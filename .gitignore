@@ -1,0 +1,104 @@
+# Environment and Configuration Files
+.env
+.env.local
+.env.*.local
+*.env.backup
+
+# Logs and Debug Files
+*.log
+debug.log
+error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+CHANGELOG_verbose.md
+CHANGELOG_internal.md
+
+# Runtime and Temporary Files
+*.tmp
+*.temp
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor and IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vim/
+.netrwhist
+
+# Backup Files
+*.bak
+*.backup
+*.orig
+*.rej
+
+# Node.js (if you add any Node tooling later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python (if you add any Python tooling)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Build and Distribution
+dist/
+build/
+*.tar.gz
+*.zip
+
+# Test Coverage and Reports
+coverage/
+*.coverage
+.nyc_output/
+test-results/
+
+# Local Development
+.local/
+local/
+scratch/
+sandbox/
+
+# Git and Version Control
+*.patch
+*.diff
+
+# Shell History and Cache
+.bash_history
+.zsh_history
+.history
+.cache/
+
+# macOS Specific
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows Specific
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux Specific
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
