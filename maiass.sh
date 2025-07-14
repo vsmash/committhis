@@ -20,8 +20,7 @@ fi
 
 # devlog.sh is my personal script for logging work in google sheets.
 # if devlog.sh is not a bash script, create an empty function to prevent errors
-if [ -z "$(type -t devlog.sh)" ]; then
-    echo 'no devlog'
+if [ -z "$(type -t devlogg.sh)" ]; then
     function devlog.sh() {
         :
     }
