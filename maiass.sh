@@ -2199,6 +2199,15 @@ function initialiseBump() {
     has_version_files=true
   fi
 
+  # if $ai_commits_only exit 0
+  if [[ "$ai_commits_only" == "true" ]]; then
+    checkUncommittedChanges
+    print_info "Mode is commits only. We are done and on $branch_name branch.\nThank you for using MAIASS"
+    exit 0
+  fi
+
+
+
   if [[ "$has_version_files" == "true" ]]; then
     changeManagement
   else
@@ -2207,10 +2216,6 @@ function initialiseBump() {
     print_info "Will proceed with git workflow only\n"
     # Still check for uncommitted changes even without version files
     checkUncommittedChanges
-  fi
-  # if $ai_commits_only exit 0
-  if [[ "$ai_commits_only" == "true" ]]; then
-    exit 0
   fi
 
   mergeDevelop "$has_version_files" "$@"
@@ -2399,8 +2404,7 @@ for arg in "$@"; do
       echo "MAIASS v$version"
       exit 0
       ;;
-    -ai|--ai-only)
-      run_ai_commit_only
+    -co|-c|--commits-only)
       export ai_commits_only=true
       ;;
   esac
