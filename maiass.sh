@@ -2264,8 +2264,21 @@ show_help() {
   local BCyan='\033[1;36m'
   local Gray='\033[0;37m'
   local Color_Off='\033[0m'
+  local BLime='\033[1;32m'
 
-  echo -e "${BBlue}MAIASS (My AI Semantic Savant) - Intelligent Git Workflow Automation${Color_Off}\n"
+  echo -e "${BBlue}"
+   cat <<-'EOF'
+        ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄
+       █  █▄█  █       █   █       █       █       █
+       █       █   ▄   █   █   ▄   █  ▄▄▄▄▄█  ▄▄▄▄▄█
+       █       █  █▄█  █   █  █▄█  █ █▄▄▄▄▄█ █▄▄▄▄▄
+       █       █       █   █       █▄▄▄▄▄  █▄▄▄▄▄  █
+       █ ██▄██ █   ▄   █   █   ▄   █▄▄▄▄▄█ █▄▄▄▄▄█ █
+       █▄█   █▄█▄▄█ █▄▄█▄▄▄█▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█
+EOF
+  echo -e "${BAqua}\n       Modular AI-Assisted Semantic Savant\n${BYellow}\n       * AI Commit Messages\n${BLime}       * Intelligent Git Workflow Automation${Color_Off}\n"
+
+
 
   echo -e "${BWhite}DESCRIPTION:${Color_Off}"
   echo -e "  Automated version bumping and changelog management script that maintains"
