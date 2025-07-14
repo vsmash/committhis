@@ -20,11 +20,20 @@ fi
 
 # devlog.sh is my personal script for logging work in google sheets.
 # if devlog.sh is not a bash script, create an empty function to prevent errors
-if [ -z "$(type -t devlogg.sh)" ]; then
+if [ -z "$(type -t devlog.sh)" ]; then
+    echo 'not a function'
+    exit 1
     function devlog.sh() {
         :
     }
 fi
+
+
+
+function logthis(){
+    devlog.sh "$1" "c" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}"
+}
+
 
 
 # Initialize debug mode early so it's available throughout the script
@@ -479,7 +488,7 @@ perform_merge_operation() {
             print_warning "Unknown repository provider. Cannot create pull request URL."
         fi
 
-        devlog.sh "Created pull request for ${newversion:-merge}" "c" "${project:-MAIASS}" "${client:-Velvary}" "${jira_ticket_number:-devops}"
+        logthis "Created pull request for ${newversion:-merge}"
     else
         # Direct merge
         print_info "Performing direct merge: $source_branch → $target_branch"
@@ -520,7 +529,7 @@ perform_merge_operation() {
         fi
 
         print_success "Merged $source_branch into $target_branch"
-        devlog.sh "Merged $source_branch into $target_branch" "c" "${project:-MAIASS}" "${client:-Velvary}" "${jira_ticket_number:-devops}"
+        logthis "Merged $source_branch into $target_branch"
     fi
 }
 
@@ -1626,8 +1635,7 @@ function checkUncommittedChanges(){
           devlog_message="${devlog_message//\"/\\\"}"
 
           # Now call the logging function
-          devlog.sh "$devlog_message" "c" "${project:-MAIASS}" "${client:-Velvary}" "${jira_ticket_number:-devops}"
-
+          logthis "$devlog_message"
           # set upstream
           if remote_exists "origin"; then
             echo -e "Pushing $branch_name to remote"
@@ -1708,7 +1716,7 @@ function mergeDevelop() {
 
             git merge "$branch_name"
             check_git_success
-            devlog.sh "Merged $branch_name into $developbranch" "c" "${project:-MAIASS}" "${client:-Velvary}" "${jira_ticket_number:-devops}"
+            logthis "Merged $branch_name into $developbranch"
         else
             print_error "Cannot proceed without merging into $developbranch"
             exit 1
