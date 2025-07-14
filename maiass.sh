@@ -1627,6 +1627,8 @@ function checkUncommittedChanges(){
             print_info "Pushing $branch_name to remote"
             run_git_command "git push --set-upstream origin '$branch_name'" "debug"
             check_git_success
+          else
+            print_warning "No remote found."
           fi
       else
           print_error "Cannot proceed with uncommitted changes"
