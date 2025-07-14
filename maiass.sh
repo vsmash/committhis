@@ -1478,7 +1478,7 @@ function get_commit_message() {
     print_info "Getting AI commit message suggestion..." "brief"
     if ai_suggestion=$(get_ai_commit_suggestion); then
       print_success "AI suggested commit message:"
-      echo -e "${BWhiteBG}${BMagenta}$ai_suggestion${Color_Off}"
+      echo -e "${BMagenta}${BWhiteBG}$ai_suggestion${Color_Off}"
       echo
 
       # Ask user if they want to use the AI suggestion
