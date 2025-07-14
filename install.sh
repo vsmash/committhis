@@ -17,6 +17,10 @@ INSTALL_DIR="$HOME/.local/bin"
 SCRIPT_NAME="maiass"
 SCRIPT_FILE="maiass.sh"
 
+# aicommit install variables
+AICOMMIT_SCRIPT_NAME="aicommit.sh"
+AICOMMIT_SYMLINK="aicommit"
+
 print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
 }
@@ -91,12 +95,23 @@ install_script() {
     cp "$SCRIPT_FILE" "$INSTALL_DIR/$SCRIPT_NAME"
 
     # create symlink in install dir for myass because it's easier to type
-    ln -s "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/myass"
-    ln -s "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/miass"
+    ln -sf "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/myass"
+    ln -sf "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/miass"
     # Make executable
     chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
 
     print_success "Installed $SCRIPT_NAME to $INSTALL_DIR"
+
+    # --- aicommit.sh install ---
+    if [[ -f "$AICOMMIT_SCRIPT_NAME" ]]; then
+        print_info "Installing $AICOMMIT_SCRIPT_NAME to $INSTALL_DIR/$AICOMMIT_SCRIPT_NAME"
+        cp "$AICOMMIT_SCRIPT_NAME" "$INSTALL_DIR/$AICOMMIT_SCRIPT_NAME"
+        chmod +x "$INSTALL_DIR/$AICOMMIT_SCRIPT_NAME"
+        ln -sf "$INSTALL_DIR/$AICOMMIT_SCRIPT_NAME" "$INSTALL_DIR/$AICOMMIT_SYMLINK"
+        print_success "Installed $AICOMMIT_SCRIPT_NAME and symlinked as $AICOMMIT_SYMLINK"
+    else
+        print_warning "$AICOMMIT_SCRIPT_NAME not found in current directory, skipping install."
+    fi
 }
 
 setup_path() {
