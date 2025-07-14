@@ -1,6 +1,8 @@
-## 4.8.8
+## 4.8.13
 14 July 2025
 
+- Cleaned up CHANGELOG.md by removing duplicate entries
+- chore: removed duplicate changelog entries for project and client defaults
 - Add AI commit tool and update installation process
 - feat: introduced `aicommit.sh` script symlinked as `aicommit`
 - docs: updated README and installation docs for AI commit usage
