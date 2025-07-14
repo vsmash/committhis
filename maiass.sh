@@ -1634,7 +1634,6 @@ function checkUncommittedChanges(){
             run_git_command "git push --set-upstream origin '$branch_name'" "debug"
             check_git_success
             echo -e "${BGreen}Commit pushed.${Color_Off}"
-            exit 0
           else
             print_warning "No remote found."
           fi
