@@ -69,6 +69,7 @@ brew install maiass
    ```bash
    ./install.sh
    ```
+   - This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`) and, if present, `aicommit.sh` (symlinked as `aicommit`) to your `~/.local/bin` directory.
 
 3. **Restart your terminal** or source your shell profile:
    ```bash
@@ -79,11 +80,14 @@ brew install maiass
 
 ## Verification
 
-After installation, verify MAIASS is working:
+After installation, verify MAIASS and AI Commit are working:
 
 ```bash
 # Check if maiass is available
 maiass --help
+
+# Check if aicommit is available (if aicommit.sh present)
+aicommit --help
 
 # Test in a git repository
 cd /path/to/your/git/repo
