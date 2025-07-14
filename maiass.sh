@@ -5,7 +5,7 @@
 # Copyright (c) 2025 Velvary Pty Ltd
 # All rights reserved.
 # This function is part of the Velvary bash scripts library.
-# Author: Mark Pottie <mark@velvary.com.au>
+# Author: vsmash <670252+vsmash@users.noreply.github.com>
 # ---------------------------------------------------------------
 
 # first check for global values
@@ -586,7 +586,6 @@ function getVersion(){
 # All rights reserved.
 # This function is part of the Velvary bash scripts library.
 # Licensed under the End User License Agreement (eula.txt) provided with this software.
-# Author: Mark Pottie <mark@velvary.com.au>
 # ---------------------------------------------------------------
     local version_arg="$1"  # major, minor, patch, or specific version
 
