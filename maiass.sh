@@ -16,6 +16,9 @@
 if [ -f .env ]; then
     source .env
 fi
+    function devlog() {
+        :
+    }
 
 # devlog is my personal script for logging work in google sheets.
 # if devlog is not a bash script, create an empty function to prevent errors
