@@ -34,11 +34,9 @@ function logthis(){
     devlog.sh "$1" "c" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}"
 }
 
-
-
 # Initialize debug mode early so it's available throughout the script
-export debug_mode="${MAIASS_DEBUG:-false}"
-
+export debug_mode="${MAIASS_DEBUG:=false}"
+export autopush_commits="${MAIASS_AUTOPUSh_COMMITS:=false}"
 # Initialize brevity and logging configuration
 export verbosity_level="${MAIASS_VERBOSITY:=brief}"
 export enable_logging="${MAIASS_LOGGING:=false}"
@@ -1604,26 +1602,27 @@ run_ai_commit_only() {
   echo "this feature is not yet supported"
 }
 
+has_staged_changes() {
+  [ -n "$(git diff --cached)" ]
+}
 
+has_uncommitted_changes() {
+  [ -n "$(git status --porcelain)" ]
+}
 
-# Check for uncommitted changes and offer to commit them
-function checkUncommittedChanges(){
-  print_section "Checking for Changes"
-  # if there are uncommitted changes, ask if the user wants to commit them
-  if [ -n "$(git status --porcelain)" ]; then
-      print_warning "There are uncommitted changes in your working directory"
-      read -n 1 -s -p "$(echo -e ${BYellow}Do you want to commit them? [y/N]${Color_Off} )" REPLY
-      echo
-      if [[ $REPLY =~ ^[Yy]$ ]]; then
-          git add -A
+handle_staged_commit() {
+          print_info "Staged changes detected:"
+          git diff --cached --name-status
+
           get_commit_message
-
           # Use git commit -F - to properly handle multi-line commit messages
           if [[ "$debug_mode" == "true" ]] || [[ "$verbosity_level" == "debug" ]]; then
             echo "$commit_message" | git commit -F -
           else
             echo "$commit_message" | git commit -F - >/dev/null 2>&1
           fi
+
+
           check_git_success
           tagmessage=$commit_message
           export tagmessage
@@ -1633,10 +1632,57 @@ function checkUncommittedChanges(){
           local devlog_message="${commit_message//$'\n'/; }"
 
           # Escape double quotes if needed
-          devlog_message="${devlog_message//\"/\\\"}"
+          devlog_message="${devlog_message//\"/\\\"}"          logthis "${commit_message//$'\n'/; }"
+          if remote_exists "origin"; then
+            # y to push upstream
+            read -n 1 -s -p "$(echo -e ${BYellow}Do you want to push this commit to remote? [y/N]${Color_Off} )" REPLY
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+              run_git_command "git push --set-upstream origin '$branch_name'" "debug"
+              check_git_success
+              echo -e "${BGreen}Commit pushed.${Color_Off}"
+            fi
+          else
+            print_warning "No remote found."
+          fi
+}
 
-          # Now call the logging function
-          logthis "$devlog_message"
+offer_to_stage_changes() {
+  print_warning "No staged changes found, but there are uncommitted changes."
+  read -n 1 -s -p "$(echo -e ${BYellow}Do you want to stage all changes and commit? [y/N]${Color_Off} )" REPLY
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    git add -A
+    handle_staged_commit
+  else
+    print_error "Aborting. No staged changes to commit."
+    exit 1
+  fi
+}
+
+check_git_commit_status() {
+  print_section "Checking Git Status"
+  if has_staged_changes; then
+    handle_staged_commit
+  elif has_uncommitted_changes; then
+    offer_to_stage_changes
+  else
+    echo -e "${BGreen}Nothing to commit. Working directory clean.${Color_Off}"
+    exit 0
+  fi
+}
+# Check for uncommitted changes and offer to commit them
+function checkUncommittedChanges(){
+  print_section "Checking for Changes"
+  # if there are uncommitted changes, ask if the user wants to commit them
+  if [ -n "$(git status --porcelain)" ]; then
+      print_warning "There are uncommitted changes in your working directory"
+      read -n 1 -s -p "$(echo -e ${BYellow}Do you want to stage and commit them? [y/N]${Color_Off} )" REPLY
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+          git add -A
+          get_commit_message
+          handle_staged_commit
           # set upstream
           if remote_exists "origin"; then
             echo -e "Pushing $branch_name to remote"
@@ -1647,10 +1693,23 @@ function checkUncommittedChanges(){
             print_warning "No remote found."
           fi
       else
-          print_error "Cannot proceed with uncommitted changes"
-          exit 1
+            if has_staged_changes; then
+              handle_staged_commit
+            fi
+          if [[ $ai_commits_only == 'true' ]]; then
+            echo -e "${BGreen}Commit process completed. Thank you for using MAIASS.${Color_Off}"
+            exit 0
+          else
+            print_success "Commit process completed."
+            print_error "Cannot proceed on release/changelog pipeline with uncommitted changes"
+            print_succsess "Thank you for using MAIASS."
+            exit 1
+          fi
       fi
   else
+    if has_staged_changes; then
+      handle_staged_commit
+    fi
     if [[ $ai_commits_only == 'true' ]]; then
       echo -e "${BGreen}No changes found. Thank you for using MAIASS.${Color_Off}"
       exit 0
@@ -2426,6 +2485,37 @@ EOF
   echo -e "${BGreen}Ready to get started? Just run:${Color_Off} ${BCyan}maiass${Color_Off}"
 }
 
+
+# Function to display help information for AICommit
+show_help_aicommit() {
+                      local BBlue='\033[1;34m'
+                      local BWhite='\033[1;37m'
+                      local BGreen='\033[1;32m'
+                      local BYellow='\033[1;33m'
+                      local BCyan='\033[1;36m'
+                      local Color_Off='\033[0m'
+
+                      echo -e "${BBlue}AICommit - AI-powered Git commit message generator${Color_Off}"
+                      echo
+                      echo -e "${BWhite}Usage:${Color_Off}"
+                      echo -e "  ${BGreen}aicommit${Color_Off}"
+                      echo
+                      echo -e "${BWhite}Environment Configuration:${Color_Off}"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your OpenAI API token (required)"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_MODE${Color_Off}       Commit mode:"
+                      echo -e "                                 ask (default), autosuggest, off"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_COMMIT_MESSAGE_STYLE${Color_Off}"
+                      echo -e "                                 Message style: bullet (default), conventional, simple"
+                      echo
+                      echo -e "${BWhite}Files (optional):${Color_Off}"
+                      echo -e "  ${BGreen}.env${Color_Off}                     Can define the variables above"
+                      echo -e "  ${BGreen}.maiass.prompt${Color_Off}           Custom AI prompt override"
+                      echo
+                      echo -e "AICommit analyzes your staged changes and suggests an intelligent commit message."
+                      echo -e "You can accept, reject, or edit it before committing."
+                      echo
+                      echo -e "This script does not manage versions, changelogs, or branches."
+                    }
 # Parse command line arguments
 for arg in "$@"; do
   case $arg in
@@ -2440,8 +2530,19 @@ for arg in "$@"; do
       script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
       script_file="${BASH_SOURCE[0]}"
       version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
-
-
+      exit 0
+      ;;
+    -aihelp|--aicommit-help)
+      show_help_aicommit
+      exit 0
+      ;;
+    -aicv|--aicommit-version)
+      # Try to read version from package.json in script directory
+      version="Unknown"
+      # get the version from line 3 of this very file
+      script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+      script_file="${BASH_SOURCE[0]}"
+      version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 
       echo "MAIASS v$version"
       exit 0
