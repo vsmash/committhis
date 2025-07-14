@@ -1624,6 +1624,7 @@ function checkUncommittedChanges(){
 
           # set upstream
           if remote_exists "origin"; then
+            echo "remote exists"
             print_info "Pushing $branch_name to remote"
             run_git_command "git push --set-upstream origin '$branch_name'" "debug"
             check_git_success
