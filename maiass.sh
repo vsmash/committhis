@@ -16,14 +16,13 @@
 if [ -f .env ]; then
     source .env
 fi
-    function devlog() {
-        :
-    }
 
-# devlog is my personal script for logging work in google sheets.
-# if devlog is not a bash script, create an empty function to prevent errors
-if [ -z "$(type -t devlog)" ]; then
-    function devlog() {
+
+# devlog.sh is my personal script for logging work in google sheets.
+# if devlog.sh is not a bash script, create an empty function to prevent errors
+if [ -z "$(type -t devlog.sh)" ]; then
+    echo 'no devlog'
+    function devlog.sh() {
         :
     }
 fi
@@ -481,7 +480,7 @@ perform_merge_operation() {
             print_warning "Unknown repository provider. Cannot create pull request URL."
         fi
 
-        devlog "Created pull request for ${newversion:-merge}" "c" "${header:-devbump}" "${jira_ticket_number:-}"
+        devlog.sh "Created pull request for ${newversion:-merge}" "c" "${header:-devbump}" "${jira_ticket_number:-}"
     else
         # Direct merge
         print_info "Performing direct merge: $source_branch → $target_branch"
@@ -522,7 +521,7 @@ perform_merge_operation() {
         fi
 
         print_success "Merged $source_branch into $target_branch"
-        devlog "Merged $source_branch into $target_branch" "c" "${header:-devbump}" "${jira_ticket_number:-}"
+        devlog.sh "Merged $source_branch into $target_branch" "c" "${header:-devbump}" "${jira_ticket_number:-}"
     fi
 }
 
@@ -1621,9 +1620,14 @@ function checkUncommittedChanges(){
           export tagmessage
           print_success "Changes committed successfully"
           # Sanitize commit message for CSV/Google Sheets compatibility
-          local devlog_message="${commit_message%$}"
-          devlog_message="${devlog_message//$'\n'/; }"
-          devlog "$devlog_message" "c" "$header" "$jira_ticket_number"
+          # Replace all newlines with semicolons and a space
+          local devlog_message="${commit_message//$'\n'/; }"
+
+          # Escape double quotes if needed
+          devlog_message="${devlog_message//\"/\\\"}"
+
+          # Now call the logging function
+          devlog.sh "$devlog_message" "c" "$header" "$jira_ticket_number"
 
           # set upstream
           if remote_exists "origin"; then
@@ -1706,7 +1710,7 @@ function mergeDevelop() {
 
             git merge "$branch_name"
             check_git_success
-            devlog "Merged $branch_name into $developbranch" "c" "$header" "$jira_ticket_number"
+            devlog.sh "Merged $branch_name into $developbranch" "c" "$header" "$jira_ticket_number"
         else
             print_error "Cannot proceed without merging into $developbranch"
             exit 1
