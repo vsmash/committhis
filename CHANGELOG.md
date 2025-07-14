@@ -1,6 +1,14 @@
-## 4.8.13
+## 4.8.14
 14 July 2025
 
+- Fix echo argument order in maiass.sh
+- fix: corrected the order of color codes in echo command
+- Add standout color for AI suggestion in script
+- feat: added standout color definition for bold magenta and white background
+- style: applied standout color to AI suggested commit message display
+- Enhanced help message formatting in maiass.sh
+- feat: added BLime color for additional formatting options
+- style: improved help section display with new color scheme and layout
 - Cleaned up CHANGELOG.md by removing duplicate entries
 - chore: removed duplicate changelog entries for project and client defaults
 - Add AI commit tool and update installation process
