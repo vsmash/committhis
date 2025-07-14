@@ -1,6 +1,54 @@
-## 4.8.4
+## 4.8.5
 14 July 2025
 
+- Added success message after branch checkout
+- feat: added a success message after branch checkout to enhance user feedback
+- Removed premature exit from checkUncommittedChanges function
+- refactor: removed exit statement to allow further execution after push
+- Add project and client details to devlog.sh calls
+- refactor: updated devlog.sh calls to include project and client information
+- fix: set client and project variables for Bitbucket and GitHub repositories
+- Corrected script name in conditional check
+- fix: corrected script name in conditional check from 'devlog.sh' to 'devlogg.sh'
+- Rename devlog function to devlog.sh
+- refactor: changed function name from devlog to devlog.sh
+- fix: updated function calls to match the new name
+- fix: corrected logic to handle function type checking
+- fix: adjusted string manipulation for commit messages with newlines and quotes
+- Add devlog function to prevent errors
+- feat: added an empty devlog function to maiass.sh
+- Enhance output messages for user feedback
+- feat: added confirmation message after pushing commits
+- fix: changed print_info to echo with color formatting for consistency
+- Enhance output message formatting
+- feat: added color formatting to the "No changes found" message for better visibility
+- Handle AI-only commit scenario in maiass.sh
+- feat: added message and exit for AI-only commit scenario when no changes found
+- Refactored devlog message handling and improved push logging
+- refactor: uncommented and adjusted devlog message sanitation
+- style: replaced echo with echo -e for consistent log formatting
+- Add debug message for remote check in maiass.sh
+- chore: added debug echo for remote existence check
+- Refactored commit message handling in maiass.sh
+- refactor: commented out devlog message sanitization and logging
+- Replace commit message variable with placeholder
+- refactor: replaced 'devlog_message' with 'testing' in function 'checkUncommittedChanges'
+- Fix variable name typo in commit message sanitation
+- fix: corrected variable name from 'metlog_message' to 'devlog_message'
+- refactor: uncommented 'devlog' function call to log messages
+- Commented out unused code in maiass.sh
+- refactor: commented out unused devlog function call
+- Handle missing remote in git push logic
+- feat: added warning message for missing remote during push operation
+- Add log message for branch push
+- feat: added informational log message before pushing branch to remote
+- Refactored commit-only mode handling in maiass.sh
+- refactor: moved and enhanced logic for ai_commits_only exit condition
+- feat: added informative message before exiting when in commits-only mode
+- fix: updated command-line option for commits-only mode to -co|-c|--commits-only
+- Refactored AI commit-only mode logic
+- refactor: exported 'ai_commits_only' variable instead of exiting immediately
+- refactor: added check for 'ai_commits_only' to exit early in 'initialiseBump' function
 - Refactored help section and added new color
 - feat: introduced BAqua color code for styling
 - refactor: updated help workflow descriptions for clarity
