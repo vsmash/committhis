@@ -1,6 +1,11 @@
-## 4.8.7
+## 4.8.8
 14 July 2025
 
+- Add AI commit tool and update installation process
+- feat: introduced `aicommit.sh` script symlinked as `aicommit`
+- docs: updated README and installation docs for AI commit usage
+- fix: ensured symlinks in install.sh use force option to avoid errors
+- chore: improved installation script to check and install `aicommit.sh` if present
 - Refactored logging functionality to use a helper function
 - refactor: added `logthis` function for centralized logging
 - refactor: replaced multiple `devlog.sh` calls with `logthis` for consistency
