@@ -1634,6 +1634,11 @@ function checkUncommittedChanges(){
           print_error "Cannot proceed with uncommitted changes"
           exit 1
       fi
+  else
+    if [[ $ai_commits_only == 'true' ]]; then
+      echo "No changes found. Thank you for using MAIASS."
+      exit 0
+    fi
   fi
 }
 
