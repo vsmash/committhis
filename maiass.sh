@@ -1636,7 +1636,7 @@ function checkUncommittedChanges(){
       fi
   else
     if [[ $ai_commits_only == 'true' ]]; then
-      echo "No changes found. Thank you for using MAIASS."
+      echo -e "${BGreen}No changes found. Thank you for using MAIASS.${Color_Off}"
       exit 0
     fi
   fi
