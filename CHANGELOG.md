@@ -1,6 +1,8 @@
-## 4.8.5
+## 4.8.6
 14 July 2025
 
+- Corrected default value syntax in logging calls
+- fix: replaced assignment syntax with parameter expansion for `project` and `client` in `devlog.sh` calls
 - Added success message after branch checkout
 - feat: added a success message after branch checkout to enhance user feedback
 - Removed premature exit from checkUncommittedChanges function
