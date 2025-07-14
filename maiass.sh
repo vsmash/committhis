@@ -479,7 +479,7 @@ perform_merge_operation() {
             print_warning "Unknown repository provider. Cannot create pull request URL."
         fi
 
-        devlog.sh "Created pull request for ${newversion:-merge}" "c" "${header:-devbump}" "${jira_ticket_number:-}"
+        devlog.sh "Created pull request for ${newversion:-merge}" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
     else
         # Direct merge
         print_info "Performing direct merge: $source_branch → $target_branch"
@@ -520,7 +520,7 @@ perform_merge_operation() {
         fi
 
         print_success "Merged $source_branch into $target_branch"
-        devlog.sh "Merged $source_branch into $target_branch" "c" "${header:-devbump}" "${jira_ticket_number:-}"
+        devlog.sh "Merged $source_branch into $target_branch" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
     fi
 }
 
@@ -1626,7 +1626,7 @@ function checkUncommittedChanges(){
           devlog_message="${devlog_message//\"/\\\"}"
 
           # Now call the logging function
-          devlog.sh "$devlog_message" "c" "$header" "$jira_ticket_number"
+          devlog.sh "$devlog_message" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
 
           # set upstream
           if remote_exists "origin"; then
@@ -1709,7 +1709,7 @@ function mergeDevelop() {
 
             git merge "$branch_name"
             check_git_success
-            devlog.sh "Merged $branch_name into $developbranch" "c" "$header" "$jira_ticket_number"
+            devlog.sh "Merged $branch_name into $developbranch" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
         else
             print_error "Cannot proceed without merging into $developbranch"
             exit 1
@@ -2052,7 +2052,7 @@ setup_bumpscript_variables() {
   if [[ "$git_remote_url" =~ bitbucket\.org[:/]([^/]+)/([^/\.]+) ]]; then
     export REPO_PROVIDER="bitbucket"
     export BITBUCKET_WORKSPACE="${MAIASS_BITBUCKET_WORKSPACE:-${BASH_REMATCH[1]}}"
-    export BITBUCKET_REPO_SLUG="${MAIASS_BITBUCKET_REPO_SLUG:-${BASH_REMATCH[2]}}"
+    export client=
   # Detect GitHub
   elif [[ "$git_remote_url" =~ github\.com[:/]([^/]+)/([^/\.]+) ]]; then
     export REPO_PROVIDER="github"
@@ -2140,8 +2140,12 @@ setup_bumpscript_variables() {
   fi
   if [[ "$REPO_PROVIDER" == "bitbucket" && -n "$BITBUCKET_WORKSPACE" ]]; then
     print_info "  Repository: Bitbucket ($BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG)"
+    export client="$BITBUCKET_WORKSPACE"
+    export project="$BITBUCKET_REPO_SLUG"
   elif [[ "$REPO_PROVIDER" == "github" && -n "$GITHUB_OWNER" ]]; then
     print_info "  Repository: GitHub ($GITHUB_OWNER/$GITHUB_REPO)"
+    export client="$GITHUB_OWNER"
+    export project="$GITHUB_REPO"
   fi
   if [[ -n "$wpVersionConstant" ]]; then
     print_info "  WordPress version constant: $wpVersionConstant"
