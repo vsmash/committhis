@@ -1619,8 +1619,8 @@ function checkUncommittedChanges(){
           print_success "Changes committed successfully"
           # Sanitize commit message for CSV/Google Sheets compatibility
           local devlog_message="${commit_message%$}"
-          devlog_message="${metlog_message//$'\n'/; }"
-          # devlog "$devlog_message" "c" "$header" "$jira_ticket_number"
+          devlog_message="${devlog_message//$'\n'/; }"
+          devlog "$devlog_message" "c" "$header" "$jira_ticket_number"
 
           # set upstream
           if remote_exists "origin"; then
