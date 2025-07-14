@@ -55,7 +55,7 @@ BBlue='\033[1;34m'      # Blue
 BYellow='\033[1;33m'    # Yellow
 BPurple='\033[1;35m'    # Purple
 BWhite='\033[1;37m'     # White
-
+BAqua='\033[96m'        # Aqua
 
 
 # Helper function to read version from a file based on type and line start
@@ -2251,19 +2251,31 @@ show_help() {
   echo -e "  ${BGreen}2.${Color_Off} For AI features: Set ${BRed}MAIASS_OPENAI_TOKEN${Color_Off} environment variable"
   echo -e "  ${BGreen}3.${Color_Off} Everything else works with sensible defaults!\n"
 
-  echo -e "${BWhite}WORKFLOW:${Color_Off}"
-  echo -e "  ${BGreen}1.${Color_Off} Merge feature branch → develop"
-  echo -e "  ${BGreen}2.${Color_Off} Create release/x.x.x branch from develop"
-  echo -e "  ${BGreen}3.${Color_Off} Update version files and changelog on release branch"
-  echo -e "  ${BGreen}4.${Color_Off} Commit and push release branch"
-  echo -e "  ${BGreen}5.${Color_Off} Merge release branch back to develop"
-  echo -e "  ${BGreen}6.${Color_Off} Return to original feature branch\n"
+  echo -e "${BWhite}AI COMMIT INTELLIGENCE WORKFLOW:${Color_Off}"
+  echo -e "MAIASS manages code changes in the following way:"
+  echo -e "  ${BGreen}1.${Color_Off} Asks if you would like to commit your changes"
+  echo -e "  ${BGreen}2.${Color_Off} If AI is available and switched in ask mode, asks if you'd like an ai suggestion"
+  echo -e "  ${BGreen}3.${Color_Off} If yes or in autosuggest mode, suggests a commit mesage"
+  echo -e "  ${BGreen}3.${Color_Off} You can use it or enter manual commit mode (multiline) at the prompt"
+  echo -e "  ${BGreen}4.${Color_Off} Offers to merge to develop, which initiates the version and changelog workflow"
+  echo -e "  ${BGreen}5.${Color_Off} If you just want ai commit suggestions and no further workflow, say no\n"
+
+  echo -e "${BWhite}VERSION AND CHANGELOG WORKFLOW:${Color_Off}"
+  echo -e "MAIASS manages version bumping and changelogging in the following way:"
+  echo -e "  ${BGreen}1.${Color_Off} Merges feature branch → develop"
+  echo -e "  ${BGreen}2.${Color_Off} Creates release/x.x.x branch from develop"
+  echo -e "  ${BGreen}3.${Color_Off} Updates version files and changelog on release branch"
+  echo -e "  ${BGreen}4.${Color_Off} Commits and pushes release branch"
+  echo -e "  ${BGreen}5.${Color_Off} Merges release branch back to develop"
+  echo -e "  ${BGreen}6.${Color_Off} Returns to original feature branch\n"
+
+
 
   echo -e "  ${BYellow}Git Flow Diagram:${Color_Off}"
-  echo -e "    feature/xyz ──┐"
+  echo -e "${BAqua}    feature/xyz ──┐"
   echo -e "                  ├─→ develop ──→ release/1.2.3 ──┐"
   echo -e "    feature/abc ──┘                                ├─→ develop"
-  echo -e "                                                    └─→ (tagged)\n"
+  echo -e "                                                    └─→ (tagged)\n${Color_Off}"
 
   echo -e "  ${BYellow}Note:${Color_Off} Script will not bump versions if develop branch requires"
   echo -e "  pull requests, as PR workflows are outside the scope of this script.\n"
@@ -2313,9 +2325,10 @@ show_help() {
   echo -e "${BWhite}📁 CUSTOM VERSION FILES:${Color_Off}"
   echo -e "  ${BYellow}For projects with non-standard version file structures:${Color_Off}"
   echo -e "  MAIASS_VERSION_PRIMARY_FILE        Primary version file path"
-  echo -e "  MAIASS_VERSION_PRIMARY_TYPE        ${Gray}('txt')${Color_Off} 'json' or 'txt' or 'pattern'"
+  echo -e "  MAIASS_VERSION_PRIMARY_TYPE        ${Gray}('txt')${Color_Off} 'json', 'php' or 'txt' or 'pattern'"
   echo -e "  MAIASS_VERSION_PRIMARY_LINE_START  Line prefix for txt files"
-  echo -e "  MAIASS_VERSION_SECONDARY_FILES     Secondary files (pipe-separated)\n"
+  echo -e "  MAIASS_VERSION_SECONDARY_FILES     Secondary files (pipe-separated)"
+  echo -e "  MAIASS_CHANGELOG_INTERNAL_NAME     alternate name for your internal changelog\n"
 
   echo -e "  ${BYellow}Examples:${Color_Off}"
   echo -e "    ${Gray}# WordPress theme with style.css version${Color_Off}"
@@ -2355,7 +2368,8 @@ show_help() {
   echo -e "  ${BYellow}Install jq:${Color_Off} ${Gray}brew install jq${Color_Off} (macOS) | ${Gray}sudo apt install jq${Color_Off} (Ubuntu)\n"
 
   echo -e "${BWhite}📝 CONFIGURATION:${Color_Off}"
-  echo -e "  Configuration loaded from ${BCyan}.env${Color_Off} files in current directory."
+  echo -e "  Global configuration loaded from ~/.maiass.env"
+  echo -e "  Global overridden by Configuration loaded from ${BCyan}.env${Color_Off} files in current directory."
   echo -e "  ${Gray}Most settings are optional with sensible defaults!${Color_Off}\n"
 
   echo -e "${BGreen}Ready to get started? Just run:${Color_Off} ${BCyan}maiass${Color_Off}"
