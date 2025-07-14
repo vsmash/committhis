@@ -2208,6 +2208,10 @@ function initialiseBump() {
     # Still check for uncommitted changes even without version files
     checkUncommittedChanges
   fi
+  # if $ai_commits_only exit 0
+  if [[ "$ai_commits_only" == "true" ]]; then
+    exit 0
+  fi
 
   mergeDevelop "$has_version_files" "$@"
   deployOptions
@@ -2397,15 +2401,14 @@ for arg in "$@"; do
       ;;
     -ai|--ai-only)
       run_ai_commit_only
-      exit 0
+      export ai_commits_only=true
       ;;
   esac
 done
 
 # Check for env var override
 if [[ "$MAIASS_MODE" == "ai_only" ]]; then
-  run_ai_commit_only
-  exit 0
+    export ai_commits_only=true
 fi
 
 
