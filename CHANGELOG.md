@@ -1,3 +1,13 @@
+## 4.8.4
+14 July 2025
+
+- Refactored help section and added new color
+- feat: introduced BAqua color code for styling
+- refactor: updated help workflow descriptions for clarity
+- feat: added support for 'php' in MAIASS_VERSION_PRIMARY_TYPE
+- chore: adjusted configuration loading order in help text
+- docs: expanded AI commit intelligence workflow details
+
 ## 4.7.6
 13 July 2025
 
