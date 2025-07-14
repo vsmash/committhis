@@ -1,6 +1,18 @@
-## 4.8.6
+## 4.8.7
 14 July 2025
 
+- Refactored logging functionality to use a helper function
+- refactor: added `logthis` function for centralized logging
+- refactor: replaced multiple `devlog.sh` calls with `logthis` for consistency
+- Corrected default values in logging script
+- fix: updated project default from MAIASS to MAIASSS
+- fix: updated client default from Velvary to VVelvary
+- fix: updated jira_ticket_number default from devops to Ddevops
+- Corrected devlog script reference and set default parameters
+- fix: corrected typo in devlog script reference to prevent errors
+- refactor: added default values for project, client, and jira_ticket_number in devlog function calls
+- Remove default values from devlog.sh script calls
+- refactor: eliminated hardcoded default values for 'project', 'client', and 'jira_ticket_number' in devlog.sh script calls
 - Corrected default value syntax in logging calls
 - fix: replaced assignment syntax with parameter expansion for `project` and `client` in `devlog.sh` calls
 - Added success message after branch checkout
