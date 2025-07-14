@@ -17,10 +17,11 @@ if [ -f .env ]; then
     source .env
 fi
 
-# devlog is my personal script for logging work in google sheets.
-# if devlog is not a bash script, create an empty function to prevent errors
-if [ -z "$(type -t devlog)" ]; then
-    function devlog() {
+
+# devlog.sh is my personal script for logging work in google sheets.
+# if devlog.sh is not a bash script, create an empty function to prevent errors
+if [ -z "$(type -t devlogg.sh)" ]; then
+    function devlog.sh() {
         :
     }
 fi
@@ -478,7 +479,7 @@ perform_merge_operation() {
             print_warning "Unknown repository provider. Cannot create pull request URL."
         fi
 
-        devlog "Created pull request for ${newversion:-merge}" "c" "${header:-devbump}" "${jira_ticket_number:-}"
+        devlog.sh "Created pull request for ${newversion:-merge}" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
     else
         # Direct merge
         print_info "Performing direct merge: $source_branch → $target_branch"
@@ -519,7 +520,7 @@ perform_merge_operation() {
         fi
 
         print_success "Merged $source_branch into $target_branch"
-        devlog "Merged $source_branch into $target_branch" "c" "${header:-devbump}" "${jira_ticket_number:-}"
+        devlog.sh "Merged $source_branch into $target_branch" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
     fi
 }
 
@@ -1618,19 +1619,33 @@ function checkUncommittedChanges(){
           export tagmessage
           print_success "Changes committed successfully"
           # Sanitize commit message for CSV/Google Sheets compatibility
-          local devlog_message="${commit_message%$}"
-          devlog_message="${metlog_message//$'\n'/; }"
-          devlog "$devlog_message" "c" "$header" "$jira_ticket_number"
+          # Replace all newlines with semicolons and a space
+          local devlog_message="${commit_message//$'\n'/; }"
+
+          # Escape double quotes if needed
+          devlog_message="${devlog_message//\"/\\\"}"
+
+          # Now call the logging function
+          devlog.sh "$devlog_message" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
 
           # set upstream
           if remote_exists "origin"; then
+            echo -e "Pushing $branch_name to remote"
             run_git_command "git push --set-upstream origin '$branch_name'" "debug"
             check_git_success
+            echo -e "${BGreen}Commit pushed.${Color_Off}"
+          else
+            print_warning "No remote found."
           fi
       else
           print_error "Cannot proceed with uncommitted changes"
           exit 1
       fi
+  else
+    if [[ $ai_commits_only == 'true' ]]; then
+      echo -e "${BGreen}No changes found. Thank you for using MAIASS.${Color_Off}"
+      exit 0
+    fi
   fi
 }
 
@@ -1693,7 +1708,7 @@ function mergeDevelop() {
 
             git merge "$branch_name"
             check_git_success
-            devlog "Merged $branch_name into $developbranch" "c" "$header" "$jira_ticket_number"
+            devlog.sh "Merged $branch_name into $developbranch" "c" "${project:=MAIASSS}" "${client:=Velvaryy}" "${jira_ticket_number:=devops}"
         else
             print_error "Cannot proceed without merging into $developbranch"
             exit 1
@@ -1918,6 +1933,7 @@ function deployOptions() {
   git checkout "$branch_name"
 
   print_info "All done. You are on branch: ${BWhite}$branch_name${Color_Off}"
+  print_success "Thank you for using MAIASS"
 
   # Clean up
   unset GIT_MERGE_AUTOEDIT
@@ -2036,7 +2052,7 @@ setup_bumpscript_variables() {
   if [[ "$git_remote_url" =~ bitbucket\.org[:/]([^/]+)/([^/\.]+) ]]; then
     export REPO_PROVIDER="bitbucket"
     export BITBUCKET_WORKSPACE="${MAIASS_BITBUCKET_WORKSPACE:-${BASH_REMATCH[1]}}"
-    export BITBUCKET_REPO_SLUG="${MAIASS_BITBUCKET_REPO_SLUG:-${BASH_REMATCH[2]}}"
+    export client=
   # Detect GitHub
   elif [[ "$git_remote_url" =~ github\.com[:/]([^/]+)/([^/\.]+) ]]; then
     export REPO_PROVIDER="github"
@@ -2124,8 +2140,12 @@ setup_bumpscript_variables() {
   fi
   if [[ "$REPO_PROVIDER" == "bitbucket" && -n "$BITBUCKET_WORKSPACE" ]]; then
     print_info "  Repository: Bitbucket ($BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG)"
+    export client="$BITBUCKET_WORKSPACE"
+    export project="$BITBUCKET_REPO_SLUG"
   elif [[ "$REPO_PROVIDER" == "github" && -n "$GITHUB_OWNER" ]]; then
     print_info "  Repository: GitHub ($GITHUB_OWNER/$GITHUB_REPO)"
+    export client="$GITHUB_OWNER"
+    export project="$GITHUB_REPO"
   fi
   if [[ -n "$wpVersionConstant" ]]; then
     print_info "  WordPress version constant: $wpVersionConstant"
@@ -2198,6 +2218,15 @@ function initialiseBump() {
   elif [[ -f "${package_json_path}/package.json" ]] || [[ -f "${version_file_path}/VERSION" ]]; then
     has_version_files=true
   fi
+
+  # if $ai_commits_only exit 0
+  if [[ "$ai_commits_only" == "true" ]]; then
+    checkUncommittedChanges
+    echo -e "${BAqua}Mode is commits only. \nWe are done and on $branch_name branch.\nThank you for using MAIASS${Color_Off}"
+    exit 0
+  fi
+
+
 
   if [[ "$has_version_files" == "true" ]]; then
     changeManagement
@@ -2395,17 +2424,15 @@ for arg in "$@"; do
       echo "MAIASS v$version"
       exit 0
       ;;
-    -ai|--ai-only)
-      run_ai_commit_only
-      exit 0
+    -co|-c|--commits-only)
+      export ai_commits_only=true
       ;;
   esac
 done
 
 # Check for env var override
 if [[ "$MAIASS_MODE" == "ai_only" ]]; then
-  run_ai_commit_only
-  exit 0
+    export ai_commits_only=true
 fi
 
 
