@@ -10,8 +10,6 @@
 - refactor: added `logthis` function for centralized logging
 - refactor: replaced multiple `devlog.sh` calls with `logthis` for consistency
 - Corrected default values in logging script
-- fix: updated project default from MAIASS to MAIASSS
-- fix: updated client default from Velvary to VVelvary
 - fix: updated jira_ticket_number default from devops to Ddevops
 - Corrected devlog script reference and set default parameters
 - fix: corrected typo in devlog script reference to prevent errors
