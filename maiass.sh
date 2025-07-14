@@ -66,7 +66,9 @@ BYellow='\033[1;33m'    # Yellow
 BPurple='\033[1;35m'    # Purple
 BWhite='\033[1;37m'     # White
 BAqua='\033[96m'        # Aqua
-
+# Define a standout color (bold magenta with white background as an example)
+BMagenta='\033[1;35m'
+BWhiteBG='\033[47m'
 
 # Helper function to read version from a file based on type and line start
 read_version_from_file() {
@@ -1476,7 +1478,7 @@ function get_commit_message() {
     print_info "Getting AI commit message suggestion..." "brief"
     if ai_suggestion=$(get_ai_commit_suggestion); then
       print_success "AI suggested commit message:"
-      echo -e "${BWhite}$ai_suggestion${Color_Off}"
+      echo -e "${BWhiteBG}${BMagenta}$ai_suggestion${Color_Off}"
       echo
 
       # Ask user if they want to use the AI suggestion
