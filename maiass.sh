@@ -1681,17 +1681,8 @@ function checkUncommittedChanges(){
       echo
       if [[ $REPLY =~ ^[Yy]$ ]]; then
           git add -A
-          get_commit_message
           handle_staged_commit
           # set upstream
-          if remote_exists "origin"; then
-            echo -e "Pushing $branch_name to remote"
-            run_git_command "git push --set-upstream origin '$branch_name'" "debug"
-            check_git_success
-            echo -e "${BGreen}Commit pushed.${Color_Off}"
-          else
-            print_warning "No remote found."
-          fi
       else
             if has_staged_changes; then
               handle_staged_commit
