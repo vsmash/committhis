@@ -135,7 +135,7 @@ push_to_aicommit() {
   git restore --staged scripts/push-dual.sh || true
 
   echo -e "${BGreen}🚀 Pushing to AICommit...${Color_Off}"
-  git push ai main
+  git push aicommit main
 
   echo -e "${BYellow}🧼 Restoring push-dual.sh to working directory...${Color_Off}"
   git restore scripts/push-dual.sh || true
