@@ -1,3 +1,13 @@
+## 4.9.0
+15 July 2025
+
+- Changelog updates for better clarity and consistency
+- refactor: renamed 'aicommit.sh' to 'committhis.sh' for consistency
+- docs: removed extraneous line in README for clarity
+- renamed: changed 'README.aicommit.md' to 'README.committhis.md' in the docs directory
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+
 ## 4.8.32
 15 July 2025
 
