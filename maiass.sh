@@ -31,7 +31,8 @@ fi
 
 
 function logthis(){
-    devlog.sh "$1" "c" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}"
+    # shellcheck disable=SC1073
+    debugmsg=$(devlog.sh "$1" "c" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}")
 }
 
 # Initialize debug mode early so it's available throughout the script
