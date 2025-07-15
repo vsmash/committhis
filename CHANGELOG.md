@@ -1,11 +1,14 @@
-## 4.8.21
+## 4.8.22
 15 July 2025
 
+- Refactored version tag extraction in deployment script
+- refactor: changed version tag extraction to use git tags instead of package.json
+- style: updated echo messages for clarity and consistency
+- Temporary: swap README for AICommit push
+- Revert README to MAIASS
 - Add push_version_tag_to_aicommit function
 - feat: implemented push_version_tag_to_aicommit for version tagging
 - refactor: integrated version tag pushing in push_to_aicommit function
-- Revert README to MAIASS
-- Temporary: swap README for AICommit push
 - Renamed and updated script references
 - chore: renamed 'deploy.sh' to 'dply.sh'
 - fix: updated script references from 'deploy.sh' to 'dply.sh' in deployment script
