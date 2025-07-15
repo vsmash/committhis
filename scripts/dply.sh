@@ -122,6 +122,23 @@ merge_staging_to_main_and_push() {
   git add README.md
   git commit -m "Update README for MAIASS" || true
   git push origin main
+  version_tag=$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+
+    printf "Create GitHub release for v$version_tag? (y/N): "
+    read CONFIRM_RELEASE
+    if [[ "$CONFIRM_RELEASE" =~ ^[Yy]$ ]]; then
+      if ! command -v gh >/dev/null 2>&1; then
+        print_error "GitHub CLI (gh) not found. Run: brew install gh"
+        exit 1
+      fi
+
+      gh release create "$version_tag" \
+        --title "$version_tag" \
+        --notes "Automated release for version $version_tag" \
+        --repo "$REPO" && print_success "Release created." || print_error "Release failed."
+    else
+      print_info "Skipped release."
+    fi
 }
 
 push_to_aicommit() {
@@ -140,6 +157,24 @@ push_to_aicommit() {
   echo -e "${BYellow}🧼 Restoring dply.sh to working directory...${Color_Off}"
   git restore scripts/dply.sh || true
   push_version_tag_to_aicommit
+  version_tag=$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+
+    printf "Create GitHub release for v$version_tag? (y/N): "
+    read CONFIRM_RELEASE
+    if [[ "$CONFIRM_RELEASE" =~ ^[Yy]$ ]]; then
+      if ! command -v gh >/dev/null 2>&1; then
+        print_error "GitHub CLI (gh) not found. Run: brew install gh"
+        exit 1
+      fi
+
+      gh release create "$version_tag" \
+        --title "$version_tag" \
+        --notes "Automated release for version $version_tag" \
+        --repo "$REPO" && print_success "Release created." || print_error "Release failed."
+    else
+      print_info "Skipped release."
+    fi
+
   echo -e "${BGreen}↩️ Reverting README to MAIASS...${Color_Off}"
   prepare_maiass_readme
   git add README.md
