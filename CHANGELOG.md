@@ -1,6 +1,8 @@
-## 4.8.23
+## 4.8.24
 15 July 2025
 
+- Update Homebrew tap in README
+- docs: changed Homebrew tap from `vsmash/tools` to `vsmash/aicommit` in README
 - Add version option to script
 - feat: added `-v`/`--version` flag to display script version using `maiass --aicommit-version`
 - Revert README to MAIASS
