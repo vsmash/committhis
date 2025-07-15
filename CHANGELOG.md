@@ -1,11 +1,14 @@
-## 4.8.17
+## 4.8.18
 15 July 2025
 
+- Corrected git remote name in deploy script
+- fix: changed remote name from 'ai' to 'aicommit' in deploy.sh
+- Temporary: swap README for AICommit push
+- Revert README to MAIASS
 - Refactored deploy script for better worktree management
 - refactor: adjusted function signature spacing for consistency
 - refactor: reorganized with_clean_worktree logic within full_push_flow
 - chore: added comments for clarity in merge operations
-- Revert README to MAIASS
 - Enhance deploy script for README management and branch merging
 - feat: added conditional commits for README changes in MAIASS and AICOMMIT
 - feat: implemented automatic merge of main into non-main branches on checkout
