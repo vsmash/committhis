@@ -126,4 +126,10 @@ Licensed under the [GNU GPL v3.0](LICENSE).
 
 ---
 
-Made with ❤️ by [Velvary](https://velvary.com.au)
+**Made with ❤️ for my fellow developers who are also crap at writing commit messages and mangaging versioning and changelogs**
+## 💸 Support my work
+
+When this tool saves your ass, consider sponsoring mine:
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?logo=github)](https://github.com/sponsors/vsmash)
+[![Ko-fi](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Ko--fi-29abe0?logo=ko-fi)](https://ko-fi.com/myass)
