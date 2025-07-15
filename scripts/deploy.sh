@@ -131,8 +131,8 @@ push_to_aicommit() {
   git add README.md
   git commit -m "Temporary: swap README for AICommit push" || true
 
-  echo -e "${BYellow}🧹 Removing push-dual.sh from staged files before AICommit push...${Color_Off}"
-  git restore --staged scripts/push-dual.sh || true
+  echo -e "${BYellow}🧹 Removing scripts/deploy.sh from staged files before AICommit push...${Color_Off}"
+  git restore --staged scripts/deploy.sh || true
 
   echo -e "${BGreen}🚀 Pushing to AICommit...${Color_Off}"
   git push aicommit main
