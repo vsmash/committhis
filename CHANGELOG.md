@@ -1,6 +1,11 @@
-## 4.8.16
+## 4.8.17
 15 July 2025
 
+- Refactored deploy script for better worktree management
+- refactor: adjusted function signature spacing for consistency
+- refactor: reorganized with_clean_worktree logic within full_push_flow
+- chore: added comments for clarity in merge operations
+- Revert README to MAIASS
 - Enhance deploy script for README management and branch merging
 - feat: added conditional commits for README changes in MAIASS and AICOMMIT
 - feat: implemented automatic merge of main into non-main branches on checkout
