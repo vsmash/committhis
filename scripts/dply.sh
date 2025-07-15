@@ -131,14 +131,14 @@ push_to_aicommit() {
   git add README.md
   git commit -m "Temporary: swap README for AICommit push" || true
 
-  echo -e "${BYellow}🧹 Removing scripts/deploy.sh from staged files before AICommit push...${Color_Off}"
-  git restore --staged scripts/deploy.sh || true
+  echo -e "${BYellow}🧹 Removing scripts/dply.sh from staged files before AICommit push...${Color_Off}"
+  git restore --staged scripts/dply.sh || true
 
   echo -e "${BGreen}🚀 Pushing to AICommit...${Color_Off}"
   git push aicommit main
 
-  echo -e "${BYellow}🧼 Restoring push-dual.sh to working directory...${Color_Off}"
-  git restore scripts/push-dual.sh || true
+  echo -e "${BYellow}🧼 Restoring dply.sh to working directory...${Color_Off}"
+  git restore scripts/dply.sh || true
 
   echo -e "${BGreen}↩️ Reverting README to MAIASS...${Color_Off}"
   prepare_maiass_readme
