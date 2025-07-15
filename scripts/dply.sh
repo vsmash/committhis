@@ -139,12 +139,33 @@ push_to_aicommit() {
 
   echo -e "${BYellow}🧼 Restoring dply.sh to working directory...${Color_Off}"
   git restore scripts/dply.sh || true
-
+  push_version_tag_to_aicommit
   echo -e "${BGreen}↩️ Reverting README to MAIASS...${Color_Off}"
   prepare_maiass_readme
   git add README.md
   git commit -m "Revert README to MAIASS" || true
 }
+
+push_version_tag_to_aicommit() {
+  local version_tag
+
+  # Extract version from package.json (assumes same directory)
+  version_tag="v$(grep -m1 '"version"' package.json | sed -E 's/[^0-9]*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')"
+
+  if [[ -z "$version_tag" ]]; then
+    echo -e "${BRed}❌ Could not determine version tag from package.json.${Color_Off}"
+    return 1
+  fi
+
+  if git rev-parse "$version_tag" >/dev/null 2>&1; then
+    echo -e "${BGreen}🏷️  Pushing tag ${version_tag} to aicommit...${Color_Off}"
+    git push aicommit "$version_tag"
+  else
+    echo -e "${BRed}❌ Local tag ${version_tag} not found. Has MAIASS created it yet?${Color_Off}"
+    return 1
+  fi
+}
+
 # --- Full push workflow ---
 full_push_flow() {
   echo -e "${BGreen}🧠 Performing full push: merge, push, dual-brand...${Color_Off}"
