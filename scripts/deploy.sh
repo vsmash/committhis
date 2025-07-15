@@ -41,12 +41,24 @@ Color_Off='\033[0m'
 prepare_maiass_readme() {
   echo -e "${BGreen}📄 Copying MAIASS README...${Color_Off}"
   cp docs/README.maiass.md README.md
+  if ! git diff --quiet README.md; then
+    git add README.md
+    git commit -m "Revert README to MAIASS"
+  else
+    echo -e "${BYellow}ℹ️ MAIASS README unchanged. No commit needed.${Color_Off}"
+  fi
 }
 
 # --- Copy correct README before pushing to aicommit ---
 prepare_aicommit_readme() {
   echo -e "${BGreen}📄 Copying AICOMMIT README...${Color_Off}"
   cp docs/README.aicommit.md README.md
+  if ! git diff --quiet README.md; then
+    git add README.md
+    git commit -m "Temporary: swap README for AICommit push"
+  else
+    echo -e "${BYellow}ℹ️ AICOMMIT README already in place. No commit needed.${Color_Off}"
+  fi
 }
 
 # --- Utility: Ensure clean worktree and stash if needed ---
@@ -65,7 +77,13 @@ with_clean_worktree() {
 
   echo -e "${BYellow}🔄 Returning to original branch: ${orig_branch}${Color_Off}"
   git checkout "$orig_branch" >/dev/null 2>&1
-
+    if [[ "$orig_branch" != "main" ]]; then
+      echo -e "${BYellow}🔄 Merging latest main into ${orig_branch}...${Color_Off}"
+      git merge main --no-edit || {
+        echo -e "${BRed}❌ Merge failed on return to ${orig_branch}. Please resolve manually.${Color_Off}"
+        exit 1
+      }
+    fi
   if $stash_needed; then
     echo -e "${BYellow}📦 Restoring stashed changes...${Color_Off}"
     git stash pop
