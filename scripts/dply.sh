@@ -36,7 +36,10 @@ BYellow='\033[1;33m'
 BRed='\033[1;31m'
 Color_Off='\033[0m'
 
-
+print_info() { echo -e "${BLUE}ℹ $1${Color_Off}"; }
+print_success() { echo -e "${GREEN}✔ $1${Color_Off}"; }
+print_warning() { echo -e "${YELLOW}⚠ $1${Color_Off}"; }
+print_error() { echo -e "${RED}✗ $1${Color_Off}"; }
 # --- Copy correct README before pushing to main ---
 prepare_maiass_readme() {
   echo -e "${BGreen}📄 Copying MAIASS README...${Color_Off}"
@@ -131,11 +134,11 @@ merge_staging_to_main_and_push() {
         print_error "GitHub CLI (gh) not found. Run: brew install gh"
         exit 1
       fi
-
+      gh repo set-default vsmash/maiass
       gh release create "$version_tag" \
         --title "$version_tag" \
         --notes "Automated release for version $version_tag" \
-        --repo "$REPO" && print_success "Release created." || print_error "Release failed."
+        --repo "vsmash/maiass" && print_success "Release created." || print_error "Release failed."
     else
       print_info "Skipped release."
     fi
@@ -166,11 +169,11 @@ push_to_aicommit() {
         print_error "GitHub CLI (gh) not found. Run: brew install gh"
         exit 1
       fi
-
+      gh repo set-default vsmash/aicommit
       gh release create "$version_tag" \
         --title "$version_tag" \
         --notes "Automated release for version $version_tag" \
-        --repo "$REPO" && print_success "Release created." || print_error "Release failed."
+        --repo "vsmash/aicommit" && print_success "Release created." || print_error "Release failed."
     else
       print_info "Skipped release."
     fi
