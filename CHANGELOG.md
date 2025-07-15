@@ -1,6 +1,11 @@
-## 4.8.30
+## 4.8.31
 15 July 2025
 
+- Removed unnecessary line from README
+- docs: removed extraneous line in README for clarity
+- # Conflicts:
+- #	README.md
+- Revert README to MAIASS
 - Renamed README file for consistency
 - renamed: changed 'README.aicommit.md' to 'README.committhis.md' in the docs directory
 - Rename 'aicommit' to 'committhis'
@@ -9,13 +14,10 @@
 - feat: added `committhis.sh` script symlinked as `committhis`
 - fix: updated help and version flags to use `committhis` identifier
 - chore: improved installation script to check and install `committhis.sh`
-- Revert README to MAIASS
 - Temporary: swap README for AICommit push
 - Cleaned up deployment script
 - fix: removed duplicate shebang line
 - fix: corrected usage instruction filename in comments
-- # Conflicts:
-- #	README.md
 - Refactored deployment script with enhanced messaging
 - feat: added functions for printing info, success, warning, and error messages
 - refactor: set default GitHub repository in release creation
