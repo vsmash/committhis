@@ -1,6 +1,10 @@
-## 4.8.26
+## 4.8.27
 15 July 2025
 
+- Refactored deployment script with enhanced messaging
+- feat: added functions for printing info, success, warning, and error messages
+- refactor: set default GitHub repository in release creation
+- fix: used explicit repo names in release command
 - Add automated GitHub release creation to deployment script
 - feat: implemented automated GitHub release creation in `dply.sh`
 - chore: added user confirmation for creating releases
