@@ -1,11 +1,14 @@
-## 4.8.31
+## 4.8.32
 15 July 2025
 
+- Renamed script file for clarity
+- refactor: renamed 'aicommit.sh' to 'committhis.sh' for better clarity and naming consistency
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - Removed unnecessary line from README
 - docs: removed extraneous line in README for clarity
 - # Conflicts:
 - #	README.md
-- Revert README to MAIASS
 - Renamed README file for consistency
 - renamed: changed 'README.aicommit.md' to 'README.committhis.md' in the docs directory
 - Rename 'aicommit' to 'committhis'
@@ -26,7 +29,6 @@
 - feat: implemented automated GitHub release creation in `dply.sh`
 - chore: added user confirmation for creating releases
 - feat: included version tagging and release notes generation
-- Temporary: swap README for committhis push
 - Add sponsorship section to README
 - docs: added a new section for sponsorship support in README
 - docs: included GitHub Sponsors and Ko-fi links
