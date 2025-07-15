@@ -1,11 +1,15 @@
-## 4.8.25
+## 4.8.26
 15 July 2025
 
+- Add automated GitHub release creation to deployment script
+- feat: implemented automated GitHub release creation in `dply.sh`
+- chore: added user confirmation for creating releases
+- feat: included version tagging and release notes generation
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Add sponsorship section to README
 - docs: added a new section for sponsorship support in README
 - docs: included GitHub Sponsors and Ko-fi links
-- Revert README to MAIASS
-- Temporary: swap README for AICommit push
 - Update Homebrew tap in README
 - docs: changed Homebrew tap from `vsmash/tools` to `vsmash/aicommit` in README
 - Add version option to script
