@@ -1,12 +1,15 @@
-## 4.8.24
+## 4.8.25
 15 July 2025
 
+- Add sponsorship section to README
+- docs: added a new section for sponsorship support in README
+- docs: included GitHub Sponsors and Ko-fi links
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Update Homebrew tap in README
 - docs: changed Homebrew tap from `vsmash/tools` to `vsmash/aicommit` in README
 - Add version option to script
 - feat: added `-v`/`--version` flag to display script version using `maiass --aicommit-version`
-- Revert README to MAIASS
-- Temporary: swap README for AICommit push
 - Refactored version tag extraction in deployment script
 - refactor: changed version tag extraction to use git tags instead of package.json
 - style: updated echo messages for clarity and consistency
