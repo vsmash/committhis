@@ -1,6 +1,14 @@
-## 4.8.15
+## 4.8.16
 15 July 2025
 
+- Enhance deploy script for README management and branch merging
+- feat: added conditional commits for README changes in MAIASS and AICOMMIT
+- feat: implemented automatic merge of main into non-main branches on checkout
+- fix: ensured proper handling of unchanged README files to avoid unnecessary commits
+- Add dual remote push script and update README
+- docs: updated README to version 4.8.15 and adjusted headings
+- feat(scripts): added deploy.sh for dual remote push to MAIASS and AICommit
+- chore: ensured README is correctly set for each remote push
 - Refactored logging function in maiass.sh
 - refactor: modified logthis function to store debug messages in a variable
 - comment: added shellcheck directive to disable specific warning
