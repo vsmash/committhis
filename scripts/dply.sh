@@ -147,21 +147,19 @@ push_to_aicommit() {
 }
 
 push_version_tag_to_aicommit() {
-  local version_tag
-
-  # Extract version from package.json (assumes same directory)
-  version_tag="v$(grep -m1 '"version"' package.json | sed -E 's/[^0-9]*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')"
+  echo -e "${BGreen}🏷️  Finding latest version tag...${Color_Off}"
+  version_tag=$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
 
   if [[ -z "$version_tag" ]]; then
-    echo -e "${BRed}❌ Could not determine version tag from package.json.${Color_Off}"
+    echo -e "${BRed}❌ No suitable version tag found.${Color_Off}"
     return 1
   fi
 
   if git rev-parse "$version_tag" >/dev/null 2>&1; then
-    echo -e "${BGreen}🏷️  Pushing tag ${version_tag} to aicommit...${Color_Off}"
+    echo -e "${BGreen}🚀 Pushing tag ${version_tag} to aicommit...${Color_Off}"
     git push aicommit "$version_tag"
   else
-    echo -e "${BRed}❌ Local tag ${version_tag} not found. Has MAIASS created it yet?${Color_Off}"
+    echo -e "${BRed}❌ Tag ${version_tag} not found locally. Has it been created yet?${Color_Off}"
     return 1
   fi
 }
