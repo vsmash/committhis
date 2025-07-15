@@ -1,200 +1,133 @@
-# 🫏 MAIASS v4.8.15
-## Modular AI-Assisted Semantic Savant
+# 🤖 AICommit
+
+**AICommit** is a streamlined AI-assisted Git commit message tool, built for speed and semantic clarity. It uses OpenAI to analyze your changes and generate intelligent, well-formatted commit messages — so you can stay focused on writing code, not prose.
+
+> 🧠 Derived from the full-featured [MAIASS](https://github.com/vsmash/maiass) script, AICommit is stripped down to do one thing extremely well: suggest commit messages based on your code diff.
 
 ---
 
-<div align="center">
+## 🚀 Features
 
-### 👩‍💻 Are you tired of playing translator between code and English?
+- 🔍 Analyzes your staged changes
+- 🧠 Uses OpenAI (GPT-4o by default) to suggest commit messages
+- ✍️ Outputs messages in configurable styles:
+    - `bullet` (default)
+    - `conventional`
+    - `simple`
+    - Custom prompt support
+- ⌨️ Supports multi-line editing before committing
+- 🧩 Works in any Git repo — just drop it in
 
-### 🧑‍💼 Are you sick of opening a repo and finding 20 commits named “fix”?
+---
 
-### 💼 Are you sick of your suits and marketroids wondering what your team did last sprint, or even what a sprint is?
+## 🛠 Installation
 
-### 🌟 You deserve structure.
-### 🚀 You deserve changelogs. 
-___
-### AI Commit Messages 
-### Automated Changelogs * Versioning 
-### 🫏 YOU can get it all from MAIASS
-#### You want MAIASS
-#### You deserve MAIASS
-Deep down in places you don’t talk about at parties, you *knead MAIASS*
+You can install `aicommit` via Homebrew:
 
-You can't beat **MAIASS**
-
-___
-</div>
-
-**MAIASS** (Modular AI-Assisted Semantic Savant) is an intelligent Git workflow automation script that streamlines version management, changelog generation, and deployment processes with optional AI-powered commit message suggestions.
-
-## Key Features
-
-- **Intelligent Version Management**: Automatic semantic versioning with support for multiple file formats
-- **AI-Powered Commit Messages**: Optional OpenAI integration for intelligent commit message generation
-- **Automated Changelog Generation**: Keep your project history organized and professional
-- **Multi-Platform Git Integration**: Works with GitHub, Bitbucket, and any Git repository
-- **Flexible Workflow Support**: Adapts to Git Flow, GitHub Flow, or custom branching strategies
-- **Pull Request Automation**: Automatic PR URL generation and browser integration
-- **Jira Integration**: Automatic ticket detection and inclusion in commits
-- **Cross-Platform Compatibility**: macOS, Linux, and Windows (WSL/Git Bash)
-
-## Quick Start
-
-### Installation
-
-**Homebrew (Recommended)**:
 ```bash
-brew tap vsmash/homebrew-maiass
-brew install maiass
+brew tap vsmash/aicommit
+brew install aicommit
 ```
 
-**Manual Installation**:
+Or manually:
+
 ```bash
-git clone https://github.com/vsmash/maiass.git
-cd maiass && ./install.sh
+curl -o /usr/local/bin/aicommit https://raw.githubusercontent.com/vsmash/aicommit/main/aicommit.sh
+chmod +x /usr/local/bin/aicommit
 ```
 
-This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`) and `aicommit.sh` (symlinked as `aicommit`) to your `~/.local/bin` directory if present.
+---
 
-### Basic Usage
+## 🧪 Usage
 
 ```bash
-# Patch version bump (1.2.3 → 1.2.4)
-maiass
-
-# Use AI-powered commit message tool
-# (requires OpenAI API key and aicommit.sh installed)
 aicommit
-
-# Minor version bump (1.2.3 → 1.3.0)
-maiass minor
-
-# Major version bump (1.2.3 → 2.0.0)
-maiass major
-
-# Set specific version
-maiass 2.1.0
 ```
 
-### AI-Powered Commit Messages
+AICommit will:
 
-```bash
-# Set up OpenAI integration
-export MAIASS_OPENAI_TOKEN="your_api_key"
-export MAIASS_OPENAI_MODE="ask"
+1. Detect your staged changes
+2. Ask if you want AI to suggest a commit message
+3. Display the message
+4. Let you accept, reject, or edit it
+5. Commit your changes
 
-# MAIASS will now suggest intelligent commit messages
-maiass patch
-```
-
-## Documentation
-
-| Topic | Description |
-|-------|-------------|
-| **[Installation Guide](docs/installation.md)** | Detailed installation instructions and prerequisites |
-| **[Configuration](docs/configuration.md)** | Environment variables and project setup |
-| **[AI Integration](docs/ai-integration.md)** | OpenAI setup and AI-powered features |
-| **[Version Management](docs/versioning.md)** | Version file formats and semantic versioning |
-| **[Pull Requests](docs/prs.md)** | GitHub/Bitbucket integration and workflows |
-| **[Advanced Usage](docs/advanced.md)** | Complex workflows and enterprise features |
-| **[Changelog Management](docs/changelogging.md)** | Automatic changelog generation and formatting |
-| **[FAQ](docs/faq.md)** | Frequently asked questions and common scenarios |
-| **[Troubleshooting](docs/troubleshooting.md)** | Common issues and debugging guide |
-
-## 🎯 What Makes MAIASS Special?
-
-### Intelligent Automation
-- **Smart Version Detection**: Automatically finds and updates version files in any format
-- **Context-Aware AI**: Analyzes your code changes to suggest meaningful commit messages
-- **Adaptive Workflows**: Works with your existing Git branching strategy
-
-### Developer Experience
-- **Zero Configuration**: Works out of the box with sensible defaults
-- **Flexible Setup**: Customize everything through environment variables
-- **Rich Feedback**: Clear, actionable output with optional verbose modes
-
-### Enterprise Ready
-- **Security First**: API keys never stored in repositories
-- **CI/CD Integration**: Perfect for automated deployment pipelines
-- **Team Collaboration**: Consistent workflows across development teams
-
-## 🔧 Supported Technologies
-
-### Version File Formats
-- **package.json** (Node.js/npm projects)
-- **VERSION** files (plain text)
-- **Custom formats** (WordPress themes, PHP projects, etc.)
-- **Git tags only** (for projects without version files)
-
-### Git Platforms
-- **GitHub** (public and private repositories)
-- **Bitbucket** (Cloud and Server)
-- **Any Git host** (core features work universally)
-
-### AI Models
-- **GPT-4o** (recommended for complex projects)
-- **GPT-4** (balanced performance and cost)
-- **GPT-3.5-turbo** (fast and economical)
-
-## 🌍 Platform Support
-
-| Platform | Status     | Notes |
-|----------|------------|-------|
-| **macOS** | ✅ Fully Supported | Native Homebrew installation |
-| **Linux** | ✅ Fully Supported | All distributions |
-| **Windows WSL** | ⚠️ Untested| Recommended for Windows users |
-| **Git Bash** | ⚠️ Limited Testing | Basic functionality works |
-
-## 🤝 Contributing
-
-We welcome contributions! Whether it's:
-- 🐛 **Bug reports** and feature requests
-- 📖 **Documentation** improvements
-- 🔧 **Code contributions** and enhancements
-- 💡 **Ideas** for new features
-
-Check out our [contribution guidelines](CONTRIBUTING.md) to get started.
-
-## 📄 License
-
-MAIASS is released under the [GNU General Public License v3.0](LICENSE). Free and open source software.
-
-## 🔗 Links
-
-- **[GitHub Repository](https://github.com/vsmash/maiass)**
-- **[Issue Tracker](https://github.com/vsmash/maiass/issues)**
-- **[Discussions](https://github.com/vsmash/maiass/discussions)**
-- **[Homebrew Formula](https://github.com/vsmash/homebrew-maiass)**
+> It will **not** bump versions, merge branches, or update changelogs.
 
 ---
 
-**Ready to streamline your Git workflow?** Install MAIASS today and experience intelligent version management with AI-powered automation.
+## ⚙️ Configuration
+
+Set your OpenAI key and preferences via environment variables or a `.env` file in the repo root:
 
 ```bash
-brew tap vsmash/homebrew-maiass && brew install maiass
+export MAIASS_OPENAI_TOKEN=your-api-key
+export MAIASS_OPENAI_MODE=ask
+export MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet
 ```
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+Alternatively, create a `.env` file:
 
-## 🆘 Support
+```dotenv
+MAIASS_OPENAI_TOKEN=your-api-key
+MAIASS_OPENAI_MODE=autosuggest
+MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=conventional
+```
 
-- 📖 **Documentation**: Check this README and `maiass --help`
-- 🐛 **Issues**: Report bugs via GitHub Issues (include OS/shell info)
-- 💡 **Feature Requests**: Submit enhancement ideas
-- 🤔 **Questions**: Start a GitHub Discussion
-- 🪟 **Windows Users**: Use WSL or Git Bash for compatibility
+---
 
-## 🙏 Acknowledgments
+## ✨ Prompt Customization
 
-- OpenAI for GPT integration
-- Git community for workflow inspiration
-- All contributors and testers
+Want full control over the AI prompt?
+
+Create a `.maiass.prompt` file:
+
+```txt
+Write a git commit message summarizing the following changes in conventional commit format. Use past tense.
+
+Git diff:
+$git_diff
+```
+
+---
+
+## 🔐 OpenAI Access
+
+You'll need an OpenAI API key. You can generate one from https://platform.openai.com/account/api-keys and export it as:
+
+```bash
+export MAIASS_OPENAI_TOKEN=sk-...
+```
+
+---
+
+## 🧼 Clean Design Philosophy
+
+This version does **not**:
+- Handle changelogs
+- Manage versions
+- Create or merge branches
+- Require Git Flow
+
+It's a focused tool for intelligent commits — nothing more.
+
+---
+
+## 🧬 Related
+
+- [MAIASS](https://github.com/vsmash/maiass) – the full-fat version with version management, changelogs, and release flow automation.
+- [aicommit](https://github.com/vsmash/aicommit) – this repo.
+
+---
+
+## 📖 License
+
+Licensed under the [GNU GPL v3.0](LICENSE).
 
 ---
 
 **Made with ❤️ for my fellow developers who are also crap at writing commit messages and mangaging versioning and changelogs**
-## 💸 Support MAIASS
+## 💸 Support my work
 
 When this tool saves your ass, consider sponsoring mine:
 
