@@ -1,6 +1,8 @@
-## 4.8.29
+## 4.8.30
 15 July 2025
 
+- Renamed README file for consistency
+- renamed: changed 'README.aicommit.md' to 'README.committhis.md' in the docs directory
 - Rename 'aicommit' to 'committhis'
 - refactor: renamed 'aicommit' to 'committhis' across files
 - docs: updated README and installation instructions to reflect new name
