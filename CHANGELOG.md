@@ -1,12 +1,19 @@
-## 4.8.28
+## 4.8.29
 15 July 2025
 
+- Rename 'aicommit' to 'committhis'
+- refactor: renamed 'aicommit' to 'committhis' across files
+- docs: updated README and installation instructions to reflect new name
+- feat: added `committhis.sh` script symlinked as `committhis`
+- fix: updated help and version flags to use `committhis` identifier
+- chore: improved installation script to check and install `committhis.sh`
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Cleaned up deployment script
 - fix: removed duplicate shebang line
 - fix: corrected usage instruction filename in comments
 - # Conflicts:
 - #	README.md
-- Revert README to MAIASS
 - Refactored deployment script with enhanced messaging
 - feat: added functions for printing info, success, warning, and error messages
 - refactor: set default GitHub repository in release creation
