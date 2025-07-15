@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 # ------------------------------------------------------------------------
 # Dual Remote Push Script for MAIASS / AICommit
 #
@@ -23,7 +22,7 @@
 # - `docs/README.maiass.md` and `docs/README.aicommit.md`
 #
 # Usage:
-#   bash scripts/push-dual.sh
+#   bash scripts/dply.sh
 #
 # Do not include this script in AICommit distributions.
 # ------------------------------------------------------------------------
