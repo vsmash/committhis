@@ -17,9 +17,9 @@ INSTALL_DIR="$HOME/.local/bin"
 SCRIPT_NAME="maiass"
 SCRIPT_FILE="maiass.sh"
 
-# aicommit install variables
-AICOMMIT_SCRIPT_NAME="aicommit.sh"
-AICOMMIT_SYMLINK="aicommit"
+# committhis install variables
+committhis_SCRIPT_NAME="committhis.sh"
+committhis_SYMLINK="committhis"
 
 print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
@@ -102,15 +102,15 @@ install_script() {
 
     print_success "Installed $SCRIPT_NAME to $INSTALL_DIR"
 
-    # --- aicommit.sh install ---
-    if [[ -f "$AICOMMIT_SCRIPT_NAME" ]]; then
-        print_info "Installing $AICOMMIT_SCRIPT_NAME to $INSTALL_DIR/$AICOMMIT_SCRIPT_NAME"
-        cp "$AICOMMIT_SCRIPT_NAME" "$INSTALL_DIR/$AICOMMIT_SCRIPT_NAME"
-        chmod +x "$INSTALL_DIR/$AICOMMIT_SCRIPT_NAME"
-        ln -sf "$INSTALL_DIR/$AICOMMIT_SCRIPT_NAME" "$INSTALL_DIR/$AICOMMIT_SYMLINK"
-        print_success "Installed $AICOMMIT_SCRIPT_NAME and symlinked as $AICOMMIT_SYMLINK"
+    # --- committhis.sh install ---
+    if [[ -f "$committhis_SCRIPT_NAME" ]]; then
+        print_info "Installing $committhis_SCRIPT_NAME to $INSTALL_DIR/$committhis_SCRIPT_NAME"
+        cp "$committhis_SCRIPT_NAME" "$INSTALL_DIR/$committhis_SCRIPT_NAME"
+        chmod +x "$INSTALL_DIR/$committhis_SCRIPT_NAME"
+        ln -sf "$INSTALL_DIR/$committhis_SCRIPT_NAME" "$INSTALL_DIR/$committhis_SYMLINK"
+        print_success "Installed $committhis_SCRIPT_NAME and symlinked as $committhis_SYMLINK"
     else
-        print_warning "$AICOMMIT_SCRIPT_NAME not found in current directory, skipping install."
+        print_warning "$committhis_SCRIPT_NAME not found in current directory, skipping install."
     fi
 }
 

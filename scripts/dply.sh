@@ -1,30 +1,30 @@
 #!/bin/bash
 # ------------------------------------------------------------------------
-# Dual Remote Push Script for MAIASS / AICommit
+# Dual Remote Push Script for MAIASS / committhis
 #
 # This script automates the process of pushing the same codebase to two
-# differently branded Git remotes: `maiass` (main repo) and `aicommit`
+# differently branded Git remotes: `maiass` (main repo) and `committhis`
 # (commit-only variant). It ensures the correct README is used for each
 # brand and maintains a clean working tree throughout the process.
 #
 # ⚠ This script is intended for maintainers of the project only.
-#    It is not part of the functionality of MAIASS or AICommit themselves.
+#    It is not part of the functionality of MAIASS or committhis themselves.
 #
 # Features:
 # - Merges `staging` into `main`
 # - Ensures correct `README.md` for each target brand
-# - Pushes to `origin` (MAIASS) and `ai` (AICommit) in sequence
+# - Pushes to `origin` (MAIASS) and `ai` (committhis) in sequence
 # - Stashes local changes and restores original branch after push
 #
 # Requires:
-# - Two configured remotes: `origin` (MAIASS) and `ai` (AICommit)
+# - Two configured remotes: `origin` (MAIASS) and `ai` (committhis)
 # - `main` and optionally `staging` branches
-# - `docs/README.maiass.md` and `docs/README.aicommit.md`
+# - `docs/README.maiass.md` and `docs/README.committhis.md`
 #
 # Usage:
 #   bash scripts/dply.sh
 #
-# Do not include this script in AICommit distributions.
+# Do not include this script in committhis distributions.
 # ------------------------------------------------------------------------
 
 set -e
@@ -51,15 +51,15 @@ prepare_maiass_readme() {
   fi
 }
 
-# --- Copy correct README before pushing to aicommit ---
-prepare_aicommit_readme() {
-  echo -e "${BGreen}📄 Copying AICOMMIT README...${Color_Off}"
-  cp docs/README.aicommit.md README.md
+# --- Copy correct README before pushing to committhis ---
+prepare_committhis_readme() {
+  echo -e "${BGreen}📄 Copying committhis README...${Color_Off}"
+  cp docs/README.committhis.md README.md
   if ! git diff --quiet README.md; then
     git add README.md
-    git commit -m "Temporary: swap README for AICommit push"
+    git commit -m "Temporary: swap README for committhis push"
   else
-    echo -e "${BYellow}ℹ️ AICOMMIT README already in place. No commit needed.${Color_Off}"
+    echo -e "${BYellow}ℹ️ committhis README already in place. No commit needed.${Color_Off}"
   fi
 }
 
@@ -71,7 +71,7 @@ with_clean_worktree () {
   local stash_needed=false
   if [[ -n "$(git status --porcelain)" ]]; then
     echo -e "${BYellow}🔒 Stashing local changes...${Color_Off}"
-    git stash push -u -m "auto-stash for maiass/aicommit push"
+    git stash push -u -m "auto-stash for maiass/committhis push"
     stash_needed=true
   fi
 
@@ -143,22 +143,22 @@ merge_staging_to_main_and_push() {
     fi
 }
 
-push_to_aicommit() {
+push_to_committhis() {
   ensure_on_main_or_fail
 
-  prepare_aicommit_readme
+  prepare_committhis_readme
   git add README.md
-  git commit -m "Temporary: swap README for AICommit push" || true
+  git commit -m "Temporary: swap README for committhis push" || true
 
-  echo -e "${BYellow}🧹 Removing scripts/dply.sh from staged files before AICommit push...${Color_Off}"
+  echo -e "${BYellow}🧹 Removing scripts/dply.sh from staged files before committhis push...${Color_Off}"
   git restore --staged scripts/dply.sh || true
 
-  echo -e "${BGreen}🚀 Pushing to AICommit...${Color_Off}"
-  git push aicommit main
+  echo -e "${BGreen}🚀 Pushing to committhis...${Color_Off}"
+  git push committhis main
 
   echo -e "${BYellow}🧼 Restoring dply.sh to working directory...${Color_Off}"
   git restore scripts/dply.sh || true
-  push_version_tag_to_aicommit
+  push_version_tag_to_committhis
   version_tag=$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
 
     printf "Create GitHub release for v$version_tag? (y/N): "
@@ -168,11 +168,11 @@ push_to_aicommit() {
         print_error "GitHub CLI (gh) not found. Run: brew install gh"
         exit 1
       fi
-      gh repo set-default vsmash/aicommit
+      gh repo set-default vsmash/committhis
       gh release create "$version_tag" \
         --title "$version_tag" \
         --notes "Automated release for version $version_tag" \
-        --repo "vsmash/aicommit" && print_success "Release created." || print_error "Release failed."
+        --repo "vsmash/committhis" && print_success "Release created." || print_error "Release failed."
     else
       print_info "Skipped release."
     fi
@@ -183,7 +183,7 @@ push_to_aicommit() {
   git commit -m "Revert README to MAIASS" || true
 }
 
-push_version_tag_to_aicommit() {
+push_version_tag_to_committhis() {
   echo -e "${BGreen}🏷️  Finding latest version tag...${Color_Off}"
   version_tag=$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
 
@@ -193,8 +193,8 @@ push_version_tag_to_aicommit() {
   fi
 
   if git rev-parse "$version_tag" >/dev/null 2>&1; then
-    echo -e "${BGreen}🚀 Pushing tag ${version_tag} to aicommit...${Color_Off}"
-    git push aicommit "$version_tag"
+    echo -e "${BGreen}🚀 Pushing tag ${version_tag} to committhis...${Color_Off}"
+    git push committhis "$version_tag"
   else
     echo -e "${BRed}❌ Tag ${version_tag} not found locally. Has it been created yet?${Color_Off}"
     return 1
@@ -212,13 +212,13 @@ full_push_flow() {
     local stash_needed=false
     if [[ -n "$(git status --porcelain)" ]]; then
       echo -e "${BYellow}🔒 Stashing local changes...${Color_Off}"
-      git stash push -u -m "auto-stash for maiass/aicommit push"
+      git stash push -u -m "auto-stash for maiass/committhis push"
       stash_needed=true
     fi
 
     git checkout main
     merge_staging_to_main_and_push
-    push_to_aicommit
+    push_to_committhis
 
     echo -e "${BYellow}🔄 Returning to original branch: ${orig_branch}${Color_Off}"
     git checkout "$orig_branch" >/dev/null 2>&1

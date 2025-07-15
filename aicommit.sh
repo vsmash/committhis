@@ -2,11 +2,11 @@
 for arg in "$@"; do
   case $arg in
     -h|--help)
-      maiass --aicommit-help
+      maiass --committhis-help
       exit 0
       ;;
     -v|--version)
-      maiass --aicommit-version      # Try to read version from package.json in script directory
+      maiass --committhis-version      # Try to read version from package.json in script directory
       exit 0
       ;;
 

@@ -2479,8 +2479,8 @@ EOF
 }
 
 
-# Function to display help information for AICommit
-show_help_aicommit() {
+# Function to display help information for committhis
+show_help_committhis() {
                       local BBlue='\033[1;34m'
                       local BWhite='\033[1;37m'
                       local BGreen='\033[1;32m'
@@ -2488,10 +2488,10 @@ show_help_aicommit() {
                       local BCyan='\033[1;36m'
                       local Color_Off='\033[0m'
 
-                      echo -e "${BBlue}AICommit - AI-powered Git commit message generator${Color_Off}"
+                      echo -e "${BBlue}committhis - AI-powered Git commit message generator${Color_Off}"
                       echo
                       echo -e "${BWhite}Usage:${Color_Off}"
-                      echo -e "  ${BGreen}aicommit${Color_Off}"
+                      echo -e "  ${BGreen}committhis${Color_Off}"
                       echo
                       echo -e "${BWhite}Environment Configuration:${Color_Off}"
                       echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your OpenAI API token (required)"
@@ -2504,7 +2504,7 @@ show_help_aicommit() {
                       echo -e "  ${BGreen}.env${Color_Off}                     Can define the variables above"
                       echo -e "  ${BGreen}.maiass.prompt${Color_Off}           Custom AI prompt override"
                       echo
-                      echo -e "AICommit analyzes your staged changes and suggests an intelligent commit message."
+                      echo -e "committhis analyzes your staged changes and suggests an intelligent commit message."
                       echo -e "You can accept, reject, or edit it before committing."
                       echo
                       echo -e "This script does not manage versions, changelogs, or branches."
@@ -2525,11 +2525,11 @@ for arg in "$@"; do
       version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
       exit 0
       ;;
-    -aihelp|--aicommit-help)
-      show_help_aicommit
+    -aihelp|--committhis-help)
+      show_help_committhis
       exit 0
       ;;
-    -aicv|--aicommit-version)
+    -aicv|--committhis-version)
       # Try to read version from package.json in script directory
       version="Unknown"
       # get the version from line 3 of this very file
@@ -2545,7 +2545,7 @@ for arg in "$@"; do
       ;;
     -ai-commits-only)
       export ai_commits_only=true
-      export brand="AICommit"
+      export brand="committhis"
       ;;
   esac
 done

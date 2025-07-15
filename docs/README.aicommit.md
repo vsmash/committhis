@@ -1,8 +1,8 @@
-# 🤖 AICommit
+# 🤖 committhis
 
-**AICommit** is a streamlined AI-assisted Git commit message tool, built for speed and semantic clarity. It uses OpenAI to analyze your changes and generate intelligent, well-formatted commit messages — so you can stay focused on writing code, not prose.
+**committhis** is a streamlined AI-assisted Git commit message tool, built for speed and semantic clarity. It uses OpenAI to analyze your changes and generate intelligent, well-formatted commit messages — so you can stay focused on writing code, not prose.
 
-> 🧠 Derived from the full-featured [MAIASS](https://github.com/vsmash/maiass) script, AICommit is stripped down to do one thing extremely well: suggest commit messages based on your code diff.
+> 🧠 Derived from the full-featured [MAIASS](https://github.com/vsmash/maiass) script, committhis is stripped down to do one thing extremely well: suggest commit messages based on your code diff.
 
 ---
 
@@ -22,18 +22,18 @@
 
 ## 🛠 Installation
 
-You can install `aicommit` via Homebrew:
+You can install `committhis` via Homebrew:
 
 ```bash
-brew tap vsmash/aicommit
-brew install aicommit
+brew tap vsmash/committhis
+brew install committhis
 ```
 
 Or manually:
 
 ```bash
-curl -o /usr/local/bin/aicommit https://raw.githubusercontent.com/vsmash/aicommit/main/aicommit.sh
-chmod +x /usr/local/bin/aicommit
+curl -o /usr/local/bin/committhis https://raw.githubusercontent.com/vsmash/committhis/main/committhis.sh
+chmod +x /usr/local/bin/committhis
 ```
 
 ---
@@ -41,10 +41,10 @@ chmod +x /usr/local/bin/aicommit
 ## 🧪 Usage
 
 ```bash
-aicommit
+committhis
 ```
 
-AICommit will:
+committhis will:
 
 1. Detect your staged changes
 2. Ask if you want AI to suggest a commit message
@@ -116,7 +116,7 @@ It's a focused tool for intelligent commits — nothing more.
 ## 🧬 Related
 
 - [MAIASS](https://github.com/vsmash/maiass) – the full-fat version with version management, changelogs, and release flow automation.
-- [aicommit](https://github.com/vsmash/aicommit) – this repo.
+- [committhis](https://github.com/vsmash/committhis) – this repo.
 
 ---
 

@@ -55,7 +55,7 @@ git clone https://github.com/vsmash/maiass.git
 cd maiass && ./install.sh
 ```
 
-This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`) and `aicommit.sh` (symlinked as `aicommit`) to your `~/.local/bin` directory if present.
+This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`) and `committhis.sh` (symlinked as `committhis`) to your `~/.local/bin` directory if present.
 
 ### Basic Usage
 
@@ -64,8 +64,8 @@ This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`)
 maiass
 
 # Use AI-powered commit message tool
-# (requires OpenAI API key and aicommit.sh installed)
-aicommit
+# (requires OpenAI API key and committhis.sh installed)
+committhis
 
 # Minor version bump (1.2.3 → 1.3.0)
 maiass minor

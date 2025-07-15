@@ -15,20 +15,20 @@
 - feat: implemented automated GitHub release creation in `dply.sh`
 - chore: added user confirmation for creating releases
 - feat: included version tagging and release notes generation
-- Temporary: swap README for AICommit push
+- Temporary: swap README for committhis push
 - Add sponsorship section to README
 - docs: added a new section for sponsorship support in README
 - docs: included GitHub Sponsors and Ko-fi links
 - Update Homebrew tap in README
-- docs: changed Homebrew tap from `vsmash/tools` to `vsmash/aicommit` in README
+- docs: changed Homebrew tap from `vsmash/tools` to `vsmash/committhis` in README
 - Add version option to script
-- feat: added `-v`/`--version` flag to display script version using `maiass --aicommit-version`
+- feat: added `-v`/`--version` flag to display script version using `maiass --committhis-version`
 - Refactored version tag extraction in deployment script
 - refactor: changed version tag extraction to use git tags instead of package.json
 - style: updated echo messages for clarity and consistency
-- Add push_version_tag_to_aicommit function
-- feat: implemented push_version_tag_to_aicommit for version tagging
-- refactor: integrated version tag pushing in push_to_aicommit function
+- Add push_version_tag_to_committhis function
+- feat: implemented push_version_tag_to_committhis for version tagging
+- refactor: integrated version tag pushing in push_to_committhis function
 - Renamed and updated script references
 - chore: renamed 'deploy.sh' to 'dply.sh'
 - fix: updated script references from 'deploy.sh' to 'dply.sh' in deployment script
@@ -36,18 +36,18 @@
 - fix: updated echo statement to reflect correct script path
 - fix: changed git restore command to target scripts/deploy.sh instead of scripts/push-dual.sh
 - Corrected git remote name in deploy script
-- fix: changed remote name from 'ai' to 'aicommit' in deploy.sh
+- fix: changed remote name from 'ai' to 'committhis' in deploy.sh
 - Refactored deploy script for better worktree management
 - refactor: adjusted function signature spacing for consistency
 - refactor: reorganized with_clean_worktree logic within full_push_flow
 - chore: added comments for clarity in merge operations
 - Enhance deploy script for README management and branch merging
-- feat: added conditional commits for README changes in MAIASS and AICOMMIT
+- feat: added conditional commits for README changes in MAIASS and committhis
 - feat: implemented automatic merge of main into non-main branches on checkout
 - fix: ensured proper handling of unchanged README files to avoid unnecessary commits
 - Add dual remote push script and update README
 - docs: updated README to version 4.8.15 and adjusted headings
-- feat(scripts): added deploy.sh for dual remote push to MAIASS and AICommit
+- feat(scripts): added deploy.sh for dual remote push to MAIASS and committhis
 - chore: ensured README is correctly set for each remote push
 - Refactored logging function in maiass.sh
 - refactor: modified logthis function to store debug messages in a variable
@@ -59,25 +59,25 @@
 - fix: replaced hardcoded branch name with variable `brand`
 - Refactored branding and added AI commit option
 - feat: added brand environment variable with default value 'MAIASS'
-- feat: implemented '-ai-commits-only' option to set brand to 'AICommit'
+- feat: implemented '-ai-commits-only' option to set brand to 'committhis'
 - refactor: replaced hardcoded 'MAIASS' with dynamic brand variable in messages
 - Update messaging in maiass.sh script
 - style: emphasized "stage and commit" text in user prompt
-- refactor: changed "MAIASS" to "aicommit" in final message
+- refactor: changed "MAIASS" to "committhis" in final message
 - Refactored commit process in checkUncommittedChanges function
 - refactor: removed redundant remote push logic
 - style: streamlined commit handling in maiass.sh
 - Enhance AI commit script with help and commit handling improvements
-- feat: added argument parsing for help flag in `aicommit.sh`
+- feat: added argument parsing for help flag in `committhis.sh`
 - feat: added new functions `has_staged_changes` and `has_uncommitted_changes` in `maiass.sh`
-- feat: added `show_help_aicommit` function for displaying AICommit help information
+- feat: added `show_help_committhis` function for displaying committhis help information
 - refactor: improved commit handling logic for staged and unstaged changes
 - fix: corrected variable initialization of `debug_mode` and `autopush_commits`
 - fix: ensured proper remote push handling with user confirmation
 - fix: resolved accidental duplication in client variable initialization
 - style: removed unnecessary blank lines for cleaner code structure
-- Add README files for AICommit and MAIASS
-- docs: created README for AICommit detailing features, installation, usage, and configuration
+- Add README files for committhis and MAIASS
+- docs: created README for committhis detailing features, installation, usage, and configuration
 - docs: added README for MAIASS covering features, installation, usage, and documentation links
 - Copyright and License check
 
@@ -95,10 +95,10 @@
 - Cleaned up CHANGELOG.md by removing duplicate entries
 - chore: removed duplicate changelog entries for project and client defaults
 - Add AI commit tool and update installation process
-- feat: introduced `aicommit.sh` script symlinked as `aicommit`
+- feat: introduced `committhis.sh` script symlinked as `committhis`
 - docs: updated README and installation docs for AI commit usage
 - fix: ensured symlinks in install.sh use force option to avoid errors
-- chore: improved installation script to check and install `aicommit.sh` if present
+- chore: improved installation script to check and install `committhis.sh` if present
 - Refactored logging functionality to use a helper function
 - refactor: added `logthis` function for centralized logging
 - refactor: replaced multiple `devlog.sh` calls with `logthis` for consistency
