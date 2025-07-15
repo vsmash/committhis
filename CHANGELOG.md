@@ -1,10 +1,13 @@
-## 4.8.18
+## 4.8.19
 15 July 2025
 
+- Corrected script path in deploy process
+- fix: updated echo statement to reflect correct script path
+- fix: changed git restore command to target scripts/deploy.sh instead of scripts/push-dual.sh
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Corrected git remote name in deploy script
 - fix: changed remote name from 'ai' to 'aicommit' in deploy.sh
-- Temporary: swap README for AICommit push
-- Revert README to MAIASS
 - Refactored deploy script for better worktree management
 - refactor: adjusted function signature spacing for consistency
 - refactor: reorganized with_clean_worktree logic within full_push_flow
