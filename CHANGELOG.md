@@ -1,11 +1,13 @@
-## 4.8.22
+## 4.8.23
 15 July 2025
 
+- Add version option to script
+- feat: added `-v`/`--version` flag to display script version using `maiass --aicommit-version`
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Refactored version tag extraction in deployment script
 - refactor: changed version tag extraction to use git tags instead of package.json
 - style: updated echo messages for clarity and consistency
-- Temporary: swap README for AICommit push
-- Revert README to MAIASS
 - Add push_version_tag_to_aicommit function
 - feat: implemented push_version_tag_to_aicommit for version tagging
 - refactor: integrated version tag pushing in push_to_aicommit function
