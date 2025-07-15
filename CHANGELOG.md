@@ -1,11 +1,14 @@
-## 4.8.19
+## 4.8.20
 15 July 2025
 
+- Renamed and updated script references
+- chore: renamed 'deploy.sh' to 'dply.sh'
+- fix: updated script references from 'deploy.sh' to 'dply.sh' in deployment script
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Corrected script path in deploy process
 - fix: updated echo statement to reflect correct script path
 - fix: changed git restore command to target scripts/deploy.sh instead of scripts/push-dual.sh
-- Revert README to MAIASS
-- Temporary: swap README for AICommit push
 - Corrected git remote name in deploy script
 - fix: changed remote name from 'ai' to 'aicommit' in deploy.sh
 - Refactored deploy script for better worktree management
