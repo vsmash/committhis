@@ -25,7 +25,7 @@
 You can install `aicommit` via Homebrew:
 
 ```bash
-brew tap vsmash/tools
+brew tap vsmash/aicommit
 brew install aicommit
 ```
 
