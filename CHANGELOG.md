@@ -1,6 +1,12 @@
-## 4.8.27
+## 4.8.28
 15 July 2025
 
+- Cleaned up deployment script
+- fix: removed duplicate shebang line
+- fix: corrected usage instruction filename in comments
+- # Conflicts:
+- #	README.md
+- Revert README to MAIASS
 - Refactored deployment script with enhanced messaging
 - feat: added functions for printing info, success, warning, and error messages
 - refactor: set default GitHub repository in release creation
@@ -9,7 +15,6 @@
 - feat: implemented automated GitHub release creation in `dply.sh`
 - chore: added user confirmation for creating releases
 - feat: included version tagging and release notes generation
-- Revert README to MAIASS
 - Temporary: swap README for AICommit push
 - Add sponsorship section to README
 - docs: added a new section for sponsorship support in README
