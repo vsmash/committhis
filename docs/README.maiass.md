@@ -1,4 +1,4 @@
-# 🫏 MAIASS v4.8.14
+# 🫏 MAIASS v4.8.15
 ## Modular AI-Assisted Semantic Savant
 
 ---
@@ -14,9 +14,9 @@
 ### 🌟 You deserve structure.
 ### 🚀 You deserve changelogs. 
 ___
-## AI Commit Messages 
-## Automated Changelogs * Versioning 
-## 🫏 YOU can get it all from MAIASS
+### AI Commit Messages 
+### Automated Changelogs * Versioning 
+### 🫏 YOU can get it all from MAIASS
 #### You want MAIASS
 #### You deserve MAIASS
 Deep down in places you don’t talk about at parties, you *knead MAIASS*
@@ -25,7 +25,7 @@ You can't beat **MAIASS**
 
 ___
 </div>
----
+
 **MAIASS** (Modular AI-Assisted Semantic Savant) is an intelligent Git workflow automation script that streamlines version management, changelog generation, and deployment processes with optional AI-powered commit message suggestions.
 
 ## Key Features
