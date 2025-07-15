@@ -1,3 +1,38 @@
+## 4.8.15
+15 July 2025
+
+- Refactored logging function in maiass.sh
+- refactor: modified logthis function to store debug messages in a variable
+- comment: added shellcheck directive to disable specific warning
+- Refined README formatting
+- docs: adjusted heading levels for consistency
+- style: removed unnecessary horizontal rule for cleaner layout
+- Corrected brand variable in commit message
+- fix: replaced hardcoded branch name with variable `brand`
+- Refactored branding and added AI commit option
+- feat: added brand environment variable with default value 'MAIASS'
+- feat: implemented '-ai-commits-only' option to set brand to 'AICommit'
+- refactor: replaced hardcoded 'MAIASS' with dynamic brand variable in messages
+- Update messaging in maiass.sh script
+- style: emphasized "stage and commit" text in user prompt
+- refactor: changed "MAIASS" to "aicommit" in final message
+- Refactored commit process in checkUncommittedChanges function
+- refactor: removed redundant remote push logic
+- style: streamlined commit handling in maiass.sh
+- Enhance AI commit script with help and commit handling improvements
+- feat: added argument parsing for help flag in `aicommit.sh`
+- feat: added new functions `has_staged_changes` and `has_uncommitted_changes` in `maiass.sh`
+- feat: added `show_help_aicommit` function for displaying AICommit help information
+- refactor: improved commit handling logic for staged and unstaged changes
+- fix: corrected variable initialization of `debug_mode` and `autopush_commits`
+- fix: ensured proper remote push handling with user confirmation
+- fix: resolved accidental duplication in client variable initialization
+- style: removed unnecessary blank lines for cleaner code structure
+- Add README files for AICommit and MAIASS
+- docs: created README for AICommit detailing features, installation, usage, and configuration
+- docs: added README for MAIASS covering features, installation, usage, and documentation links
+- Copyright and License check
+
 ## 4.8.14
 14 July 2025
 
