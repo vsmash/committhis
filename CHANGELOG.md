@@ -1,11 +1,14 @@
-## 4.8.20
+## 4.8.21
 15 July 2025
 
+- Add push_version_tag_to_aicommit function
+- feat: implemented push_version_tag_to_aicommit for version tagging
+- refactor: integrated version tag pushing in push_to_aicommit function
+- Revert README to MAIASS
+- Temporary: swap README for AICommit push
 - Renamed and updated script references
 - chore: renamed 'deploy.sh' to 'dply.sh'
 - fix: updated script references from 'deploy.sh' to 'dply.sh' in deployment script
-- Revert README to MAIASS
-- Temporary: swap README for AICommit push
 - Corrected script path in deploy process
 - fix: updated echo statement to reflect correct script path
 - fix: changed git restore command to target scripts/deploy.sh instead of scripts/push-dual.sh
