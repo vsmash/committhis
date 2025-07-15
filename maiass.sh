@@ -37,6 +37,7 @@ function logthis(){
 # Initialize debug mode early so it's available throughout the script
 export debug_mode="${MAIASS_DEBUG:=false}"
 export autopush_commits="${MAIASS_AUTOPUSh_COMMITS:=false}"
+export brand="${MAIASS_BRAND:=MAIASS}"
 # Initialize brevity and logging configuration
 export verbosity_level="${MAIASS_VERBOSITY:=brief}"
 export enable_logging="${MAIASS_LOGGING:=false}"
@@ -1688,12 +1689,12 @@ function checkUncommittedChanges(){
               handle_staged_commit
             fi
           if [[ $ai_commits_only == 'true' ]]; then
-            echo -e "${BGreen}Commit process completed. Thank you for using MAIASS.${Color_Off}"
+            echo -e "${BGreen}Commit process completed. Thank you for using $brand.${Color_Off}"
             exit 0
           else
             print_success "Commit process completed."
             print_error "Cannot proceed on release/changelog pipeline with uncommitted changes"
-            print_succsess "Thank you for using MAIASS."
+            print_succsess "Thank you for using $brand."
             exit 1
           fi
       fi
@@ -1702,7 +1703,7 @@ function checkUncommittedChanges(){
       handle_staged_commit
     fi
     if [[ $ai_commits_only == 'true' ]]; then
-      echo -e "${BGreen}No changes found. Thank you for using aicommit.${Color_Off}"
+      echo -e "${BGreen}No changes found. Thank you for using $brand.${Color_Off}"
       exit 0
     fi
   fi
@@ -1992,7 +1993,7 @@ function deployOptions() {
   git checkout "$branch_name"
 
   print_info "All done. You are on branch: ${BWhite}$branch_name${Color_Off}"
-  print_success "Thank you for using MAIASS"
+  print_success "Thank you for using $brand."
 
   # Clean up
   unset GIT_MERGE_AUTOEDIT
@@ -2540,6 +2541,10 @@ for arg in "$@"; do
       ;;
     -co|-c|--commits-only)
       export ai_commits_only=true
+      ;;
+    -ai-commits-only)
+      export ai_commits_only=true
+      export brand="AICommit"
       ;;
   esac
 done
