@@ -1677,7 +1677,7 @@ function checkUncommittedChanges(){
   # if there are uncommitted changes, ask if the user wants to commit them
   if [ -n "$(git status --porcelain)" ]; then
       print_warning "There are uncommitted changes in your working directory"
-      read -n 1 -s -p "$(echo -e ${BYellow}Do you want to stage and commit them? [y/N]${Color_Off} )" REPLY
+      read -n 1 -s -p "$(echo -e ${BYellow}Do you want to ${BRed}stage and commit${BYellow} them? [y/N]${Color_Off} )" REPLY
       echo
       if [[ $REPLY =~ ^[Yy]$ ]]; then
           git add -A
@@ -1702,7 +1702,7 @@ function checkUncommittedChanges(){
       handle_staged_commit
     fi
     if [[ $ai_commits_only == 'true' ]]; then
-      echo -e "${BGreen}No changes found. Thank you for using MAIASS.${Color_Off}"
+      echo -e "${BGreen}No changes found. Thank you for using aicommit.${Color_Off}"
       exit 0
     fi
   fi
