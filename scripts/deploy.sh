@@ -62,7 +62,7 @@ prepare_aicommit_readme() {
 }
 
 # --- Utility: Ensure clean worktree and stash if needed ---
-with_clean_worktree() {
+with_clean_worktree () {
   local orig_branch
   orig_branch=$(git symbolic-ref --short HEAD)
 
@@ -77,13 +77,16 @@ with_clean_worktree() {
 
   echo -e "${BYellow}🔄 Returning to original branch: ${orig_branch}${Color_Off}"
   git checkout "$orig_branch" >/dev/null 2>&1
-    if [[ "$orig_branch" != "main" ]]; then
-      echo -e "${BYellow}🔄 Merging latest main into ${orig_branch}...${Color_Off}"
-      git merge main --no-edit || {
-        echo -e "${BRed}❌ Merge failed on return to ${orig_branch}. Please resolve manually.${Color_Off}"
-        exit 1
-      }
-    fi
+
+  # merge main into original branch, if needed
+  if [[ "$orig_branch" != "main" ]]; then
+    echo -e "${BYellow}🔄 Merging latest main into ${orig_branch}...${Color_Off}"
+    git merge main --no-edit || {
+      echo -e "${BRed}❌ Merge failed on return to ${orig_branch}. Please resolve manually.${Color_Off}"
+      exit 1
+    }
+  fi
+
   if $stash_needed; then
     echo -e "${BYellow}📦 Restoring stashed changes...${Color_Off}"
     git stash pop
@@ -146,11 +149,41 @@ push_to_aicommit() {
 full_push_flow() {
   echo -e "${BGreen}🧠 Performing full push: merge, push, dual-brand...${Color_Off}"
 
-  with_clean_worktree merge_staging_to_main_and_push
-  with_clean_worktree push_to_aicommit
+  with_clean_worktree () {
+    local orig_branch
+    orig_branch=$(git symbolic-ref --short HEAD)
+
+    local stash_needed=false
+    if [[ -n "$(git status --porcelain)" ]]; then
+      echo -e "${BYellow}🔒 Stashing local changes...${Color_Off}"
+      git stash push -u -m "auto-stash for maiass/aicommit push"
+      stash_needed=true
+    fi
+
+    git checkout main
+    merge_staging_to_main_and_push
+    push_to_aicommit
+
+    echo -e "${BYellow}🔄 Returning to original branch: ${orig_branch}${Color_Off}"
+    git checkout "$orig_branch" >/dev/null 2>&1
+
+    if [[ "$orig_branch" != "main" ]]; then
+      echo -e "${BYellow}🔄 Merging latest main into ${orig_branch}...${Color_Off}"
+      git merge main --no-edit || {
+        echo -e "${BRed}❌ Merge failed on return to ${orig_branch}. Please resolve manually.${Color_Off}"
+        exit 1
+      }
+    fi
+
+    if $stash_needed; then
+      echo -e "${BYellow}📦 Restoring stashed changes...${Color_Off}"
+      git stash pop
+    fi
+  }
+
+  with_clean_worktree
 
   echo -e "${BGreen}✅ All done. Both repos updated.${Color_Off}"
 }
-
 # --- Execute ---
 full_push_flow
