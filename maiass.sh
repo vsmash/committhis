@@ -2282,7 +2282,7 @@ function initialiseBump() {
   # if $ai_commits_only exit 0
   if [[ "$ai_commits_only" == "true" ]]; then
     checkUncommittedChanges
-    echo -e "${BAqua}Mode is commits only. \nWe are done and on $branch_name branch.\nThank you for using MAIASS${Color_Off}"
+    echo -e "${BAqua}Mode is commits only. \nWe are done and on $branch_name branch.\nThank you for using $brand${Color_Off}"
     exit 0
   fi
 
