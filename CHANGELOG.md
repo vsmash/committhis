@@ -1,14 +1,11 @@
 ## 4.8.32
 15 July 2025
 
-- Renamed script file for clarity
 - refactor: renamed 'aicommit.sh' to 'committhis.sh' for better clarity and naming consistency
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
 - Removed unnecessary line from README
 - docs: removed extraneous line in README for clarity
-- # Conflicts:
-- #	README.md
 - Renamed README file for consistency
 - renamed: changed 'README.aicommit.md' to 'README.committhis.md' in the docs directory
 - Rename 'aicommit' to 'committhis'
