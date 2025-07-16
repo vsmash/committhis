@@ -7,15 +7,29 @@
 # This function is part of the Velvary bash scripts library.
 # Author: vsmash <670252+vsmash@users.noreply.github.com>
 # ---------------------------------------------------------------
+# Color and style definitions
+BCyan='\033[1;36m'      # Cyan
+Color_Off='\033[0m'     # Text Reset
+BRed='\033[1;31m'       # Red
+BGreen='\033[1;32m'     # Green
+BBlue='\033[1;34m'      # Blue
+BYellow='\033[1;33m'    # Yellow
+BPurple='\033[1;35m'    # Purple
+BWhite='\033[1;37m'     # White
+BAqua='\033[96m'        # Aqua
+# Define a standout color (bold magenta with white background as an example)
+BMagenta='\033[1;35m'
+BWhiteBG='\033[47m'
 
 # first check for global values
 [ -f "$HOME/.maiass.env" ] && source "$HOME/.maiass.env"
 
+export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 
-# if .env exists, source it and override globals
-if [ -f .env ]; then
-    source .env
-fi
+
+
+
+
 
 
 # devlog.sh is my personal script for logging work in google sheets.
@@ -35,40 +49,6 @@ function logthis(){
     debugmsg=$(devlog.sh "$1" "c" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}")
 }
 
-# Initialize debug mode early so it's available throughout the script
-export debug_mode="${MAIASS_DEBUG:=false}"
-export autopush_commits="${MAIASS_AUTOPUSh_COMMITS:=false}"
-export brand="${MAIASS_BRAND:=MAIASS}"
-# Initialize brevity and logging configuration
-export verbosity_level="${MAIASS_VERBOSITY:=brief}"
-export enable_logging="${MAIASS_LOGGING:=false}"
-export log_file="${MAIASS_LOG_FILE:=maiass.log}"
-
-# Initialize AI variables early so they're available when get_commit_message is called
-export openai_mode="${MAIASS_OPENAI_MODE:-ask}"
-export openai_token="${MAIASS_OPENAI_TOKEN:-}"
-export openai_model="${MAIASS_OPENAI_MODEL:-gpt-4o}"
-export openai_commit_message_style="${MAIASS_OPENAI_COMMIT_MESSAGE_STYLE:=bullet}"
-
-# Initialize configurable version file system
-export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
-export version_primary_type="${MAIASS_VERSION_PRIMARY_TYPE:-}"
-export version_primary_line_start="${MAIASS_VERSION_PRIMARY_LINE_START:-}"
-export version_secondary_files="${MAIASS_VERSION_SECONDARY_FILES:-}"
-
-# Color and style definitions
-BCyan='\033[1;36m'      # Cyan
-Color_Off='\033[0m'     # Text Reset
-BRed='\033[1;31m'       # Red
-BGreen='\033[1;32m'     # Green
-BBlue='\033[1;34m'      # Blue
-BYellow='\033[1;33m'    # Yellow
-BPurple='\033[1;35m'    # Purple
-BWhite='\033[1;37m'     # White
-BAqua='\033[96m'        # Aqua
-# Define a standout color (bold magenta with white background as an example)
-BMagenta='\033[1;35m'
-BWhiteBG='\033[47m'
 
 # Helper function to read version from a file based on type and line start
 read_version_from_file() {
@@ -2004,6 +1984,11 @@ function deployOptions() {
 
 # Function to load MAIASS_* variables from .env files
 load_bumpscript_env() {
+
+# if .env exists and ingnore_local_env is not true, source it and override globals
+
+
+
   local env_file=".env"
 
   # Check if .env file exists
@@ -2031,6 +2016,31 @@ load_bumpscript_env() {
 
 # Function to set up branch and changelog variables with override logic
 setup_bumpscript_variables() {
+
+      # Initialize debug mode early so it's available throughout the script
+      export debug_mode="${MAIASS_DEBUG:=false}"
+      export autopush_commits="${MAIASS_AUTOPUSh_COMMITS:=false}"
+      export brand="${MAIASS_BRAND:=MAIASS}"
+      # Initialize brevity and logging configuration
+      export verbosity_level="${MAIASS_VERBOSITY:=brief}"
+      export enable_logging="${MAIASS_LOGGING:=false}"
+      export log_file="${MAIASS_LOG_FILE:=maiass.log}"
+
+      # Initialize AI variables early so they're available when get_commit_message is called
+      export openai_mode="${MAIASS_OPENAI_MODE:-ask}"
+      export openai_token="${MAIASS_OPENAI_TOKEN:-}"
+      export openai_model="${MAIASS_OPENAI_MODEL:-gpt-4o}"
+      export openai_commit_message_style="${MAIASS_OPENAI_COMMIT_MESSAGE_STYLE:=bullet}"
+
+      # Initialize configurable version file system
+      export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
+      export version_primary_type="${MAIASS_VERSION_PRIMARY_TYPE:-}"
+      export version_primary_line_start="${MAIASS_VERSION_PRIMARY_LINE_START:-}"
+      export version_secondary_files="${MAIASS_VERSION_SECONDARY_FILES:-}"
+
+
+
+
   # Branch name defaults with MAIASS_* overrides
   export developbranch="${MAIASS_DEVELOPBRANCH:-develop}"
   export stagingbranch="${MAIASS_STAGINGBRANCH:-staging}"
@@ -2234,6 +2244,9 @@ check_git_repository() {
 }
 
 function initialiseBump() {
+
+
+
   print_header "$header"
   print_info "This script will help you bump the version number and manage your git workflow" "brief"
   print_info "Press ${BWhite}ctrl+c${Color_Off} to abort at any time\n" "brief"
@@ -2523,6 +2536,8 @@ for arg in "$@"; do
       script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
       script_file="${BASH_SOURCE[0]}"
       version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+      echo "MIASS v$version"
+
       exit 0
       ;;
     -aihelp|--committhis-help)
@@ -2537,7 +2552,7 @@ for arg in "$@"; do
       script_file="${BASH_SOURCE[0]}"
       version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 
-      echo "MAIASS v$version"
+      echo "COMMITTHIS v$version"
       exit 0
       ;;
     -co|-c|--commits-only)
