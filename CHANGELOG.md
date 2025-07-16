@@ -1,3 +1,15 @@
+## 4.9.1
+16 July 2025
+
+- Refactored environment variable initialization and improved output formatting
+- refactor: moved initialization of environment variables to setup_bumpscript_variables function
+- refactor: removed redundant sourcing of .env file in main script
+- feat: added ignore_local_env flag to control .env sourcing
+- feat: added version display for MIASS in the help menu
+- fix: corrected version display from "MAIASS" to "COMMITTHIS"
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+
 ## 4.9.0
 15 July 2025
 
