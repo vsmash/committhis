@@ -1,6 +1,9 @@
-## 4.10.3
+## 4.10.4
 17 July 2025
 
+- Simplified versioning update logic and added debug info
+- refactor: removed unnecessary prefix escaping in awk command
+- chore: added debug print statement for file updates
 - Improve pattern matching in version update script
 - fix: escaped special regex characters in prefix for reliable pattern matching
 - Add environment variable exports for version control
