@@ -1,3 +1,15 @@
+## 4.9.2
+17 July 2025
+
+- Add project configuration and improve script functionality
+- feat: created '.windsurf' for MAIASS project configuration
+- feat: added 'maiasstest.code-workspace' for VSCode integration
+- fix: removed exit on missing 'devlog.sh' function
+- fix: corrected header message to 'MAIASS Script'
+- feat: implemented 'print_always' function for consistent logging
+- feat: enhanced branch detection to include release branches
+- fix: added debugging info for version file detection
+
 ## 4.9.1
 16 July 2025
 
