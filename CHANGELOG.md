@@ -1,6 +1,9 @@
-## 4.10.4
+## 4.10.5
 17 July 2025
 
+- Enhance version update reliability
+- feat: added escape_regex function to escape regex metacharacters
+- refactor: used escape_regex in update_version_in_file for improved pattern matching
 - Simplified versioning update logic and added debug info
 - refactor: removed unnecessary prefix escaping in awk command
 - chore: added debug print statement for file updates
