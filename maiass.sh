@@ -1193,7 +1193,7 @@ function branchDetection() {
         fi
     fi
     # if branch starts with release/ or releases/ offer do same as masterbranch
-    
+
 
 
     # if we are on the master or staging branch, switch to develop
@@ -1660,6 +1660,7 @@ offer_to_stage_changes() {
   fi
 }
 
+
 check_git_commit_status() {
   print_section "Checking Git Status"
   if has_staged_changes; then
@@ -1887,6 +1888,7 @@ function mergeDevelop() {
   fi
 }
 
+# function to show deploy options
 function deployOptions() {
   # Check what branches are available and adapt options accordingly
   local has_develop has_staging has_master has_remote
@@ -2315,7 +2317,7 @@ function initialiseBump() {
   print_info "Verion primary file: ${BYellow}${version_primary_file}" debug
   echo
   print_info "has version files: ${BYellow}$has_version_files" debug
-  
+
 
   # if $ai_commits_only exit 0
   if [[ "$ai_commits_only" == "true" ]]; then
