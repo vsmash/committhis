@@ -208,12 +208,10 @@ parse_secondary_version_files() {
         return 0
     fi
 
-    # Split by pipe (|) to get individual file configurations
     IFS='|' read -ra files_array <<< "$config"
 
     for file_config in "${files_array[@]}"; do
         if [[ -n "$file_config" ]]; then
-            # Split by colon (:) to get file:type:line_start
             IFS=':' read -ra config_parts <<< "$file_config"
             local file="${config_parts[0]}"
             local type="${config_parts[1]:-txt}"
@@ -221,6 +219,8 @@ parse_secondary_version_files() {
 
             if [[ -f "$file" ]]; then
                 echo "$file:$type:$line_start"
+            else
+                echo "Skipping $file (not found)" >&2
             fi
         fi
     done
