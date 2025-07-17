@@ -1,6 +1,9 @@
-## 4.10.8
+## 4.10.11
 17 July 2025
 
+- Refactored version update function in maiass.sh
+- refactor: removed unused variable `escaped_prefix`
+- refactor: simplified `awk` logic for prefix matching
 - Updated script header comment formatting
 - style: removed version number formatting in header comment
 - Refactored environment variable loading logic
