@@ -35,8 +35,6 @@ export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 # devlog.sh is my personal script for logging work in google sheets.
 # if devlog.sh is not a bash script, create an empty function to prevent errors
 if [ -z "$(type -t devlog.sh)" ]; then
-    echo 'not a function'
-    exit 1
     function devlog.sh() {
         :
     }
@@ -224,7 +222,7 @@ parse_secondary_version_files() {
 # Print a decorated header
 print_header() {
     echo -e "\n${BPurple}════════════════════════════════════════════════════════════════${Color_Off}"
-    echo -e "${BBlue}                    $1 Version Bump Script${Color_Off}"
+    echo -e "${BBlue}                    $1 MAIASS Script${Color_Off}"
     echo -e "${BPurple}════════════════════════════════════════════════════════════════${Color_Off}\n"
 }
 
@@ -244,6 +242,11 @@ log_message() {
 print_success() {
     echo -e "${BGreen}✔ $1${Color_Off}"
     log_message "SUCCESS: $1"
+}
+
+print_always(){
+  echo  -e "${BAqua}ℹ $message${Color_Off}"
+  log_message "INFO: $message"
 }
 
 # Print an info message with verbosity level support
@@ -1166,10 +1169,11 @@ function bumpVersion() {
 
 function branchDetection() {
     print_section "Branch Detection"
-    print_info "Currently on branch: ${BWhite}$branch_name${Color_Off}"
+    echo -e "Currently on branch: ${BWhite}$branch_name${Color_Off}"
     # if we are on the master branch, advise user not to use this script for hot fixes
-    if [ "$branch_name" == "$masterbranch" ]; then
-        print_warning "You are currently on the $masterbranch branch"
+    # if on master or a release branch, advise the user
+    if [[ "$branch_name" == "$masterbranch" || "$branch_name" == release/* || "$branch_name" == releases/* ]]; then
+        print_warning "You are currently on the $branch_name branch"
         read -n 1 -s -p "$(echo -e ${BYellow}Do you want to continue on $developbranch? [y/N]${Color_Off} )" REPLY
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -1177,6 +1181,9 @@ function branchDetection() {
             exit 1
         fi
     fi
+    # if branch starts with release/ or releases/ offer do same as masterbranch
+    
+
 
     # if we are on the master or staging branch, switch to develop
     if [ "$branch_name" == "$masterbranch" ] || [ "$branch_name" == "$stagingbranch" ]; then
@@ -2293,14 +2300,17 @@ function initialiseBump() {
     has_version_files=true
   fi
 
+  print_info "Verion primary file: ${BYellow}${version_primary_file}" debug
+  echo
+  print_info "has version files: ${BYellow}$has_version_files" debug
+  
+
   # if $ai_commits_only exit 0
   if [[ "$ai_commits_only" == "true" ]]; then
     checkUncommittedChanges
     echo -e "${BAqua}Mode is commits only. \nWe are done and on $branch_name branch.\nThank you for using $brand${Color_Off}"
     exit 0
   fi
-
-
 
   if [[ "$has_version_files" == "true" ]]; then
     changeManagement
