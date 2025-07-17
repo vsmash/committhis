@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------------------------------------------
-# MAIASS (Modular AI-Assisted Semantic Savant) v4.10.9
+# MAIASS (Modular AI-Assisted Semantic Savant) v4.9.0
 # Intelligent Git workflow automation script
 # Copyright (c) 2025 Velvary Pty Ltd
 # All rights reserved.
@@ -150,15 +150,12 @@ update_version_in_file() {
         "txt")
             # Text file - update line starting with specified prefix
             if [[ -n "$line_start" ]]; then
-              escaped_prefix=$(escape_regex "$line_start")
 
-              awk -v prefix="$escaped_prefix" -v version="$new_version" '
-                $0 ~ "^" prefix {
-                  print prefix version
-                  next
-                }
-                { print }
-              ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+                awk -v prefix="$line_start" -v version="$new_version" '
+                  BEGIN { len = length(prefix) }
+                  substr($0, 1, len) == prefix { print prefix version; next }
+                  { print }
+                ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
             else
                 # If no line start specified, replace entire file content
                 echo "$new_version" > "$file"
