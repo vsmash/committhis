@@ -1,3 +1,13 @@
+## 4.10.12
+18 July 2025
+
+- Add images and improve script formatting
+- feat: added new image files 'maiass.png' and 'maiass_banner.png'
+- style: removed trailing whitespace in 'maiass.sh' script
+- chore: added comment for deploy options function in 'maiass.sh'
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+
 ## 4.10.11
 17 July 2025
 
