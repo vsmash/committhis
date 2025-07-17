@@ -1,6 +1,8 @@
-## 4.10.0
+## 4.10.2
 17 July 2025
 
+- Add environment variable exports for version control
+- feat: exported environment variables for version file details
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
 
