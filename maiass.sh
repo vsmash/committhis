@@ -148,14 +148,10 @@ update_version_in_file() {
             # Text file - update line starting with specified prefix
             if [[ -n "$line_start" ]]; then
                 # Use awk for more reliable pattern matching with literal strings
-              escaped_prefix=$(printf '%s\n' "$line_start" | sed 's/[.[\*^$/]/\\&/g; s/(/\\(/g; s/)/\\)/g')
-              awk -v prefix="$escaped_prefix" -v version="$new_version" '
-                  $0 ~ "^" prefix {
-                      print prefix version
-                      next
-                  }
-                  { print }
-              ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+                awk -v prefix="$line_start" -v version="$new_version" '
+                    index($0, prefix) == 1 { print prefix version; next }
+                    { print }
+                ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
             else
                 # If no line start specified, replace entire file content
                 echo "$new_version" > "$file"
@@ -1150,6 +1146,7 @@ function bumpVersion() {
                 local sec_line_start="${config_parts[2]:-}"
                 # Track which files were executable before
                 was_executable=$(test -x "$sec_file" && echo "yes" || echo "no")
+                print_info "Updating $sec_file, as $sec_type" "debug"
 
                 if update_version_in_file "$sec_file" "$sec_type" "$sec_line_start" "$newversion"; then
                     if [[ "$was_executable" == "yes" ]]; then
