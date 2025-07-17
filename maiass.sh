@@ -40,7 +40,10 @@ if [ -z "$(type -t devlog.sh)" ]; then
     }
 fi
 
-
+escape_regex() {
+  # Escapes all regex metacharacters
+  echo "$1" | sed -e 's/[][\/.^$*+?(){}|]/\\&/g'
+}
 
 function logthis(){
     # shellcheck disable=SC1073
@@ -147,11 +150,15 @@ update_version_in_file() {
         "txt")
             # Text file - update line starting with specified prefix
             if [[ -n "$line_start" ]]; then
-                # Use awk for more reliable pattern matching with literal strings
-                awk -v prefix="$line_start" -v version="$new_version" '
-                    index($0, prefix) == 1 { print prefix version; next }
-                    { print }
-                ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+              escaped_prefix=$(escape_regex "$line_start")
+
+              awk -v prefix="$escaped_prefix" -v version="$new_version" '
+                $0 ~ "^" prefix {
+                  print prefix version
+                  next
+                }
+                { print }
+              ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
             else
                 # If no line start specified, replace entire file content
                 echo "$new_version" > "$file"
