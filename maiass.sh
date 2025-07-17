@@ -48,6 +48,12 @@ function logthis(){
 }
 
 
+export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
+export version_primary_type="${MAIASS_VERSION_PRIMARY_TYPE:-}"
+export version_primary_line_start="${MAIASS_VERSION_PRIMARY_LINE_START:-}"
+export version_secondary_files="${MAIASS_VERSION_SECONDARY_FILES:-}"
+
+
 # Helper function to read version from a file based on type and line start
 read_version_from_file() {
     local file="$1"
