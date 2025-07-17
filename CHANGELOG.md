@@ -1,6 +1,9 @@
-## 4.10.5
+## 4.10.6
 17 July 2025
 
+- Improve error handling in file parsing
+- refactor: removed redundant comments for splitting logic
+- feat: added warning message for missing files during parsing
 - Enhance version update reliability
 - feat: added escape_regex function to escape regex metacharacters
 - refactor: used escape_regex in update_version_in_file for improved pattern matching
