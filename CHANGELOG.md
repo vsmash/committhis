@@ -1,6 +1,8 @@
-## 4.10.7
+## 4.10.8
 17 July 2025
 
+- Updated script header comment formatting
+- style: removed version number formatting in header comment
 - Refactored environment variable loading logic
 - refactor: improved whitespace handling in .env file processing
 - fix: corrected logic for stripping quotes from variable values
