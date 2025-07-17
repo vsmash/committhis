@@ -1,0 +1,31 @@
+# MAIASS Project Configuration
+# Modular AI-Assisted Semantic Savant
+
+## Project Structure
+- `maiass.sh` - Main script with Git workflow automation
+- `README.md` - Comprehensive documentation
+- Version files supported: package.json, composer.json, PHP defines, text files
+
+## Key Functions to Focus On
+- `mergeDevelop()` - Main workflow function (lines 1696-1869)
+- `getVersion()` - Version management (lines 562-739)
+- `updateChangelog()` - Changelog generation (lines 871-1047)
+- `get_ai_commit_suggestion()` - AI commit messages (lines 1211-1404)
+
+## Known Issues
+- Misleading success message in mergeDevelop() function
+- Shows "Merged X into develop" even when no merge occurs
+- Affects user experience and could cause confusion
+
+## Testing Areas
+- Branch detection logic
+- Merge operation validation
+- Version file parsing
+- AI commit message generation
+- Cross-platform compatibility
+
+## Environment Variables
+- MAIASS_* variables loaded from .env files
+- OpenAI integration for commit messages
+- Jira ticket integration
+- Custom branch naming support
