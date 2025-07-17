@@ -1,6 +1,10 @@
-## 4.10.6
+## 4.10.7
 17 July 2025
 
+- Refactored environment variable loading logic
+- refactor: improved whitespace handling in .env file processing
+- fix: corrected logic for stripping quotes from variable values
+- chore: removed unnecessary comments and streamlined code
 - Improve error handling in file parsing
 - refactor: removed redundant comments for splitting logic
 - feat: added warning message for missing files during parsing
