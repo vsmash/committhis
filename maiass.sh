@@ -2005,35 +2005,36 @@ function deployOptions() {
 
 # Function to load MAIASS_* variables from .env files
 load_bumpscript_env() {
-
-# if .env exists and ingnore_local_env is not true, source it and override globals
-
-
-
   local env_file=".env"
 
-  # Check if .env file exists
   if [[ -f "$env_file" ]]; then
     print_info "Loading MAIASS_* variables from $env_file"
 
-    # Read .env file and extract MAIASS_* variables
-    while IFS='=' read -r key value; do
-      # Skip comments and empty lines
-      [[ "$key" =~ ^#.*$ ]] && continue
-      [[ -z "$key" ]] && continue
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      # Trim leading/trailing whitespace
+      line="${line#"${line%%[![:space:]]*}"}"
+      line="${line%"${line##*[![:space:]]}"}"
 
-      # Only process MAIASS_* variables
-      if [[ "$key" =~ ^MAIASS_ ]]; then
-        # Remove quotes from value if present
-        value=$(echo "$value" | sed 's/^["'"'"']\|["'"'"']$//g')
+      # Skip blank lines and comments
+      [[ -z "$line" || "$line" == \#* ]] && continue
 
-        # Export the variable (this will override any existing env vars)
-        export "$key"="$value"
+      # Only process MAIASS_* assignments
+      if [[ "$line" =~ ^MAIASS_ ]]; then
+        local key="${line%%=*}"
+        local value="${line#*=}"
+
+        # Strip surrounding matching quotes with POSIX-safe cut
+        if [[ "$value" == \"*\" && "$value" == *\" ]] || [[ "$value" == \'*\' && "$value" == *\' ]]; then
+          value=$(echo "$value" | cut -c2- | rev | cut -c2- | rev)
+        fi
+
+        export "$key=$value"
         print_info "Set $key=$value"
       fi
-    done < <(grep -E '^[^#]*=' "$env_file" 2>/dev/null || true)
+    done < "$env_file"
   fi
 }
+
 
 # Function to set up branch and changelog variables with override logic
 setup_bumpscript_variables() {
