@@ -1,6 +1,8 @@
-## 4.10.2
+## 4.10.3
 17 July 2025
 
+- Improve pattern matching in version update script
+- fix: escaped special regex characters in prefix for reliable pattern matching
 - Add environment variable exports for version control
 - feat: exported environment variables for version file details
 - Revert README to MAIASS
