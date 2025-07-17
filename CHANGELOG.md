@@ -1,6 +1,9 @@
-## 4.10.12
+## 4.10.13
 18 July 2025
 
+- Add banner image and update README formatting
+- docs: added MAIASS banner image to README
+- docs: adjusted formatting and spacing for improved readability
 - Add images and improve script formatting
 - feat: added new image files 'maiass.png' and 'maiass_banner.png'
 - style: removed trailing whitespace in 'maiass.sh' script
