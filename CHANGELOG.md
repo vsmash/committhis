@@ -1,14 +1,16 @@
-## 4.10.17
+## 4.10.18
 18 July 2025
 
+- 'Updated assets
+- feat: updated maiass_banner.png in assets'
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - 'Updated README for maiass
 - docs: clarified usage of AI-powered commit message tool in README'
 - 'Updated testing script and added new developer guidelines
 - feat: expanded test_maiass.sh with more detailed tests
 - feat: added handling for various edge cases in tests
 - docs: created new .junie/guidelines.md file with project instructions'
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
 - 'Update maiass.sh and add new test_maiass.sh script
 - fix: corrected assignment of AI variables in maiass.sh
 - feat: added new test script test_maiass.sh for testing MAIASS functionality'
