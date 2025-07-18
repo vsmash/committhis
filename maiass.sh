@@ -2050,9 +2050,9 @@ setup_bumpscript_variables() {
       # Initialize AI variables early so they're available when get_commit_message is called
       export openai_mode="${MAIASS_OPENAI_MODE:-ask}"
       export openai_token="${MAIASS_OPENAI_TOKEN:-}"
-      export openai_model="${MAIASS_OPENAI_MODEL:-gpt-3.5-turbo}"
-      export openai_temperature="${MAIASS_OPENAI_TEMPERATURE:-0.7}"
-      export openai_max_characters="${MAIASS_OPENAI_MAX_CHARACTERS:-8000}"
+      export openai_model="${MAIASS_OPENAI_MODEL:=gpt-3.5-turbo}"
+      export openai_temperature="${MAIASS_OPENAI_TEMPERATURE:=0.7}"
+      export openai_max_characters="${MAIASS_OPENAI_MAX_CHARACTERS:=8000}"
       export openai_commit_message_style="${MAIASS_OPENAI_COMMIT_MESSAGE_STYLE:=bullet}"
 
       # Initialize configurable version file system
@@ -2192,7 +2192,7 @@ setup_bumpscript_variables() {
   # AI commit message configuration
   export openai_mode="${MAIASS_OPENAI_MODE:-off}"
   export openai_token="${MAIASS_OPENAI_TOKEN:-}"
-  export openai_model="${MAIASS_OPENAI_MODEL:-gpt-4o}"
+  export openai_model="${MAIASS_OPENAI_MODEL:-gpt-3.5-turbo}"
 
 
   # Determine the OpenAI commit message style
@@ -2230,6 +2230,8 @@ setup_bumpscript_variables() {
   print_info "  AI commit messages: $openai_mode"
   if [[ "$openai_mode" != "off" && -n "$openai_token" ]]; then
     print_info "  AI model: $openai_model"
+    print_info "  AI temperature: $openai_temperature"
+    print_info "  AI Max commit characters: $openai_max_characters"
     print_info "  AI commit style: $openai_commit_style"
   fi
   if [[ "$REPO_PROVIDER" == "bitbucket" && -n "$BITBUCKET_WORKSPACE" ]]; then
