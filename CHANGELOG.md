@@ -1,6 +1,13 @@
-## 4.10.14
+## 4.10.15
 18 July 2025
 
+- 'Update maiass.sh and add new test_maiass.sh script
+- fix: corrected assignment of AI variables in maiass.sh
+- feat: added new test script test_maiass.sh for testing MAIASS functionality'
+- Update MAIASS banner image URL in README
+- docs: changed MAIASS banner image URL to use a direct link from GitHub repository
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - Fix typo in environment variable
 - fix: corrected typo in environment variable name from MAIASS_AUTOPUSh_COMMITS to MAIASS_AUTOPUSH_COMMITS
 - Refactored character limit handling and updated AI model configuration
@@ -9,8 +16,6 @@
 - feat: added new variable `openai_temperature` for AI model configuration
 - feat: added `openai_max_characters` variable for flexible token limit
 - chore: updated default AI model to `gpt-3.5-turbo`
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
 - Add banner image and update README formatting
 - docs: added MAIASS banner image to README
 - docs: adjusted formatting and spacing for improved readability
