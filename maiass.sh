@@ -2040,7 +2040,7 @@ setup_bumpscript_variables() {
 
       # Initialize debug mode early so it's available throughout the script
       export debug_mode="${MAIASS_DEBUG:=false}"
-      export autopush_commits="${MAIASS_AUTOPUSh_COMMITS:=false}"
+      export autopush_commits="${MAIASS_AUTOPUSH_COMMITS:=false}"
       export brand="${MAIASS_BRAND:=MAIASS}"
       # Initialize brevity and logging configuration+6
       export verbosity_level="${MAIASS_VERBOSITY:=brief}"
