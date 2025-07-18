@@ -1,6 +1,16 @@
-## 4.10.13
+## 4.10.14
 18 July 2025
 
+- Fix typo in environment variable
+- fix: corrected typo in environment variable name from MAIASS_AUTOPUSh_COMMITS to MAIASS_AUTOPUSH_COMMITS
+- Refactored character limit handling and updated AI model configuration
+- refactor: replaced hardcoded character limit with variable `$openai_max_characters`
+- fix: corrected typo in variable `autopush_commits` initialization
+- feat: added new variable `openai_temperature` for AI model configuration
+- feat: added `openai_max_characters` variable for flexible token limit
+- chore: updated default AI model to `gpt-3.5-turbo`
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - Add banner image and update README formatting
 - docs: added MAIASS banner image to README
 - docs: adjusted formatting and spacing for improved readability
@@ -8,8 +18,6 @@
 - feat: added new image files 'maiass.png' and 'maiass_banner.png'
 - style: removed trailing whitespace in 'maiass.sh' script
 - chore: added comment for deploy options function in 'maiass.sh'
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
 
 ## 4.10.11
 17 July 2025

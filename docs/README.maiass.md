@@ -1,7 +1,7 @@
 ![MAIASS Banner](../assets/maiass_banner.png)
 
 <div align="center">
-# 🫏 MAIASS v4.10.13
+# 🫏 MAIASS v4.10.14
 Modular AI-Assisted Semantic Savant
 
 ---
