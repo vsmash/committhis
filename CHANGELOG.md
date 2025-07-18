@@ -1,10 +1,12 @@
-## 4.10.18
+## 4.10.19
 18 July 2025
 
-- 'Updated assets
-- feat: updated maiass_banner.png in assets'
+- 'Restructured README.maiass.md for better clarity
+- docs: moved section about AI-powered commit message tool'
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
+- 'Updated assets
+- feat: updated maiass_banner.png in assets'
 - 'Updated README for maiass
 - docs: clarified usage of AI-powered commit message tool in README'
 - 'Updated testing script and added new developer guidelines
