@@ -1268,9 +1268,9 @@ Git diff:
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff length: ${#git_diff} characters" >&2
 
   # Truncate diff if too long (API has token limits)
-  if [[ ${#git_diff} -gt 8000 ]]; then
-    git_diff="${git_diff:0:8000}...[truncated]"
-    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff truncated to 8000 characters" >&2
+  if [[ ${#git_diff} -gt $openai_max_characters ]]; then
+    git_diff="${git_diff:0:$openai_max_characters}...[truncated]"
+    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff truncated to $openai_max_characters characters" >&2
   fi
     print_info "DEBUG: prompt mode: $openai_commit_style" >&2
   get_ai_commit_message_style
@@ -2042,7 +2042,7 @@ setup_bumpscript_variables() {
       export debug_mode="${MAIASS_DEBUG:=false}"
       export autopush_commits="${MAIASS_AUTOPUSh_COMMITS:=false}"
       export brand="${MAIASS_BRAND:=MAIASS}"
-      # Initialize brevity and logging configuration
+      # Initialize brevity and logging configuration+6
       export verbosity_level="${MAIASS_VERBOSITY:=brief}"
       export enable_logging="${MAIASS_LOGGING:=false}"
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
@@ -2050,7 +2050,9 @@ setup_bumpscript_variables() {
       # Initialize AI variables early so they're available when get_commit_message is called
       export openai_mode="${MAIASS_OPENAI_MODE:-ask}"
       export openai_token="${MAIASS_OPENAI_TOKEN:-}"
-      export openai_model="${MAIASS_OPENAI_MODEL:-gpt-4o}"
+      export openai_model="${MAIASS_OPENAI_MODEL:-gpt-3.5-turbo}"
+      export openai_temperature="${MAIASS_OPENAI_TEMPERATURE:-0.7}"
+      export openai_max_characters="${MAIASS_OPENAI_MAX_CHARACTERS:-8000}"
       export openai_commit_message_style="${MAIASS_OPENAI_COMMIT_MESSAGE_STYLE:=bullet}"
 
       # Initialize configurable version file system
