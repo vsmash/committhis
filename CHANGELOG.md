@@ -1,6 +1,8 @@
-## 4.10.16
+## 4.10.17
 18 July 2025
 
+- 'Updated README for maiass
+- docs: clarified usage of AI-powered commit message tool in README'
 - 'Updated testing script and added new developer guidelines
 - feat: expanded test_maiass.sh with more detailed tests
 - feat: added handling for various edge cases in tests
