@@ -1,7 +1,7 @@
 ![MAIASS Banner](https://raw.githubusercontent.com/vsmash/maiass/main/assets/maiass_banner.png)
 
 <div align="center">
-# 🫏 MAIASS v4.10.18
+# 🫏 MAIASS v4.10.19
 Modular AI-Assisted Semantic Savant
 
 ---
@@ -65,13 +65,6 @@ This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`)
 # Patch version bump (1.2.3 → 1.2.4)
 maiass
 
-# Use AI-powered commit message tool only
-# (requires OpenAI API key and committhis.sh installed)
-committhis
-* committhis is already integrated into maiass. this is only 
-for people who want to use the commit functionality on its 
-own without the git flow, version managment and changelog generation
-
 # Minor version bump (1.2.3 → 1.3.0)
 maiass minor
 
@@ -80,6 +73,14 @@ maiass major
 
 # Set specific version
 maiass 2.1.0
+
+# Use AI-powered commit message tool only
+# (requires OpenAI API key and committhis.sh installed)
+committhis
+* committhis is already integrated into maiass. this is only 
+for people who want to use the commit functionality on its 
+own without the git flow, version managment and changelog generation
+
 ```
 
 ### AI-Powered Commit Messages
