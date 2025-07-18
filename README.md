@@ -1,20 +1,22 @@
-# 🫏 MAIASS v4.10.11
-## Modular AI-Assisted Semantic Savant
+![MAIASS Banner](../assets/maiass_banner.png)
+
+<div align="center">
+# 🫏 MAIASS v4.10.14
+Modular AI-Assisted Semantic Savant
 
 ---
 
-<div align="center">
 
 ### 👩‍💻 Are you tired of playing translator between code and English?
 
 ### 🧑‍💼 Are you sick of opening a repo and finding 20 commits named “fix”?
 
-### 💼 Are you sick of your suits and marketroids wondering what your team did last sprint, or even what a sprint is?
-
+### 🧠 Wanna keep your code-mode going and leave your explain-brain to ai at commit time?
 ### 🌟 You deserve structure.
 ### 🚀 You deserve changelogs. 
+### You deserve MAIASS
 ___
-### AI Commit Messages 
+### AI Commit Messages
 ### Automated Changelogs * Versioning 
 ### 🫏 YOU can get it all from MAIASS
 #### You want MAIASS
