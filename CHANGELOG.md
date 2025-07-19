@@ -1,3 +1,13 @@
+## 4.10.20
+19 July 2025
+
+- 'Added detailed instructions and updated AI integration
+- docs: added comprehensive guidelines for GitHub Copilot in MAIASS ecosystem
+- docs: added GitHub Copilot instructions for MAIASS project
+- docs(ai): updated default AI mode and added max characters setting'
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+
 ## 4.10.19
 18 July 2025
 
