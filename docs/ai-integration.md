@@ -21,9 +21,10 @@ Only `MAIASS_OPENAI_TOKEN` is required. Other settings have defaults but can be 
 ```bash
 # AI Configuration
 MAIASS_OPENAI_TOKEN=your_api_key_here
-MAIASS_OPENAI_MODE=ask
+MAIASS_OPENAI_MODE=autosuggest
 MAIASS_OPENAI_MODEL=gpt-4o
 MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet
+MAIASS_OPENAI_MAX_CHARACTERS=8000
 ```
 
 ## AI Modes
@@ -33,7 +34,7 @@ MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet
 - Manual commit message entry only
 - Fastest option
 
-### `ask` (Recommended)
+### `ask` (Default/Recommended)
 - AI asks if you want to use AI to suggest commit messages
 - You can approve, edit, or reject suggestions
 - Interactive and safe
