@@ -1345,14 +1345,16 @@ esac
   fi
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: JSON payload length: ${#json_payload} characters" >&2
-
-  api_response=$(curl -s -X POST "https://api.openai.com/v1/chat/completions" \
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: endpoint: ${openai_endpoint}" >&2
+  api_response=$(curl -s -X POST "$openai_endpoint" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $openai_token" \
     -d "$json_payload" 2>/dev/null)
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response length: ${#api_response} characters" >&2
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: ${openai_token} " >&2
 
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response : ${api_response} " >&2
   # Extract the suggested message from API response
   if [[ -n "$api_response" ]]; then
     # Check for API error first
@@ -2054,6 +2056,8 @@ setup_bumpscript_variables() {
       export openai_temperature="${MAIASS_OPENAI_TEMPERATURE:=0.7}"
       export openai_max_characters="${MAIASS_OPENAI_MAX_CHARACTERS:=8000}"
       export openai_commit_message_style="${MAIASS_OPENAI_COMMIT_MESSAGE_STYLE:=bullet}"
+      export openai_endpoint="${MAIASS_OPENAI_ENDPOINT:-https://api.openai.com/v1/chat/completions}"
+
 
       # Initialize configurable version file system
       export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
