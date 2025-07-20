@@ -1,3 +1,11 @@
+## 4.10.21
+20 July 2025
+
+- Updated debug mode and OpenAI API endpoint configuration
+- feat: Added more debug info output in debug mode
+- feat: Replaced hardcoded OpenAI API endpoint with configurable variable
+- feat: Added new variable for OpenAI API endpoint in setup function
+
 ## 4.10.20
 19 July 2025
 
