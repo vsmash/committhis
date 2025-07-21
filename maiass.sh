@@ -2445,7 +2445,8 @@ EOF
   echo -e "  ${BRed}MAIASS_OPENAI_TOKEN${Color_Off}          Optional but ${BRed}REQUIRED${Color_Off} if you want AI commit messages"
   echo -e "  MAIASS_OPENAI_MODE           ${Gray}('ask')${Color_Off} 'off', 'autosuggest'"
   echo -e "  MAIASS_OPENAI_MODEL          ${Gray}('gpt-4o')${Color_Off} AI model to use"
-  echo -e "  MAIASS_OPENAI_COMMIT_MESSAGE_STYLE  ${Gray}('bullet')${Color_Off} 'conventional', 'simple'\n"
+  echo -e "  MAIASS_OPENAI_COMMIT_MESSAGE_STYLE  ${Gray}('bullet')${Color_Off} 'conventional', 'simple'"
+  echo -e "  MAIASS_OPENAI_ENDPOINT       ${Gray}(default AI provider)${Color_Off} Custom AI endpoint\n"
 
   echo -e "${BWhite}📊 OUTPUT CONTROL:${Color_Off}"
   echo -e "  MAIASS_VERBOSITY             ${Gray}('brief')${Color_Off} 'normal', 'debug'"
@@ -2492,7 +2493,7 @@ EOF
   echo -e "${BRed}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${Color_Off}\n"
 
   echo -e "${BWhite}✨ KEY FEATURES:${Color_Off}"
-  echo -e "  • ${BGreen}AI-powered commit messages${Color_Off} via OpenAI GPT"
+  echo -e "  • ${BGreen}AI-powered commit messages${Color_Off} via AI integration"
   echo -e "  • ${BGreen}Automatic changelog generation${Color_Off} and management"
   echo -e "  • ${BGreen}Multi-repository support${Color_Off} (WordPress, Craft, bespoke projects)"
   echo -e "  • ${BGreen}Git workflow automation${Color_Off} (commit, tag, merge, push)"
@@ -2539,11 +2540,12 @@ show_help_committhis() {
                       echo -e "  ${BGreen}committhis${Color_Off}"
                       echo
                       echo -e "${BWhite}Environment Configuration:${Color_Off}"
-                      echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your OpenAI API token (required)"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your AI API token (required)"
                       echo -e "  ${BCyan}MAIASS_OPENAI_MODE${Color_Off}       Commit mode:"
                       echo -e "                                 ask (default), autosuggest, off"
                       echo -e "  ${BCyan}MAIASS_OPENAI_COMMIT_MESSAGE_STYLE${Color_Off}"
                       echo -e "                                 Message style: bullet (default), conventional, simple"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_ENDPOINT${Color_Off}   Custom AI endpoint (optional)"
                       echo
                       echo -e "${BWhite}Files (optional):${Color_Off}"
                       echo -e "  ${BGreen}.env${Color_Off}                     Can define the variables above"
