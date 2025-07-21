@@ -1,6 +1,10 @@
-## 4.10.25
+## 4.10.26
 21 July 2025
 
+- 'Updated MAIASS script and CHANGELOG
+- feat: updated commit message functionality in maiass.sh script
+- refactor: modified git log syntax in updateChangelog function
+- fix: corrected typo in print_success function'
 - Update commit message functionality in maiass.sh script
 - feat: added internal commit message variable
 - feat: included author in commit message
