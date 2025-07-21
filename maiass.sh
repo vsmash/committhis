@@ -8,18 +8,31 @@
 # Author: vsmash <670252+vsmash@users.noreply.github.com>
 # ---------------------------------------------------------------
 # Color and style definitions
-BCyan='\033[1;36m'      # Cyan
+# Bold colors (for emphasis and important messages)
+BCyan='\033[1;36m'      # Bold Cyan
+BRed='\033[1;31m'       # Bold Red
+BGreen='\033[1;32m'     # Bold Green
+BBlue='\033[1;34m'      # Bold Blue
+BYellow='\033[1;33m'    # Bold Yellow
+BPurple='\033[1;35m'    # Bold Purple
+BWhite='\033[1;37m'     # Bold White
+BMagenta='\033[1;35m'   # Bold Magenta
+BAqua='\033[1;96m'      # Bold Aqua
+
+# Regular colors (for standard messages)
+Cyan='\033[0;36m'       # Cyan
+Red='\033[0;31m'        # Red
+Green='\033[0;32m'      # Green
+Blue='\033[0;34m'       # Blue
+Yellow='\033[0;33m'     # Yellow
+Purple='\033[0;35m'     # Purple
+White='\033[0;37m'      # White
+Magenta='\033[0;35m'    # Magenta
+Aqua='\033[0;96m'       # Aqua
+
+# Special formatting
 Color_Off='\033[0m'     # Text Reset
-BRed='\033[1;31m'       # Red
-BGreen='\033[1;32m'     # Green
-BBlue='\033[1;34m'      # Blue
-BYellow='\033[1;33m'    # Yellow
-BPurple='\033[1;35m'    # Purple
-BWhite='\033[1;37m'     # White
-BAqua='\033[96m'        # Aqua
-# Define a standout color (bold magenta with white background as an example)
-BMagenta='\033[1;35m'
-BWhiteBG='\033[47m'
+BWhiteBG='\033[47m'     # White Background
 
 # first check for global values
 [ -f "$HOME/.maiass.env" ] && source "$HOME/.maiass.env"
@@ -238,7 +251,7 @@ print_header() {
 
 # Print a section header
 print_section() {
-    echo -e "\n${BYellow}▶ $1${Color_Off}"
+    echo -e "\n${Yellow}▶ $1${Color_Off}"
 }
 
 # Logging function - writes to log file if logging is enabled
@@ -250,12 +263,14 @@ log_message() {
 
 # Print a success message
 print_success() {
-    echo -e "${BGreen}✔ $1${Color_Off}"
+    echo -e "${Green}✔ $1${Color_Off}"
     log_message "SUCCESS: $1"
 }
 
+# Print a message that's always shown regardless of verbosity level
 print_always(){
-  echo  -e "${BAqua}ℹ $message${Color_Off}"
+  local message="$1"
+  echo -e "${Aqua}ℹ $message${Color_Off}"
   log_message "INFO: $message"
 }
 
@@ -266,30 +281,37 @@ print_info() {
     local message="$1"
     local level="${2:-normal}"
 
-    # Always show if debug mode is true (backward compatibility)
-    if [[ "$debug_mode" == "true" ]]; then
-        echo -e "${BCyan}ℹ $message${Color_Off}"
-        log_message "INFO: $message"
-        return
+    # For backward compatibility, treat debug_mode=true as verbosity_level=debug
+    if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
+        # Only log this when not already in debug verbosity to avoid noise
+        log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
+        # Treat as if verbosity_level is debug
+        local effective_verbosity="debug"
+    else
+        local effective_verbosity="$verbosity_level"
     fi
 
     # Show based on verbosity level
-    case "$verbosity_level" in
+    case "$effective_verbosity" in
         "brief")
             # Only show essential messages in brief mode
             if [[ "$level" == "brief" ]]; then
-                echo -e "${BCyan}ℹ $message${Color_Off}"
+                echo -e "${Cyan}ℹ $message${Color_Off}"
             fi
             ;;
         "normal")
             # Show brief and normal messages
             if [[ "$level" == "brief" || "$level" == "normal" ]]; then
-                echo -e "${BCyan}ℹ $message${Color_Off}"
+                echo -e "${Cyan}ℹ $message${Color_Off}"
             fi
             ;;
         "debug")
-            # Show all messages
-            echo -e "${BCyan}ℹ $message${Color_Off}"
+            # Show all messages, use bold for debug level messages
+            if [[ "$level" == "debug" ]]; then
+                echo -e "${BCyan}ℹ $message${Color_Off}"
+            else
+                echo -e "${Cyan}ℹ $message${Color_Off}"
+            fi
             ;;
     esac
 
@@ -298,11 +320,11 @@ print_info() {
 
 # Print a warning message
 print_warning() {
-    echo -e "${BYellow}⚠ $1${Color_Off}"
+    echo -e "${Yellow}⚠ $1${Color_Off}"
     log_message "WARNING: $1"
 }
 
-# Print an error message
+# Print an error message (using bold for emphasis as errors are important)
 print_error() {
     echo -e "${BRed}✘ $1${Color_Off}"
     log_message "ERROR: $1"
@@ -315,14 +337,18 @@ run_git_command() {
     local git_cmd="$1"
     local show_level="${2:-normal}"
 
-    # Always show if debug mode is true (backward compatibility)
-    if [[ "$debug_mode" == "true" ]]; then
-        eval "$git_cmd"
-        return $?
+    # For backward compatibility, treat debug_mode=true as verbosity_level=debug
+    if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
+        # Only log this when not already in debug verbosity to avoid noise
+        log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
+        # Treat as if verbosity_level is debug
+        local effective_verbosity="debug"
+    else
+        local effective_verbosity="$verbosity_level"
     fi
 
     # Control output based on verbosity level
-    case "$verbosity_level" in
+    case "$effective_verbosity" in
         "brief")
             if [[ "$show_level" == "brief" ]]; then
                 eval "$git_cmd"
@@ -347,7 +373,7 @@ run_git_command() {
 
 # Print a section header (always shown regardless of verbosity)
 print_section() {
-    echo -e "\n${BWhite}▶ $1${Color_Off}"
+    echo -e "\n${White}▶ $1${Color_Off}"
     log_message "SECTION: $1"
 }
 
@@ -1257,9 +1283,14 @@ Git diff:
 
 
   # Debug test - this should always show if debug is enabled
-  if [[ "$debug_mode" == "true" ]]; then
-    print_info "DEBUG: AI function called with debug_mode=$debug_mode" >&2
-    print_info "DEBUG: MAIASS_DEBUG=$MAIASS_DEBUG" >&2
+  # For backward compatibility, treat debug_mode=true as verbosity_level=debug
+  if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
+    # Only log this when not already in debug verbosity to avoid noise
+    log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
+    print_info "DEBUG: AI function called with debug_mode=$debug_mode (deprecated, use MAIASS_VERBOSITY=debug instead)" "debug" >&2
+    print_info "DEBUG: MAIASS_DEBUG=$MAIASS_DEBUG" "debug" >&2
+  elif [[ "$verbosity_level" == "debug" ]]; then
+    print_info "DEBUG: AI function called with verbosity_level=$verbosity_level" "debug" >&2
   fi
 
   # Get git diff for context
@@ -1618,7 +1649,18 @@ handle_staged_commit() {
 
           get_commit_message
           # Use git commit -F - to properly handle multi-line commit messages
-          if [[ "$debug_mode" == "true" ]] || [[ "$verbosity_level" == "debug" ]]; then
+
+          # For backward compatibility, treat debug_mode=true as verbosity_level=debug
+          if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
+            # Only log this when not already in debug verbosity to avoid noise
+            log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
+            # Treat as if verbosity_level is debug
+            local effective_verbosity="debug"
+          else
+            local effective_verbosity="$verbosity_level"
+          fi
+
+          if [[ "$effective_verbosity" == "debug" ]]; then
             echo "$commit_message" | git commit -F -
           else
             echo "$commit_message" | git commit -F - >/dev/null 2>&1
@@ -2445,7 +2487,8 @@ EOF
   echo -e "  ${BRed}MAIASS_OPENAI_TOKEN${Color_Off}          Optional but ${BRed}REQUIRED${Color_Off} if you want AI commit messages"
   echo -e "  MAIASS_OPENAI_MODE           ${Gray}('ask')${Color_Off} 'off', 'autosuggest'"
   echo -e "  MAIASS_OPENAI_MODEL          ${Gray}('gpt-4o')${Color_Off} AI model to use"
-  echo -e "  MAIASS_OPENAI_COMMIT_MESSAGE_STYLE  ${Gray}('bullet')${Color_Off} 'conventional', 'simple'\n"
+  echo -e "  MAIASS_OPENAI_COMMIT_MESSAGE_STYLE  ${Gray}('bullet')${Color_Off} 'conventional', 'simple'"
+  echo -e "  MAIASS_OPENAI_ENDPOINT       ${Gray}(default AI provider)${Color_Off} Custom AI endpoint\n"
 
   echo -e "${BWhite}📊 OUTPUT CONTROL:${Color_Off}"
   echo -e "  MAIASS_VERBOSITY             ${Gray}('brief')${Color_Off} 'normal', 'debug'"
@@ -2492,7 +2535,7 @@ EOF
   echo -e "${BRed}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${Color_Off}\n"
 
   echo -e "${BWhite}✨ KEY FEATURES:${Color_Off}"
-  echo -e "  • ${BGreen}AI-powered commit messages${Color_Off} via OpenAI GPT"
+  echo -e "  • ${BGreen}AI-powered commit messages${Color_Off} via AI integration"
   echo -e "  • ${BGreen}Automatic changelog generation${Color_Off} and management"
   echo -e "  • ${BGreen}Multi-repository support${Color_Off} (WordPress, Craft, bespoke projects)"
   echo -e "  • ${BGreen}Git workflow automation${Color_Off} (commit, tag, merge, push)"
@@ -2539,11 +2582,12 @@ show_help_committhis() {
                       echo -e "  ${BGreen}committhis${Color_Off}"
                       echo
                       echo -e "${BWhite}Environment Configuration:${Color_Off}"
-                      echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your OpenAI API token (required)"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your AI API token (required)"
                       echo -e "  ${BCyan}MAIASS_OPENAI_MODE${Color_Off}       Commit mode:"
                       echo -e "                                 ask (default), autosuggest, off"
                       echo -e "  ${BCyan}MAIASS_OPENAI_COMMIT_MESSAGE_STYLE${Color_Off}"
                       echo -e "                                 Message style: bullet (default), conventional, simple"
+                      echo -e "  ${BCyan}MAIASS_OPENAI_ENDPOINT${Color_Off}   Custom AI endpoint (optional)"
                       echo
                       echo -e "${BWhite}Files (optional):${Color_Off}"
                       echo -e "  ${BGreen}.env${Color_Off}                     Can define the variables above"
