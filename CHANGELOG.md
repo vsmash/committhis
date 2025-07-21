@@ -1,3 +1,19 @@
+## 4.10.22
+21 July 2025
+
+- 'Enhanced color coding and improved verbosity control in maiass.sh
+- feat: Expanded color palette for console output
+- refactor: Organized color definitions into bold and regular categories
+- refactor: Updated print functions to use new color palette
+- refactor: Replaced debug_mode with verbosity_level for better output control
+- refactor: Updated codebase to use new verbosity_level control
+- fix: Corrected console output to match verbosity level
+- feat: Added deprecation warning for use of debug_mode
+- refactor: Updated section headers to use regular color palette'
+- Updated AI integration and added custom endpoint option
+- feat: added custom AI endpoint option in MAIASS script
+- refactor: replaced OpenAI GPT with generic AI integration
+
 ## 4.10.21
 20 July 2025
 
