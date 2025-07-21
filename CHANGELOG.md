@@ -1,6 +1,8 @@
-## 4.10.23
+## 4.10.24
 21 July 2025
 
+- 'Updated git log command in updateChangelog function
+- refactor: modified git log syntax to include full commit message with proper line breaks'
 - 'Updated messaging system in MAIASS
 - feat: clarified relationship between verbosity and debug
 - fix: corrected print_always function to accept parameters properly
