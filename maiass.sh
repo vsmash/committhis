@@ -1613,12 +1613,13 @@ function get_commit_message() {
     # Remove one trailing newline if present:
     commit_message="${commit_message%$'\n'}"
   fi
-
+  internal_commit_message="[$(git config user.name)] $commit_message"
   # Prepend Jira ticket number if found and not already present
   if [[ -n "$jira_ticket_number" && ! "$commit_message" =~ ^$jira_ticket_number ]]; then
     commit_message="$jira_ticket_number $commit_message"
+    internal_commit_message="$jira_ticket_number $internal_commit_message"
   fi
-
+  # prepend with author of commit
   # Abort if the commit message is still empty
   if [[ -z "$commit_message" ]]; then
       echo "Aborting commit due to empty commit message."
@@ -1626,6 +1627,7 @@ function get_commit_message() {
   fi
 
   # Export the commit message and jira ticket number for use by calling function
+  export internal_commit_message
   export commit_message
   export jira_ticket_number
 }
