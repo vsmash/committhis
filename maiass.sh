@@ -1404,6 +1404,17 @@ esac
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Using jq for JSON parsing" >&2
       suggested_message=$(echo "$api_response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: jq result: '$suggested_message'" >&2
+      
+      # Extract token usage information if available
+      local prompt_tokens completion_tokens total_tokens
+      prompt_tokens=$(echo "$api_response" | jq -r '.usage.prompt_tokens // empty' 2>/dev/null)
+      completion_tokens=$(echo "$api_response" | jq -r '.usage.completion_tokens // empty' 2>/dev/null)
+      total_tokens=$(echo "$api_response" | jq -r '.usage.total_tokens // empty' 2>/dev/null)
+      
+      # Display token usage if available (always show regardless of verbosity)
+      if [[ -n "$total_tokens" && "$total_tokens" != "null" && "$total_tokens" != "empty" ]]; then
+        print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"
+      fi
     fi
 
     # Fallback to sed parsing if jq not available or failed
@@ -2485,9 +2496,6 @@ EOF
   echo -e "${BRed}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${Color_Off}"
   echo -e "${BRed}                            CONFIGURATION (OPTIONAL)${Color_Off}"
   echo -e "${BRed}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${Color_Off}\n"
-
-  echo -e "${BYellow}💡 Most settings are OPTIONAL with sensible defaults!${Color_Off}"
-  echo -e "${BYellow}   Only set these if you want to override the default behavior.${Color_Off}\n"
 
   echo -e "${BWhite}🤖 AI FEATURES:${Color_Off}"
   echo -e "  ${BRed}MAIASS_OPENAI_TOKEN${Color_Off}          Optional but ${BRed}REQUIRED${Color_Off} if you want AI commit messages"
