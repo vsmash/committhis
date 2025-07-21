@@ -1509,6 +1509,8 @@ function get_commit_message() {
     print_info "Getting AI commit message suggestion..." "brief"
     if ai_suggestion=$(get_ai_commit_suggestion); then
       print_success "AI suggested commit message:"
+      ai_suggestion="$(echo "$ai_suggestion" | sed "1s/^'//; \$s/'$//")"
+      ai_suggestion="$(echo "$ai_suggestion" | sed 's/\r$//')"
       echo -e "${BMagenta}${BWhiteBG}$ai_suggestion${Color_Off}"
       echo
 
@@ -1679,7 +1681,8 @@ handle_staged_commit() {
           local devlog_message="${commit_message//$'\n'/; }"
 
           # Escape double quotes if needed
-          devlog_message="${devlog_message//\"/\\\"}"          logthis "${commit_message//$'\n'/; }"
+          devlog_message="${devlog_message//\"/\\\"}"
+          logthis "${commit_message//$'\n'/; }"
           if remote_exists "origin"; then
             # y to push upstream
             read -n 1 -s -p "$(echo -e ${BYellow}Do you want to push this commit to remote? [y/N]${Color_Off} )" REPLY
