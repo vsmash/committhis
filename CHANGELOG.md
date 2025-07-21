@@ -8,15 +8,15 @@
 - fix: corrected print_always function to accept parameters properly
 - fix: refined AI commit message suggestion in get_commit_message function
 - refactor: improved handling of staged commit in handle_staged_commit function
-- 'Update commit message functionality in maiass.sh script
-- feat: exported internal commit message for use by calling function'
-- 'Updated git log command in updateChangelog function
-- refactor: modified git log syntax to include full commit message with proper line breaks'
-- 'Updated messaging system in MAIASS
+- Update commit message functionality in maiass.sh script
+- feat: exported internal commit message for use by calling function
+- Updated git log command in updateChangelog function
+- refactor: modified git log syntax to include full commit message with proper line breaks
+- Updated messaging system in MAIASS
 - feat: clarified relationship between verbosity and debug
 - style: refined use of bold formatting for emphasis
-- docs: added MESSAGING_CHANGES.md and messaging_system.md documentation'
-- 'Enhanced color coding and improved verbosity control in maiass.sh
+- docs: added MESSAGING_CHANGES.md and messaging_system.md documentation
+- Enhanced color coding and improved verbosity control in maiass.sh
 - feat: Expanded color palette for console output
 - refactor: Organized color definitions into bold and regular categories
 - refactor: Updated print functions to use new color palette
@@ -24,8 +24,7 @@
 - refactor: Updated codebase to use new verbosity_level control
 - fix: Corrected console output to match verbosity level
 - feat: Added deprecation warning for use of debug_mode
-- refactor: Updated section headers to use regular color palette'
-- Updated AI integration and added custom endpoint option
+- refactor: Updated section headers to use regular color palette- Updated AI integration and added custom endpoint option
 - feat: added custom AI endpoint option in MAIASS script
 - refactor: replaced OpenAI GPT with generic AI integration
 
@@ -40,32 +39,27 @@
 ## 4.10.20
 19 July 2025
 
-- 'Added detailed instructions and updated AI integration
+- Added detailed instructions and updated AI integration
 - docs: added comprehensive guidelines for GitHub Copilot in MAIASS ecosystem
 - docs: added GitHub Copilot instructions for MAIASS project
-- docs(ai): updated default AI mode and added max characters setting'
+- docs(ai): updated default AI mode and added max characters setting
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
 
 ## 4.10.19
 18 July 2025
 
-- 'Restructured README.maiass.md for better clarity
-- docs: moved section about AI-powered commit message tool'
-- Revert README to MAIASS
+- Restructured README.maiass.md for better clarity
+- docs: moved section about AI-powered commit message tool- Revert README to MAIASS
 - Temporary: swap README for committhis push
-- 'Updated assets
-- feat: updated maiass_banner.png in assets'
-- 'Updated README for maiass
-- docs: clarified usage of AI-powered commit message tool in README'
-- 'Updated testing script and added new developer guidelines
+- Updated assets
+- feat: updated maiass_banner.png in assets- 'Updated README for maiass
+- docs: clarified usage of AI-powered commit message tool in README- 'Updated testing script and added new developer guidelines
 - feat: expanded test_maiass.sh with more detailed tests
 - feat: added handling for various edge cases in tests
-- docs: created new .junie/guidelines.md file with project instructions'
-- 'Update maiass.sh and add new test_maiass.sh script
+- docs: created new .junie/guidelines.md file with project instructions- 'Update maiass.sh and add new test_maiass.sh script
 - fix: corrected assignment of AI variables in maiass.sh
-- feat: added new test script test_maiass.sh for testing MAIASS functionality'
-- Update MAIASS banner image URL in README
+- feat: added new test script test_maiass.sh for testing MAIASS functionality- Update MAIASS banner image URL in README
 - docs: changed MAIASS banner image URL to use a direct link from GitHub repository
 - Fix typo in environment variable
 - fix: corrected typo in environment variable name from MAIASS_AUTOPUSh_COMMITS to MAIASS_AUTOPUSH_COMMITS
@@ -79,10 +73,8 @@
 - docs: added MAIASS banner image to README
 - docs: adjusted formatting and spacing for improved readability
 - Add images and improve script formatting
-- feat: added new image files 'maiass.png' and 'maiass_banner.png'
-- style: removed trailing whitespace in 'maiass.sh' script
-- chore: added comment for deploy options function in 'maiass.sh'
-
+- feat: added new image files 'maiass.png' and 'maiass_banner.png- style: removed trailing whitespace in 'maiass.sh' script
+- chore: added comment for deploy options function in 'maiass.sh
 ## 4.10.11
 17 July 2025
 
@@ -118,8 +110,7 @@
 - feat: created '.windsurf' for MAIASS project configuration
 - feat: added 'maiasstest.code-workspace' for VSCode integration
 - fix: removed exit on missing 'devlog.sh' function
-- fix: corrected header message to 'MAIASS Script'
-- feat: implemented 'print_always' function for consistent logging
+- fix: corrected header message to 'MAIASS Script- feat: implemented 'print_always' function for consistent logging
 - feat: enhanced branch detection to include release branches
 - fix: added debugging info for version file detection
 
@@ -155,8 +146,7 @@
 - docs: removed extraneous line in README for clarity
 - Renamed README file for consistency
 - renamed: changed 'README.aicommit.md' to 'README.committhis.md' in the docs directory
-- Rename 'aicommit' to 'committhis'
-- refactor: renamed 'aicommit' to 'committhis' across files
+- Rename 'aicommit' to 'committhis- refactor: renamed 'aicommit' to 'committhis' across files
 - docs: updated README and installation instructions to reflect new name
 - feat: added `committhis.sh` script symlinked as `committhis`
 - fix: updated help and version flags to use `committhis` identifier
@@ -187,8 +177,7 @@
 - feat: implemented push_version_tag_to_committhis for version tagging
 - refactor: integrated version tag pushing in push_to_committhis function
 - Renamed and updated script references
-- chore: renamed 'deploy.sh' to 'dply.sh'
-- fix: updated script references from 'deploy.sh' to 'dply.sh' in deployment script
+- chore: renamed 'deploy.sh' to 'dply.sh- fix: updated script references from 'deploy.sh' to 'dply.sh' in deployment script
 - Corrected script path in deploy process
 - fix: updated echo statement to reflect correct script path
 - fix: changed git restore command to target scripts/deploy.sh instead of scripts/push-dual.sh
@@ -215,9 +204,7 @@
 - Corrected brand variable in commit message
 - fix: replaced hardcoded branch name with variable `brand`
 - Refactored branding and added AI commit option
-- feat: added brand environment variable with default value 'MAIASS'
-- feat: implemented '-ai-commits-only' option to set brand to 'committhis'
-- refactor: replaced hardcoded 'MAIASS' with dynamic brand variable in messages
+- feat: added brand environment variable with default value 'MAIASS- feat: implemented '-ai-commits-only' option to set brand to 'committhis- refactor: replaced hardcoded 'MAIASS' with dynamic brand variable in messages
 - Update messaging in maiass.sh script
 - style: emphasized "stage and commit" text in user prompt
 - refactor: changed "MAIASS" to "committhis" in final message
@@ -276,8 +263,7 @@
 - refactor: updated devlog.sh calls to include project and client information
 - fix: set client and project variables for Bitbucket and GitHub repositories
 - Corrected script name in conditional check
-- fix: corrected script name in conditional check from 'devlog.sh' to 'devlogg.sh'
-- Rename devlog function to devlog.sh
+- fix: corrected script name in conditional check from 'devlog.sh' to 'devlogg.sh- Rename devlog function to devlog.sh
 - refactor: changed function name from devlog to devlog.sh
 - fix: updated function calls to match the new name
 - fix: corrected logic to handle function type checking
@@ -299,10 +285,8 @@
 - Refactored commit message handling in maiass.sh
 - refactor: commented out devlog message sanitization and logging
 - Replace commit message variable with placeholder
-- refactor: replaced 'devlog_message' with 'testing' in function 'checkUncommittedChanges'
-- Fix variable name typo in commit message sanitation
-- fix: corrected variable name from 'metlog_message' to 'devlog_message'
-- refactor: uncommented 'devlog' function call to log messages
+- refactor: replaced 'devlog_message' with 'testing' in function 'checkUncommittedChanges- Fix variable name typo in commit message sanitation
+- fix: corrected variable name from 'metlog_message' to 'devlog_message- refactor: uncommented 'devlog' function call to log messages
 - Commented out unused code in maiass.sh
 - refactor: commented out unused devlog function call
 - Handle missing remote in git push logic
@@ -329,8 +313,7 @@
 - Improve README formatting
 - docs: removed version repetition in the title
 - docs: added a section header for the full name
-- docs: removed extraneous numeral '3'
-- # Conflicts:
+- docs: removed extraneous numeral '3- # Conflicts:
 - #	README.md
 - Refined README structure
 - docs: simplified header by combining lines
@@ -359,8 +342,7 @@
 - Update README for clarity and accuracy
 - docs: refined question about team sprint understanding
 - docs: adjusted platform support table formatting
-- docs: updated Windows WSL support status to 'Untested'
-- Added README symlink in docs directory
+- docs: updated Windows WSL support status to 'Untested- Added README symlink in docs directory
 - chore: created symlink for README in the docs directory
 - blurb for readme
 - Refactored AI integration and PR documentation
@@ -422,8 +404,7 @@
 - Improve changelog formatting using %B
 - Switch from %b to %B in git log commands to include full commit messages with proper line breaks.
 - Enhance changelog readability by accurately processing multi-line commits.
-- Update repository references to 'maiass'
-- Add sponsorship section to README.md
+- Update repository references to 'maiass- Add sponsorship section to README.md
 - Added a new section to the README.md file to encourage users to sponsor the project if they find it helpful. Includes GitHub Sponsors and Ko-fi links.
 - Create FUNDING.yml
 - funding yml
@@ -645,8 +626,7 @@
 - Improve changelog formatting using %B
 - Switch from %b to %B in git log commands to include full commit messages with proper line breaks.
 - Enhance changelog readability by accurately processing multi-line commits.
-- Update repository references to 'maiass'
-- Add sponsorship section to README.md
+- Update repository references to 'maiass- Add sponsorship section to README.md
 - Added a new section to the README.md file to encourage users to sponsor the project if they find it helpful. Includes GitHub Sponsors and Ko-fi links.
 - Create FUNDING.yml
 - funding yml
