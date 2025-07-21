@@ -1,15 +1,19 @@
-## 4.10.25
+## 4.10.27
 21 July 2025
 
-- 'Update commit message functionality in maiass.sh script
+- Updated MAIASS script and CHANGELOG
 - feat: added internal commit message variable
 - feat: included author in commit message
+- refactor: modified git log syntax to include full commit message with proper line breaks
+- fix: corrected print_always function to accept parameters properly
+- fix: refined AI commit message suggestion in get_commit_message function
+- refactor: improved handling of staged commit in handle_staged_commit function
+- 'Update commit message functionality in maiass.sh script
 - feat: exported internal commit message for use by calling function'
 - 'Updated git log command in updateChangelog function
 - refactor: modified git log syntax to include full commit message with proper line breaks'
 - 'Updated messaging system in MAIASS
 - feat: clarified relationship between verbosity and debug
-- fix: corrected print_always function to accept parameters properly
 - style: refined use of bold formatting for emphasis
 - docs: added MESSAGING_CHANGES.md and messaging_system.md documentation'
 - 'Enhanced color coding and improved verbosity control in maiass.sh
