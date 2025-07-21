@@ -1025,7 +1025,8 @@ function updateChangelog() {
     }')
 
     # changelog_internal=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%h %s (%an)" \
-    changelog_internal=$(git log "$(git describe --tags --abbrev=0)"..HEAD --pretty=format:"%h %s (%an)%n%B" \
+    # Using only %B to get the full commit message with proper line breaks, avoiding duplication
+    changelog_internal=$(git log "$(git describe --tags --abbrev=0)"..HEAD --pretty=format:"%B" \
     | sed -E 's/^[0-9a-f]+ \([^)]+\) //; s/^[0-9a-f]+ //' \
     | grep -vE '^(ncl|Merge|Bump|Fixing merge conflicts)' -i \
     | sed 's/^/- /')
