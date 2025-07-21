@@ -1,3 +1,15 @@
+## 4.11.1
+21 July 2025
+
+- Updated maiass.sh script
+- feat: added exports for total_tokens, completion_tokens, and prompt_tokens
+- refactor: moved total tokens condition check and print statement
+- style: removed redundant whitespace
+- [0;96mℹ Token usage: 653 total (616 prompt + 37 completion)[0m
+- 'Updated token usage and cleaned up configuration in maiass.sh
+- feat: added extraction and display of token usage information
+- fix: removed redundant settings information in configuration
+
 ## 4.10.28
 21 July 2025
 
