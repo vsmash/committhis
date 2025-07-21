@@ -1,6 +1,11 @@
-## 4.10.22
+## 4.10.23
 21 July 2025
 
+- 'Updated messaging system in MAIASS
+- feat: clarified relationship between verbosity and debug
+- fix: corrected print_always function to accept parameters properly
+- style: refined use of bold formatting for emphasis
+- docs: added MESSAGING_CHANGES.md and messaging_system.md documentation'
 - 'Enhanced color coding and improved verbosity control in maiass.sh
 - feat: Expanded color palette for console output
 - refactor: Organized color definitions into bold and regular categories
