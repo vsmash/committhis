@@ -1741,7 +1741,7 @@ function checkUncommittedChanges(){
           else
             print_success "Commit process completed."
             print_error "Cannot proceed on release/changelog pipeline with uncommitted changes"
-            print_succsess "Thank you for using $brand."
+            print_success "Thank you for using $brand."
             exit 1
           fi
       fi
