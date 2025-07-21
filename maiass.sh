@@ -63,7 +63,9 @@ function logthis(){
     debugmsg=$(devlog.sh "$1" "c" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}")
 }
 
-
+export total_tokens=''
+export completion_tokens=''
+export prompt_tokens=''
 export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
 export version_primary_type="${MAIASS_VERSION_PRIMARY_TYPE:-}"
 export version_primary_line_start="${MAIASS_VERSION_PRIMARY_LINE_START:-}"
@@ -1410,11 +1412,9 @@ esac
       prompt_tokens=$(echo "$api_response" | jq -r '.usage.prompt_tokens // empty' 2>/dev/null)
       completion_tokens=$(echo "$api_response" | jq -r '.usage.completion_tokens // empty' 2>/dev/null)
       total_tokens=$(echo "$api_response" | jq -r '.usage.total_tokens // empty' 2>/dev/null)
-      
+
+       print_always "Total Tokens : ${total_tokens} " >&2
       # Display token usage if available (always show regardless of verbosity)
-      if [[ -n "$total_tokens" && "$total_tokens" != "null" && "$total_tokens" != "empty" ]]; then
-        print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"
-      fi
     fi
 
     # Fallback to sed parsing if jq not available or failed
@@ -1522,6 +1522,10 @@ function get_commit_message() {
       print_success "AI suggested commit message:"
       ai_suggestion="$(echo "$ai_suggestion" | sed "1s/^'//; \$s/'$//")"
       ai_suggestion="$(echo "$ai_suggestion" | sed 's/\r$//')"
+      if [[ -n "$total_tokens" && "$total_tokens" != "null" && "$total_tokens" != "empty" ]]; then
+        print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"
+      fi
+
       echo -e "${BMagenta}${BWhiteBG}$ai_suggestion${Color_Off}"
       echo
 
