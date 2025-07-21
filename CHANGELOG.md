@@ -1,6 +1,13 @@
-## 4.10.27
+## 4.10.28
 21 July 2025
 
+- Refactored code and updated documentation
+- refactor: improved handling of commit message functionality and syntax
+- feat: expanded color palette for console output and updated test scripts
+- docs: added comprehensive guidelines for GitHub Copilot and updated README
+- style: removed trailing whitespace in scripts and refined script formatting
+- fix: corrected assignment of AI variables, typo in environment variable name, and script references
+- chore: renamed scripts and added comment for deploy options function
 - Updated MAIASS script and CHANGELOG
 - feat: added internal commit message variable
 - feat: included author in commit message
@@ -11,7 +18,6 @@
 - Update commit message functionality in maiass.sh script
 - feat: exported internal commit message for use by calling function
 - Updated git log command in updateChangelog function
-- refactor: modified git log syntax to include full commit message with proper line breaks
 - Updated messaging system in MAIASS
 - feat: clarified relationship between verbosity and debug
 - style: refined use of bold formatting for emphasis
@@ -75,6 +81,7 @@
 - Add images and improve script formatting
 - feat: added new image files 'maiass.png' and 'maiass_banner.png- style: removed trailing whitespace in 'maiass.sh' script
 - chore: added comment for deploy options function in 'maiass.sh
+
 ## 4.10.11
 17 July 2025
 
