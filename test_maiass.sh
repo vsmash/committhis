@@ -49,7 +49,7 @@ export MAIASS_NO_PUSH=true
 export MAIASS_NO_TAG=true
 export MAIASS_NO_MERGE=true
 export MAIASS_VERBOSITY="brief"
-export MAIASS_OPENAI_MODE="off"
+export MAIASS_AI_MODE="off"
 
 # Create empty changelog files to prevent errors
 touch CHANGELOG.md

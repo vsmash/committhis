@@ -76,7 +76,7 @@ These affect the entire ecosystem:
 
 ```bash
 # Core MAIASS configuration
-export MAIASS_OPENAI_TOKEN="your-key"           # For maiass/ and maiass-proxy/
+export MAIASS_AI_TOKEN="your-key"           # For maiass/ and maiass-proxy/
 export MAIASS_VERBOSITY="normal"                # Debugging across projects
 
 # Development paths
@@ -91,7 +91,7 @@ export MAIASS_TEST_REPOS="/path/to/testrepos"   # For automated testing
 # Primary development environment
 export MAIASS_MASTERBRANCH="main"
 export MAIASS_VERSION_PRIMARY_FILE="package.json"
-export MAIASS_OPENAI_MODE="ask"
+export MAIASS_AI_MODE="ask"
 ```
 
 #### maiass-proxy/ Configuration  

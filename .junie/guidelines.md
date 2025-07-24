@@ -27,8 +27,8 @@ This document provides essential information for developers working on the MAIAS
    export MAIASS_VERSION_PRIMARY_TYPE="json"          # Type of primary version file
    
    # OpenAI integration (for AI-powered commit messages)
-   export MAIASS_OPENAI_TOKEN="your-api-key"          # Your OpenAI API key
-   export MAIASS_OPENAI_MODE="ask"                    # Mode for AI integration (ask, auto, off)
+   export MAIASS_AI_TOKEN="your-api-key"          # Your OpenAI API key
+   export MAIASS_AI_MODE="ask"                    # Mode for AI integration (ask, auto, off)
    
    # Verbosity
    export MAIASS_VERBOSITY="brief"                    # Output verbosity (brief, normal, verbose)

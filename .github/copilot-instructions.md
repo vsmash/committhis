@@ -31,10 +31,10 @@ export MAIASS_VERSION_PRIMARY_FILE="package.json"    # Primary version file
 export MAIASS_VERSION_PRIMARY_TYPE="json"            # File type: json, txt, php
 
 # OpenAI integration
-export MAIASS_OPENAI_TOKEN="your-api-key"           # OpenAI API key
-export MAIASS_OPENAI_MODE="ask"                     # Modes: ask, autosuggest, off
-export MAIASS_OPENAI_MODEL="gpt-4o"                 # Default: gpt-4o
-export MAIASS_OPENAI_COMMIT_MESSAGE_STYLE="bullet"  # Styles: bullet, conventional, simple
+export MAIASS_AI_TOKEN="your-api-key"           # OpenAI API key
+export MAIASS_AI_MODE="ask"                     # Modes: ask, autosuggest, off
+export MAIASS_AI_MODEL="gpt-4o"                 # Default: gpt-4o
+export MAIASS_AI_COMMIT_MESSAGE_STYLE="bullet"  # Styles: bullet, conventional, simple
 
 # Output control
 export MAIASS_VERBOSITY="brief"                     # Levels: brief, normal, debug

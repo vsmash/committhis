@@ -73,9 +73,9 @@ When AI integration is enabled, MAIASS can generate conventional commit messages
 
 ```bash
 # Enable AI for commit message generation
-export MAIASS_OPENAI_MODE="ask"
-export MAIASS_OPENAI_TOKEN="your_api_key"
-export MAIASS_OPENAI_COMMIT_MESSAGE_STYLE="conventional"
+export MAIASS_AI_MODE="ask"
+export MAIASS_AI_TOKEN="your_api_key"
+export MAIASS_AI_COMMIT_MESSAGE_STYLE="conventional"
 ```
 
 **AI generates conventional commit messages with prefixes**:
@@ -194,8 +194,8 @@ echo "$MAIASS_CHANGELOG_PATH/$MAIASS_CHANGELOG_NAME"
 ### AI Issues?
 
 ```bash
-echo "$MAIASS_OPENAI_MODE"
-echo "${MAIASS_OPENAI_TOKEN:0:10}..."
+echo "$MAIASS_AI_MODE"
+echo "${MAIASS_AI_TOKEN:0:10}..."
 ```
 
 ## Example Scripts

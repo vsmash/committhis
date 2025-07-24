@@ -40,8 +40,8 @@ MAIASS uses environment variables for configuration. You can set these in severa
 ### Example 1: Global AI Setup (Recommended)
 ```bash
 # ~/.maiass.env - set once for all projects
-MAIASS_OPENAI_TOKEN=your_openai_api_key_here
-MAIASS_OPENAI_MODE=ask
+MAIASS_AI_TOKEN=your_openai_api_key_here
+MAIASS_AI_MODE=ask
 ```
 
 ### Example 2: Project-Level Branch Override
@@ -55,10 +55,10 @@ MAIASS_MASTERBRANCH=main
 # .env file - full configuration example (most users won't need all of these)
 
 # AI Configuration
-MAIASS_OPENAI_TOKEN=your_openai_api_key_here
-MAIASS_OPENAI_MODE=ask                    # Default: off
-MAIASS_OPENAI_MODEL=gpt-4o               # Default: gpt-4o
-MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet # Default: bullet
+MAIASS_AI_TOKEN=your_openai_api_key_here
+MAIASS_AI_MODE=ask                    # Default: off
+MAIASS_AI_MODEL=gpt-4o               # Default: gpt-4o
+MAIASS_AI_COMMIT_MESSAGE_STYLE=bullet # Default: bullet
 
 # Branch Configuration (only set if different from defaults)
 MAIASS_DEVELOPBRANCH=develop             # Default: develop
@@ -104,10 +104,10 @@ MAIASS_BROWSER_PROFILE="Work"            # Default: Default
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MAIASS_OPENAI_TOKEN` | *(none)* | OpenAI API token (required for AI features) |
-| `MAIASS_OPENAI_MODE` | `off` | AI mode: `off`, `ask`, `autosuggest` |
-| `MAIASS_OPENAI_MODEL` | `gpt-4o` | OpenAI model: `gpt-4o`, `gpt-4`, `gpt-3.5-turbo` |
-| `MAIASS_OPENAI_COMMIT_MESSAGE_STYLE` | `bullet` | Commit message style: `bullet`, `conventional`, `simple` |
+| `MAIASS_AI_TOKEN` | *(none)* | OpenAI API token (required for AI features) |
+| `MAIASS_AI_MODE` | `off` | AI mode: `off`, `ask`, `autosuggest` |
+| `MAIASS_AI_MODEL` | `gpt-4o` | OpenAI model: `gpt-4o`, `gpt-4`, `gpt-3.5-turbo` |
+| `MAIASS_AI_COMMIT_MESSAGE_STYLE` | `bullet` | Commit message style: `bullet`, `conventional`, `simple` |
 
 ### Repository Integration Variables
 
@@ -206,8 +206,8 @@ MAIASS_DEVELOPBRANCH="develop"
 # .env for Node.js project
 MAIASS_VERSION_PRIMARY_FILE="package.json"
 MAIASS_VERSION_PRIMARY_TYPE="json"
-MAIASS_OPENAI_MODE="ask"
-MAIASS_OPENAI_COMMIT_MESSAGE_STYLE="conventional"
+MAIASS_AI_MODE="ask"
+MAIASS_AI_COMMIT_MESSAGE_STYLE="conventional"
 ```
 
 ### Shell Script Project

@@ -60,17 +60,17 @@ committhis will:
 Set your OpenAI key and preferences via environment variables or a `.env` file in the repo root:
 
 ```bash
-export MAIASS_OPENAI_TOKEN=your-api-key
-export MAIASS_OPENAI_MODE=ask
-export MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet
+export MAIASS_AI_TOKEN=your-api-key
+export MAIASS_AI_MODE=ask
+export MAIASS_AI_COMMIT_MESSAGE_STYLE=bullet
 ```
 
 Alternatively, create a `.env` file:
 
 ```dotenv
-MAIASS_OPENAI_TOKEN=your-api-key
-MAIASS_OPENAI_MODE=autosuggest
-MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=conventional
+MAIASS_AI_TOKEN=your-api-key
+MAIASS_AI_MODE=autosuggest
+MAIASS_AI_COMMIT_MESSAGE_STYLE=conventional
 ```
 
 ---
@@ -95,7 +95,7 @@ $git_diff
 You'll need an OpenAI API key. You can generate one from https://platform.openai.com/account/api-keys and export it as:
 
 ```bash
-export MAIASS_OPENAI_TOKEN=sk-...
+export MAIASS_AI_TOKEN=sk-...
 ```
 
 ---

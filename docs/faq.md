@@ -44,7 +44,7 @@ Create a `.env` file in your project root with your preferred settings:
 ```bash
 # Basic configuration
 MAIASS_MASTERBRANCH=main
-MAIASS_OPENAI_MODE=autosuggest
+MAIASS_AI_MODE=autosuggest
 ```
 You can also set global overrides and your openai token in your home directory in `.maiass.env`
 The `.env` file takes precedence over the `.maiass.env` file.
@@ -107,10 +107,10 @@ Yes! MAIASS works perfectly with local-only repositories:
 
 ### How do I set up AI commit messages?
 1. Get an OpenAI API key from [platform.openai.com](https://platform.openai.com/)
-2. Add to your `.env` in your project: `MAIASS_OPENAI_TOKEN=your_key_here`, or in your shell profile: `export MAIASS_OPENAI_TOKEN="your_key_here", or in your home directory in `.maiass.env`
-3. Set mode: `MAIASS_OPENAI_MODE=autosuggest`. The default mode is 'ask' which will prompt you for approval.
-4. Set model: `MAIASS_OPENAI_MODEL=gpt-3.5-turbo`. The default model is 'gpt-4o'.
-5. Set commit message style: `MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet`. The default style is 'bullet'.
+2. Add to your `.env` in your project: `MAIASS_AI_TOKEN=your_key_here`, or in your shell profile: `export MAIASS_AI_TOKEN="your_key_here", or in your home directory in `.maiass.env`
+3. Set mode: `MAIASS_AI_MODE=autosuggest`. The default mode is 'ask' which will prompt you for approval.
+4. Set model: `MAIASS_AI_MODEL=gpt-3.5-turbo`. The default model is 'gpt-4o'.
+5. Set commit message style: `MAIASS_AI_COMMIT_MESSAGE_STYLE=bullet`. The default style is 'bullet'.
 
 ### What AI modes are available?
 - **`off`**: No AI assistance
@@ -176,10 +176,10 @@ sudo yum install jq
 - Test with debug mode: `MAIASS_DEBUG=true maiass patch`
 
 ### AI features aren't working
-- Verify API key is set: `echo $MAIASS_OPENAI_TOKEN`
+- Verify API key is set: `echo $MAIASS_AI_TOKEN`
 - Check internet connectivity
 - Ensure you have OpenAI credits
-- Try a different model: `MAIASS_OPENAI_MODEL=gpt-3.5-turbo`
+- Try a different model: `MAIASS_AI_MODEL=gpt-3.5-turbo`
 
 ## Advanced Usage
 

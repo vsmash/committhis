@@ -87,8 +87,8 @@ own without the git flow, version managment and changelog generation
 
 ```bash
 # Set up OpenAI integration
-export MAIASS_OPENAI_TOKEN="your_api_key"
-export MAIASS_OPENAI_MODE="ask"
+export MAIASS_AI_TOKEN="your_api_key"
+export MAIASS_AI_MODE="ask"
 
 # MAIASS will now suggest intelligent commit messages
 maiass patch

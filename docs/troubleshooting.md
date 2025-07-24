@@ -205,20 +205,20 @@ maiass patch
 **Solutions**:
 1. **Verify API key is set**:
    ```bash
-   echo $MAIASS_OPENAI_TOKEN
+   echo $MAIASS_AI_TOKEN
    # Should show: sk-...
    ```
 
 2. **Check .env file**:
    ```bash
    cat .env | grep OPENAI
-   # Should show: MAIASS_OPENAI_TOKEN=sk-...
+   # Should show: MAIASS_AI_TOKEN=sk-...
    ```
 
 3. **Source .env file**:
    ```bash
    source .env
-   export MAIASS_OPENAI_TOKEN="your_key_here"
+   export MAIASS_AI_TOKEN="your_key_here"
    ```
 
 #### "API request failed" errors
@@ -232,13 +232,13 @@ maiass patch
 
 2. **Verify API key validity**:
    ```bash
-   curl -H "Authorization: Bearer $MAIASS_OPENAI_TOKEN" \
+   curl -H "Authorization: Bearer $MAIASS_AI_TOKEN" \
         https://api.openai.com/v1/models
    ```
 
 3. **Try different model**:
    ```bash
-   export MAIASS_OPENAI_MODEL="gpt-3.5-turbo"
+   export MAIASS_AI_MODEL="gpt-3.5-turbo"
    ```
 
 4. **Check OpenAI account credits**:
@@ -298,7 +298,7 @@ maiass patch
 
 2. **Disable AI for speed**:
    ```bash
-   export MAIASS_OPENAI_MODE="off"
+   export MAIASS_AI_MODE="off"
    ```
 
 3. **Check network connectivity**:

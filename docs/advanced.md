@@ -79,11 +79,11 @@ MAIASS_VERSION_SECONDARY_FILES="README.md:txt:Version |docs/installation.md:txt:
 
 ```bash
 # Use different models for different scenarios
-MAIASS_OPENAI_MODEL="gpt-4o"  # For complex changes
-# MAIASS_OPENAI_MODEL="gpt-3.5-turbo"  # For simple changes
+MAIASS_AI_MODEL="gpt-4o"  # For complex changes
+# MAIASS_AI_MODEL="gpt-3.5-turbo"  # For simple changes
 
 # Customize commit message style
-MAIASS_OPENAI_COMMIT_MESSAGE_STYLE="conventional"
+MAIASS_AI_COMMIT_MESSAGE_STYLE="conventional"
 ```
 
 ### AI Integration with Jira
@@ -102,6 +102,13 @@ git checkout -b hotfix/TICKET-789-security-patch
 ```
 
 ## Repository Integration
+
+If you have bitbucket or github as part of  your .ssh config, MAIASS will automatically detect the repository provider and use it.
+
+```bash
+# Repository detection override
+MAIASS_REPO_PROVIDER="github"
+```
 
 ### GitHub Advanced Configuration
 
@@ -203,9 +210,9 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/vsmash/maiass/main/install.sh | bash
       - name: Configure MAIASS
         env:
-          MAIASS_OPENAI_TOKEN: ${{ secrets.OPENAI_API_KEY }}
+          MAIASS_AI_TOKEN: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          export MAIASS_OPENAI_MODE="autosuggest"
+          export MAIASS_AI_MODE="autosuggest"
           export MAIASS_VERBOSITY="brief"
           maiass patch
 ```
@@ -224,7 +231,7 @@ release:
     - apt-get update && apt-get install -y git jq curl bash
     - curl -sSL https://raw.githubusercontent.com/vsmash/maiass/main/install.sh | bash
   script:
-    - export MAIASS_OPENAI_MODE="off"  # No AI in CI
+    - export MAIASS_AI_MODE="off"  # No AI in CI
     - export MAIASS_VERBOSITY="brief"
     - maiass patch
   only:
@@ -238,7 +245,7 @@ release:
 ```bash
 # Minimal configuration for speed
 export MAIASS_VERBOSITY="brief"      # Reduce output
-export MAIASS_OPENAI_MODE="off"      # Skip AI processing
+export MAIASS_AI_MODE="off"      # Skip AI processing
 export MAIASS_LOGGING="false"        # Disable logging
 
 # Skip unnecessary operations
@@ -268,10 +275,10 @@ git config gc.auto 256
 cp .env.development .env
 
 # Production (no API keys in repo)
-export MAIASS_OPENAI_TOKEN="$(cat ~/.secrets/openai-key)"
+export MAIASS_AI_TOKEN="$(cat ~/.secrets/openai-key)"
 
 # CI/CD (use secret management)
-# Set MAIASS_OPENAI_TOKEN in CI environment variables
+# Set MAIASS_AI_TOKEN in CI environment variables
 ```
 
 ### Secure Logging

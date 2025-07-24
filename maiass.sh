@@ -40,7 +40,21 @@ BWhiteBG='\033[47m'     # White Background
 export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 
 
-
+mask_api_key() {
+    local api_key="$1"
+    
+    # Check if key is empty or too short
+    if [[ -z "$api_key" ]] || [[ ${#api_key} -lt 8 ]]; then
+        echo "[INVALID_KEY]"
+        return
+    fi
+    
+    # Extract first 4 and last 4 characters using parameter expansion
+    local first_four="${api_key:0:4}"
+    local last_four="${api_key: -4}"
+    
+    echo "${first_four}****${last_four}"
+}
 
 
 
@@ -1236,11 +1250,13 @@ function branchDetection() {
     fi
 }
 
+
+
 function get_ai_commit_message_style() {
 
   # Determine the OpenAI commit message style
-  if [[ -n "$MAIASS_OPENAI_COMMIT_MESSAGE_STYLE" ]]; then
-    openai_commit_style="$MAIASS_OPENAI_COMMIT_MESSAGE_STYLE"
+  if [[ -n "$MAIASS_AI_COMMIT_MESSAGE_STYLE" ]]; then
+    openai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
     print_info "Using AI commit style from .env: $openai_commit_style" >&2
   elif [[ -f ".maiass.prompt" ]]; then
     openai_commit_style="custom"
@@ -1386,7 +1402,10 @@ esac
     -d "$json_payload" 2>/dev/null)
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response length: ${#api_response} characters" >&2
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: ${openai_token} " >&2
+  # mask the api token
+
+  
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: $(mask_api_key "${openai_token}") " >&2
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response : ${api_response} " >&2
   # Extract the suggested message from API response
@@ -2113,13 +2132,13 @@ setup_bumpscript_variables() {
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
 
       # Initialize AI variables early so they're available when get_commit_message is called
-      export openai_mode="${MAIASS_OPENAI_MODE:-ask}"
-      export openai_token="${MAIASS_OPENAI_TOKEN:-}"
-      export openai_model="${MAIASS_OPENAI_MODEL:=gpt-3.5-turbo}"
-      export openai_temperature="${MAIASS_OPENAI_TEMPERATURE:=0.7}"
-      export openai_max_characters="${MAIASS_OPENAI_MAX_CHARACTERS:=8000}"
-      export openai_commit_message_style="${MAIASS_OPENAI_COMMIT_MESSAGE_STYLE:=bullet}"
-      export openai_endpoint="${MAIASS_OPENAI_ENDPOINT:-https://api.openai.com/v1/chat/completions}"
+      export openai_mode="${MAIASS_AI_MODE:-ask}"
+      export openai_token="${MAIASS_AI_TOKEN:-}"
+      export openai_model="${MAIASS_AI_MODEL:=gpt-3.5-turbo}"
+      export openai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
+      export openai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
+      export openai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
+      export openai_endpoint="${MAIASS_AI_ENDPOINT:-https://api.openai.com/v1/chat/completions}"
 
 
       # Initialize configurable version file system
@@ -2258,14 +2277,14 @@ fi
   fi
 
   # AI commit message configuration
-  export openai_mode="${MAIASS_OPENAI_MODE:-off}"
-  export openai_token="${MAIASS_OPENAI_TOKEN:-}"
-  export openai_model="${MAIASS_OPENAI_MODEL:-gpt-3.5-turbo}"
+  export openai_mode="${MAIASS_AI_MODE:-off}"
+  export openai_token="${MAIASS_AI_TOKEN:-}"
+  export openai_model="${MAIASS_AI_MODEL:-gpt-3.5-turbo}"
 
 
   # Determine the OpenAI commit message style
-  if [[ -n "$MAIASS_OPENAI_COMMIT_MESSAGE_STYLE" ]]; then
-    openai_commit_style="$MAIASS_OPENAI_COMMIT_MESSAGE_STYLE"
+  if [[ -n "$MAIASS_AI_COMMIT_MESSAGE_STYLE" ]]; then
+    openai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
     print_info "Using AI commit style from .env: $openai_commit_style"
   elif [[ -f ".maiass.prompt" ]]; then
     openai_commit_style="custom"
@@ -2286,7 +2305,7 @@ fi
   # Validate AI configuration - prevent ask/autosuggest modes without token
   if [[ "$openai_mode" == "ask" || "$openai_mode" == "autosuggest" ]]; then
     if [[ -z "$openai_token" ]]; then
-      print_warning "AI commit message mode '$openai_mode' requires MAIASS_OPENAI_TOKEN"
+      print_warning "AI commit message mode '$openai_mode' requires MAIASS_AI_TOKEN"
       print_warning "Falling back to 'off' mode"
       export openai_mode="off"
     fi
@@ -2460,7 +2479,7 @@ EOF
 
   echo -e "${BWhite}QUICK START:${Color_Off}"
   echo -e "  ${BGreen}1.${Color_Off} Run ${BCyan}maiass${Color_Off} in your git repository"
-  echo -e "  ${BGreen}2.${Color_Off} For AI features: Set ${BRed}MAIASS_OPENAI_TOKEN${Color_Off} environment variable"
+  echo -e "  ${BGreen}2.${Color_Off} For AI features: Set ${BRed}MAIASS_AI_TOKEN${Color_Off} environment variable"
   echo -e "  ${BGreen}3.${Color_Off} Everything else works with sensible defaults!\n"
 
   echo -e "${BWhite}AI COMMIT INTELLIGENCE WORKFLOW:${Color_Off}"
@@ -2503,11 +2522,11 @@ EOF
   echo -e "${BRed}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${Color_Off}\n"
 
   echo -e "${BWhite}🤖 AI FEATURES:${Color_Off}"
-  echo -e "  ${BRed}MAIASS_OPENAI_TOKEN${Color_Off}          Optional but ${BRed}REQUIRED${Color_Off} if you want AI commit messages"
-  echo -e "  MAIASS_OPENAI_MODE           ${Gray}('ask')${Color_Off} 'off', 'autosuggest'"
-  echo -e "  MAIASS_OPENAI_MODEL          ${Gray}('gpt-4o')${Color_Off} AI model to use"
-  echo -e "  MAIASS_OPENAI_COMMIT_MESSAGE_STYLE  ${Gray}('bullet')${Color_Off} 'conventional', 'simple'"
-  echo -e "  MAIASS_OPENAI_ENDPOINT       ${Gray}(default AI provider)${Color_Off} Custom AI endpoint\n"
+  echo -e "  ${BRed}MAIASS_AI_TOKEN${Color_Off}          Optional but ${BRed}REQUIRED${Color_Off} if you want AI commit messages"
+  echo -e "  MAIASS_AI_MODE           ${Gray}('ask')${Color_Off} 'off', 'autosuggest'"
+  echo -e "  MAIASS_AI_MODEL          ${Gray}('gpt-4o')${Color_Off} AI model to use"
+  echo -e "  MAIASS_AI_COMMIT_MESSAGE_STYLE  ${Gray}('bullet')${Color_Off} 'conventional', 'simple'"
+  echo -e "  MAIASS_AI_ENDPOINT       ${Gray}(default AI provider)${Color_Off} Custom AI endpoint\n"
 
   echo -e "${BWhite}📊 OUTPUT CONTROL:${Color_Off}"
   echo -e "  MAIASS_VERBOSITY             ${Gray}('brief')${Color_Off} 'normal', 'debug'"
@@ -2601,12 +2620,12 @@ show_help_committhis() {
                       echo -e "  ${BGreen}committhis${Color_Off}"
                       echo
                       echo -e "${BWhite}Environment Configuration:${Color_Off}"
-                      echo -e "  ${BCyan}MAIASS_OPENAI_TOKEN${Color_Off}      Your AI API token (required)"
-                      echo -e "  ${BCyan}MAIASS_OPENAI_MODE${Color_Off}       Commit mode:"
+                      echo -e "  ${BCyan}MAIASS_AI_TOKEN${Color_Off}      Your AI API token (required)"
+                      echo -e "  ${BCyan}MAIASS_AI_MODE${Color_Off}       Commit mode:"
                       echo -e "                                 ask (default), autosuggest, off"
-                      echo -e "  ${BCyan}MAIASS_OPENAI_COMMIT_MESSAGE_STYLE${Color_Off}"
+                      echo -e "  ${BCyan}MAIASS_AI_COMMIT_MESSAGE_STYLE${Color_Off}"
                       echo -e "                                 Message style: bullet (default), conventional, simple"
-                      echo -e "  ${BCyan}MAIASS_OPENAI_ENDPOINT${Color_Off}   Custom AI endpoint (optional)"
+                      echo -e "  ${BCyan}MAIASS_AI_ENDPOINT${Color_Off}   Custom AI endpoint (optional)"
                       echo
                       echo -e "${BWhite}Files (optional):${Color_Off}"
                       echo -e "  ${BGreen}.env${Color_Off}                     Can define the variables above"

@@ -17,14 +17,14 @@ MAIASS integrates with OpenAI to generate intelligent commit messages based on y
 ### 2. Configure MAIASS
 
 Add your API key to your `.env` file for your project or globally in `~/.maiass.env`:
-Only `MAIASS_OPENAI_TOKEN` is required. Other settings have defaults but can be overridden:
+Only `MAIASS_AI_TOKEN` is required. Other settings have defaults but can be overridden:
 ```bash
 # AI Configuration
-MAIASS_OPENAI_TOKEN=your_api_key_here
-MAIASS_OPENAI_MODE=autosuggest
-MAIASS_OPENAI_MODEL=gpt-4o
-MAIASS_OPENAI_COMMIT_MESSAGE_STYLE=bullet
-MAIASS_OPENAI_MAX_CHARACTERS=8000
+MAIASS_AI_TOKEN=your_api_key_here
+MAIASS_AI_MODE=autosuggest
+MAIASS_AI_MODEL=gpt-4o
+MAIASS_AI_COMMIT_MESSAGE_STYLE=bullet
+MAIASS_AI_MAX_CHARACTERS=8000
 ```
 
 ## AI Modes
@@ -79,7 +79,7 @@ Add user authentication system with JWT support
 
 ```bash
 # Use different model
-MAIASS_OPENAI_MODEL=gpt-3.5-turbo
+MAIASS_AI_MODEL=gpt-3.5-turbo
 ```
 
 ## How AI Analysis Works
@@ -122,8 +122,8 @@ For complex changes across multiple files, AI provides:
 
 ```bash
 # Set up AI mode
-export MAIASS_OPENAI_MODE="ask"
-export MAIASS_OPENAI_COMMIT_MESSAGE_STYLE="conventional"
+export MAIASS_AI_MODE="ask"
+export MAIASS_AI_COMMIT_MESSAGE_STYLE="conventional"
 
 # Run maiass - AI will suggest commit message
 maiass patch
@@ -143,7 +143,7 @@ maiass patch
 
 ```bash
 # Enable automatic commits (use carefully!)
-export MAIASS_OPENAI_MODE="autosuggest"
+export MAIASS_AI_MODE="autosuggest"
 
 # AI will commit automatically with generated message
 maiass minor
@@ -154,7 +154,7 @@ maiass minor
 ### Common Issues
 
 **"OpenAI API key not found"**
-- Verify `MAIASS_OPENAI_TOKEN` is set correctly
+- Verify `MAIASS_AI_TOKEN` is set correctly
 - Check `.env` file exists and is sourced
 - Ensure API key starts with `sk-`
 
