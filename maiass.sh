@@ -2203,23 +2203,24 @@ setup_bumpscript_variables() {
   git_remote_url=$(git remote get-url origin 2>/dev/null || echo "")
 
   # Initialize repository variables
-  export REPO_PROVIDER=""
+  export REPO_PROVIDER="${MAIASS_REPO_PROVIDER:-}"
   export BITBUCKET_WORKSPACE="${MAIASS_BITBUCKET_WORKSPACE:-}"
   export BITBUCKET_REPO_SLUG="${MAIASS_BITBUCKET_REPO_SLUG:-}"
   export GITHUB_OWNER="${MAIASS_GITHUB_OWNER:-}"
   export GITHUB_REPO="${MAIASS_GITHUB_REPO:-}"
 
   # Detect Bitbucket
-  if [[ "$git_remote_url" =~ bitbucket\.org[:/]([^/]+)/([^/\.]+) ]]; then
-    export REPO_PROVIDER="bitbucket"
-    export BITBUCKET_WORKSPACE="${MAIASS_BITBUCKET_WORKSPACE:-${BASH_REMATCH[1]}}"
-    export client=
-  # Detect GitHub
-  elif [[ "$git_remote_url" =~ github\.com[:/]([^/]+)/([^/\.]+) ]]; then
-    export REPO_PROVIDER="github"
-    export GITHUB_OWNER="${MAIASS_GITHUB_OWNER:-${BASH_REMATCH[1]}}"
-    export GITHUB_REPO="${MAIASS_GITHUB_REPO:-${BASH_REMATCH[2]}}"
-  fi
+resolved_host=$(ssh -G "${git_remote_url#*@}" 2>/dev/null | awk '/^hostname / { print $2 }')
+if [[ "$git_remote_url" =~ @(.*bitbucket\.org)[:/]([^/]+)/([^/\.]+) ]]; then
+  export REPO_PROVIDER="bitbucket"
+  export BITBUCKET_WORKSPACE="${MAIASS_BITBUCKET_WORKSPACE:-${BASH_REMATCH[2]}}"
+  export client=
+elif [[ "$git_remote_url" =~ @(.*github\.com)[:/]([^/]+)/([^/\.]+) ]]; then
+  export REPO_PROVIDER="github"
+  export GITHUB_OWNER="${MAIASS_GITHUB_OWNER:-${BASH_REMATCH[2]}}"
+  export GITHUB_REPO="${MAIASS_GITHUB_REPO:-${BASH_REMATCH[3]}}"
+fi
+
 
   # Calculate WordPress version constant for themes/plugins
   if [[ "$repo_type" == "wordpress-theme" || "$repo_type" == "wordpress-plugin" ]]; then
