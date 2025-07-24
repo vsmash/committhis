@@ -1,3 +1,11 @@
+## 4.11.2
+24 July 2025
+
+- Updated documentation and improved repository setup
+- docs: removed token usage line from CHANGELOG.md
+- refactor: renamed files for better organization in docs
+- feat: updated repository provider detection in maiass.sh
+
 ## 4.11.1
 21 July 2025
 
