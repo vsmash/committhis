@@ -57,6 +57,10 @@ mask_api_key() {
 }
 
 
+escape_regex() {
+  # Escapes all regex metacharacters
+  echo "$1" | sed -e 's/[][\/.^$*+?(){}|]/\\&/g'
+}
 
 
 # devlog.sh is my personal script for logging work in google sheets.
@@ -67,10 +71,6 @@ if [ -z "$(type -t devlog.sh)" ]; then
     }
 fi
 
-escape_regex() {
-  # Escapes all regex metacharacters
-  echo "$1" | sed -e 's/[][\/.^$*+?(){}|]/\\&/g'
-}
 
 function logthis(){
     # shellcheck disable=SC1073
@@ -1256,19 +1256,19 @@ function get_ai_commit_message_style() {
 
   # Determine the OpenAI commit message style
   if [[ -n "$MAIASS_AI_COMMIT_MESSAGE_STYLE" ]]; then
-    openai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
-    print_info "Using AI commit style from .env: $openai_commit_style" >&2
+    ai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
+    print_info "Using AI commit style from .env: $ai_commit_style" >&2
   elif [[ -f ".maiass.prompt" ]]; then
-    openai_commit_style="custom"
+    ai_commit_style="custom"
     print_info "No style set in .env; using local prompt file: .maiass.prompt" >&2
   elif [[ -f "$HOME/.maiass.prompt" ]]; then
-    openai_commit_style="global_custom"
+    ai_commit_style="global_custom"
     print_info "No style set in .env; using global prompt file: ~/.maiass.prompt" >&2
   else
-    openai_commit_style="bullet"
+    ai_commit_style="bullet"
     print_info "No style or prompt files found; defaulting to 'bullet'" >&2
   fi
-  export openai_commit_style
+  export ai_commit_style
 }
 
 # Function to get AI-generated commit message suggestion
@@ -1318,14 +1318,14 @@ Git diff:
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff length: ${#git_diff} characters" >&2
 
   # Truncate diff if too long (API has token limits)
-  if [[ ${#git_diff} -gt $openai_max_characters ]]; then
-    git_diff="${git_diff:0:$openai_max_characters}...[truncated]"
-    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff truncated to $openai_max_characters characters" >&2
+  if [[ ${#git_diff} -gt $ai_max_characters ]]; then
+    git_diff="${git_diff:0:$ai_max_characters}...[truncated]"
+    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff truncated to $ai_max_characters characters" >&2
   fi
-    print_info "DEBUG: prompt mode: $openai_commit_style" >&2
+    print_info "DEBUG: prompt mode: $ai_commit_style" >&2
   get_ai_commit_message_style
   # Create AI prompt based on commit style
-  case "$openai_commit_style" in
+  case "$ai_commit_style" in
   "bullet")
     ai_prompt="${bullet_prompt//\$git_diff/$git_diff}"
     ;;
@@ -1365,20 +1365,20 @@ Git diff:
     ;;
 
   *)
-    print_warning "Unknown commit message style: '$openai_commit_style'. Skipping AI suggestion." >&2
+    print_warning "Unknown commit message style: '$ai_commit_style'. Skipping AI suggestion." >&2
     ai_prompt="${bullet_prompt//\$git_diff/$git_diff}"
     ;;
 esac
 
 
   # Call OpenAI API
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Calling OpenAI API with model: $openai_model" >&2
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI prompt style: $openai_commit_style" >&2
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Calling OpenAI API with model: $ai_model" >&2
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI prompt style: $ai_commit_style" >&2
 
   # Build JSON payload using jq if available (handles escaping automatically)
   local json_payload
   if command -v jq >/dev/null 2>&1; then
-    json_payload=$(jq -n --arg model "$openai_model" --arg prompt "$ai_prompt" '{
+    json_payload=$(jq -n --arg model "$ai_model" --arg prompt "$ai_prompt" '{
       "model": $model,
       "messages": [
         {"role": "system", "content": "You are a helpful assistant that writes concise, descriptive git commit messages based on code changes."},
@@ -1391,21 +1391,21 @@ esac
     # Simple fallback - replace quotes and newlines only
     local safe_prompt
     safe_prompt=$(printf '%s' "$ai_prompt" | sed 's/"/\\"/g' | tr '\n' ' ')
-    json_payload='{"model":"'$openai_model'","messages":[{"role":"system","content":"You are a helpful assistant that writes concise, descriptive git commit messages based on code changes."},{"role":"user","content":"'$safe_prompt'"}],"max_tokens":150,"temperature":0.7}'
+    json_payload='{"model":"'$ai_model'","messages":[{"role":"system","content":"You are a helpful assistant that writes concise, descriptive git commit messages based on code changes."},{"role":"user","content":"'$safe_prompt'"}],"max_tokens":150,"temperature":0.7}'
   fi
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: JSON payload length: ${#json_payload} characters" >&2
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: endpoint: ${openai_endpoint}" >&2
-  api_response=$(curl -s -X POST "$openai_endpoint" \
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: endpoint: ${maiass_endpoint}" >&2
+  api_response=$(curl -s -X POST "$maiass_endpoint" \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $openai_token" \
+    -H "Authorization: Bearer $ai_token" \
     -d "$json_payload" 2>/dev/null)
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response length: ${#api_response} characters" >&2
   # mask the api token
 
   
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: $(mask_api_key "${openai_token}") " >&2
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: $(mask_api_key "${ai_token}") " >&2
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response : ${api_response} " >&2
   # Extract the suggested message from API response
@@ -1413,7 +1413,7 @@ esac
     # Check for API error first
     if echo "$api_response" | grep -q '"error"'; then
       error_msg=$(echo "$api_response" | grep -o '"message":"[^"]*"' | sed 's/"message":"//' | sed 's/"$//' | head -1)
-      print_warning "OpenAI API Error: $error_msg"
+      print_warning "API Error: $error_msg"
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Full error response: $api_response" >&2
       return 1
     fi
@@ -1439,7 +1439,7 @@ esac
     # Fallback to sed parsing if jq not available or failed
     if [[ -z "$suggested_message" ]]; then
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: jq failed, trying sed parsing" >&2
-      # Handle the actual OpenAI response structure with nested objects
+      # Handle the actual AI response structure with nested objects
       suggested_message=$(echo "$api_response" | sed -n 's/.*"content":"\([^"]*\)".*/\1/p' | tail -1)
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: sed result: '$suggested_message'"
     fi
@@ -1501,12 +1501,12 @@ function get_commit_message() {
   fi
 
   # Handle AI commit message modes
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: openai_mode='$openai_mode', openai_token length=${#openai_token}"
+  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: ai_mode='$ai_mode', ai_token length=${#ai_token}"
 
-  case "$openai_mode" in
+  case "$ai_mode" in
     "ask")
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'ask'"
-      if [[ -n "$openai_token" ]]; then
+      if [[ -n "$ai_token" ]]; then
         [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Token available, showing AI prompt"
         read -n 1 -s -p "$(echo -e ${BYellow}Would you like to use AI to suggest a commit message? [y/N]${Color_Off} )" REPLY
         echo
@@ -1522,12 +1522,12 @@ function get_commit_message() {
       ;;
     "autosuggest")
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'autosuggest'"
-      if [[ -n "$openai_token" ]]; then
+      if [[ -n "$ai_token" ]]; then
         use_ai=true
       fi
       ;;
     "off"|*)
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'off' or unknown: '$openai_mode'"
+      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'off' or unknown: '$ai_mode'"
       use_ai=false
       ;;
   esac
@@ -2132,13 +2132,13 @@ setup_bumpscript_variables() {
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
 
       # Initialize AI variables early so they're available when get_commit_message is called
-      export openai_mode="${MAIASS_AI_MODE:-ask}"
-      export openai_token="${MAIASS_AI_TOKEN:-}"
-      export openai_model="${MAIASS_AI_MODEL:=gpt-3.5-turbo}"
-      export openai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
-      export openai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
-      export openai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
-      export openai_endpoint="${MAIASS_AI_ENDPOINT:-https://api.openai.com/v1/chat/completions}"
+      export ai_mode="${MAIASS_AI_MODE:-ask}"
+      export ai_token="${MAIASS_AI_TOKEN:-}"
+      export ai_model="${MAIASS_AI_MODEL:=gpt-3.5-turbo}"
+      export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
+      export ai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
+      export ai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
+      export maiass_endpoint="https://pound.maiass.net/v1/chat/completions}"
 
 
       # Initialize configurable version file system
@@ -2277,49 +2277,49 @@ fi
   fi
 
   # AI commit message configuration
-  export openai_mode="${MAIASS_AI_MODE:-off}"
-  export openai_token="${MAIASS_AI_TOKEN:-}"
-  export openai_model="${MAIASS_AI_MODEL:-gpt-3.5-turbo}"
+  export ai_mode="${MAIASS_AI_MODE:-off}"
+  export ai_token="${MAIASS_AI_TOKEN:-}"
+  export ai_model="${MAIASS_AI_MODEL:-gpt-3.5-turbo}"
 
 
-  # Determine the OpenAI commit message style
+  # Determine the AI commit message style
   if [[ -n "$MAIASS_AI_COMMIT_MESSAGE_STYLE" ]]; then
-    openai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
-    print_info "Using AI commit style from .env: $openai_commit_style"
+    ai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
+    print_info "Using AI commit style from .env: $ai_commit_style"
   elif [[ -f ".maiass.prompt" ]]; then
-    openai_commit_style="custom"
+    ai_commit_style="custom"
     print_info "No style set in .env; using local prompt file: .maiass.prompt"
   elif [[ -f "$HOME/.maiass.prompt" ]]; then
-    openai_commit_style="global_custom"
+    ai_commit_style="global_custom"
     print_info "No style set in .env; using global prompt file: ~/.maiass.prompt"
   else
-    openai_commit_style="bullet"
+    ai_commit_style="bullet"
     print_info "No style or prompt files found; defaulting to 'bullet'"
   fi
 
-  export openai_commit_style
+  export ai_commit_style
 
 
   export debug_mode="${MAIASS_DEBUG:-false}"
 
   # Validate AI configuration - prevent ask/autosuggest modes without token
-  if [[ "$openai_mode" == "ask" || "$openai_mode" == "autosuggest" ]]; then
-    if [[ -z "$openai_token" ]]; then
-      print_warning "AI commit message mode '$openai_mode' requires MAIASS_AI_TOKEN"
+  if [[ "$ai_mode" == "ask" || "$ai_mode" == "autosuggest" ]]; then
+    if [[ -z "$ai_token" ]]; then
+      print_warning "AI commit message mode '$ai_mode' requires MAIASS_AI_TOKEN"
       print_warning "Falling back to 'off' mode"
-      export openai_mode="off"
+      export ai_mode="off"
     fi
   fi
 
   print_info "Integration configuration:"
   print_info "  Staging pull requests: $staging_pullrequests"
   print_info "  Master pull requests: $master_pullrequests"
-  print_info "  AI commit messages: $openai_mode"
-  if [[ "$openai_mode" != "off" && -n "$openai_token" ]]; then
-    print_info "  AI model: $openai_model"
-    print_info "  AI temperature: $openai_temperature"
-    print_info "  AI Max commit characters: $openai_max_characters"
-    print_info "  AI commit style: $openai_commit_style"
+  print_info "  AI commit messages: $ai_mode"
+  if [[ "$ai_mode" != "off" && -n "$ai_token" ]]; then
+    print_info "  AI model: $ai_model"
+    print_info "  AI temperature: $ai_temperature"
+    print_info "  AI Max commit characters: $ai_max_characters"
+    print_info "  AI commit style: $ai_commit_style"
   fi
   if [[ "$REPO_PROVIDER" == "bitbucket" && -n "$BITBUCKET_WORKSPACE" ]]; then
     print_info "  Repository: Bitbucket ($BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG)"
