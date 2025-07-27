@@ -1,5 +1,8 @@
-## 4.11.4
+## 4.11.5
 27 July 2025
+
+- Updated logging function in maiass.sh
+	- fix: modified logthis function debugmsg argument in maiass.sh
 
 - Endpoint verification changes
 - corrected endpoint
