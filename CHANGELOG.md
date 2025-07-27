@@ -1,3 +1,9 @@
+## 4.11.4
+27 July 2025
+
+- Endpoint verification changes
+- corrected endpoint
+
 ## 4.11.3
 25 July 2025
 
