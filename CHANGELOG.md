@@ -1,3 +1,17 @@
+## 4.12.0
+2 August 2025
+
+- # Conflicts:
+	- #	bashmaiass.sh
+	- #	docs/README.bashmaiass.md
+	- #	package.json
+- Updated codebase reflecting project's renamed: MAIASS to BASHMAIASS
+	- feat: renamed main script from maiass.sh to bashmaiass.sh
+	- feat: updated internal documentation with project's new name
+	- fix: handled potential issue with undefined WordPress version constant
+	- chore: added .env.maiass to gitignore
+	- docs: updated all instances of the project name MAIASS to BASHMAIASS
+
 ## 4.11.5
 27 July 2025
 
