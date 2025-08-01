@@ -369,7 +369,7 @@
 - Update AI integration and changelogging documentation - docs: clarified API key configuration in AI integration guide - docs: detailed changelog update process on the `develop` branch - docs: explained Jira ticket inclusion in internal changelogs - docs: corrected variable name in changelog example
 - VEL-39 Update .gitignore and enhance changelog documentation - chore: added 'CHANGELOG_internal.md' to .gitignore - docs: expanded changelogging.md with AI features and customization options - docs: included examples of AI-generated commit messages and their integration into changelogs
 - [1;33m⚠ Unknown commit message style: '"bullet"'. Skipping AI suggestion.[0m Update configuration documentation for MAIASS - docs: added section on zero configuration defaults - docs: described when configuration is necessary - docs: provided detailed examples for global and project-level setups - docs: expanded environment variables reference with additional categories
-- VEL-39 [1;33m⚠ Unknown commit message style: '"bullet"'. Skipping AI suggestion.[0m Update README and simplify installation instructions - docs: revised project description for clarity and updated name to "Modular AI-Assisted Semantic Savant" - docs: condensed feature list and added cross-platform compatibility - docs: removed Windows compatibility warning and prerequisites - docs: streamlined quick start installation instructions - docs: eliminated detailed configuration and workflow examples for brevity
+- VEL-39 [1;33m⚠ Unknown commit message style: '"bullet"'. Skipping AI suggestion.[0m Update README and simplify installation instructions - docs: revised project description for clarity and updated name to "Modular AI-Augmented Semantic Scribe" - docs: condensed feature list and added cross-platform compatibility - docs: removed Windows compatibility warning and prerequisites - docs: streamlined quick start installation instructions - docs: eliminated detailed configuration and workflow examples for brevity
 - updated readme
 - Add internal changelog and README updates
 - docs: created `CHANGELOG_internal.md` for tracking internal changes
@@ -419,12 +419,12 @@
 - docs: provided detailed examples for global and project-level setups
 - docs: expanded environment variables reference with additional categories
 - Update README and simplify installation instructions
-- docs: revised project description for clarity and updated name to "Modular AI-Assisted Semantic Savant"
+- docs: revised project description for clarity and updated name to "Modular AI-Augmented Semantic Scribe"
 - docs: condensed feature list and added cross-platform compatibility
 - docs: removed Windows compatibility warning and prerequisites
 - docs: streamlined quick start installation instructions
 - docs: eliminated detailed configuration and workflow examples for brevity
-- Add AI-assisted commit functionality to script
+- Add AI-augmented commit functionality to script
 - feat: introduced `run_ai_commit_only` function for AI-suggested commit messages
 - feat: added `-ai` and `--ai-only` options to trigger AI commit flow
 - feat: implemented environment variable check for `MAIASS_MODE` to enable AI-only mode
@@ -628,7 +628,7 @@
 - docs: provided detailed examples for global and project-level setups
 - docs: expanded environment variables reference with additional categories
 - Update README and simplify installation instructions
-- docs: revised project description for clarity and updated name to "Modular AI-Assisted Semantic Savant"
+- docs: revised project description for clarity and updated name to "Modular AI-Augmented Semantic Scribe"
 - docs: condensed feature list and added cross-platform compatibility
 - docs: removed Windows compatibility warning and prerequisites
 - docs: streamlined quick start installation instructions
@@ -638,7 +638,7 @@
 13 July 2025
 
 - [1;33m⚠ Unknown commit message style: '"bullet"'. Skipping AI suggestion.[0m
-- Add AI-assisted commit functionality to script
+- Add AI-augmented commit functionality to script
 - feat: introduced `run_ai_commit_only` function for AI-suggested commit messages
 - feat: added `-ai` and `--ai-only` options to trigger AI commit flow
 - feat: implemented environment variable check for `MAIASS_MODE` to enable AI-only mode

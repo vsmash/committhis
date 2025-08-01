@@ -1,5 +1,5 @@
 #!/bin/bash
-# Simple test script for MAIASS functionality
+# Simple test script for BASHMAIASS functionality
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -7,8 +7,8 @@ RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}=== MAIASS Test Script ===${NC}"
-echo "This script tests basic MAIASS functionality"
+echo -e "${BLUE}=== BASHMAIASS Test Script ===${NC}"
+echo "This script tests basic BASHMAIASS functionality"
 echo
 
 # Create a temporary test directory
@@ -18,18 +18,18 @@ echo -e "${BLUE}Creating test environment in ${TEST_DIR}${NC}"
 # Initialize a git repository
 cd "$TEST_DIR" || exit 1
 git init
-git config user.name "MAIASS Test"
+git config user.name "BASHMAIASS Test"
 git config user.email "test@example.com"
 
 # Create a simple package.json with version
 echo '{
-  "name": "maiass-test",
+  "name": "bashmaiass-test",
   "version": "1.0.0",
-  "description": "Test project for MAIASS"
+  "description": "Test project for BASHMAIASS"
 }' > package.json
 
 # Create a README.md file
-echo "# MAIASS Test Project
+echo "# BASHMAIASS Test Project
 Version: 1.0.0
 " > README.md
 
@@ -41,38 +41,38 @@ git commit -m "Initial commit"
 git checkout -b develop
 
 # Set environment variables to bypass branch checks and other prompts
-export MAIASS_FORCE=true
-export MAIASS_NO_BRANCH_CHECK=true
-export MAIASS_AUTO_YES=true
-export MAIASS_NO_CHANGELOG=true
-export MAIASS_NO_PUSH=true
-export MAIASS_NO_TAG=true
-export MAIASS_NO_MERGE=true
-export MAIASS_VERBOSITY="brief"
-export MAIASS_AI_MODE="off"
+export BASHMAIASS_FORCE=true
+export BASHMAIASS_NO_BRANCH_CHECK=true
+export BASHMAIASS_AUTO_YES=true
+export BASHMAIASS_NO_CHANGELOG=true
+export BASHMAIASS_NO_PUSH=true
+export BASHMAIASS_NO_TAG=true
+export BASHMAIASS_NO_MERGE=true
+export BASHMAIASS_VERBOSITY="brief"
+export BASHMAIASS_AI_MODE="off"
 
 # Create empty changelog files to prevent errors
 touch CHANGELOG.md
 touch CHANGELOG_internal.md
 
-# Define path to MAIASS script
-# First try to use the repository's maiass.sh if we're in the repo
-if [[ -f "$(pwd)/maiass.sh" ]]; then
-    MAIASS_SCRIPT="$(pwd)/maiass.sh"
+# Define path to BASHMAIASS script
+# First try to use the repository's bashmaiass.sh if we're in the repo
+if [[ -f "$(pwd)/bashmaiass.sh" ]]; then
+    BASHMAIASS_SCRIPT="$(pwd)/bashmaiass.sh"
 # Then try to use dma if it's available in PATH
 elif command -v dma &> /dev/null; then
-    MAIASS_SCRIPT="dma"
-# Finally fall back to maiass.sh in PATH
-elif command -v maiass.sh &> /dev/null; then
-    MAIASS_SCRIPT="maiass.sh"
+    BASHMAIASS_SCRIPT="dma"
+# Finally fall back to bashmaiass.sh in PATH
+elif command -v bashmaiass.sh &> /dev/null; then
+    BASHMAIASS_SCRIPT="bashmaiass.sh"
 else
-    echo -e "${RED}✗ Could not find maiass.sh or dma command${NC}"
+    echo -e "${RED}✗ Could not find bashmaiass.sh or dma command${NC}"
     exit 1
 fi
 
-echo -e "${BLUE}Using MAIASS script: ${MAIASS_SCRIPT}${NC}"
+echo -e "${BLUE}Using BASHMAIASS script: ${BASHMAIASS_SCRIPT}${NC}"
 
-# Test 1: Check if MAIASS can detect the version
+# Test 1: Check if BASHMAIASS can detect the version
 echo -e "\n${BLUE}Test 1: Detecting version${NC}"
 
 # Instead of using --version-only which causes errors, check the version in package.json
@@ -108,16 +108,16 @@ EXPECTED_VERSION="$MAJOR.$MINOR.$EXPECTED_PATCH"
 echo -e "${BLUE}Current version: $CURRENT_VERSION, Expected new version: $EXPECTED_VERSION${NC}"
 
 # Set environment variables for the test
-export MAIASS_VERSION_PRIMARY_FILE="package.json"
-export MAIASS_VERSION_PRIMARY_TYPE="json"
-export MAIASS_VERSION_SECONDARY_FILES="README.md:txt:Version: "
+export BASHMAIASS_VERSION_PRIMARY_FILE="package.json"
+export BASHMAIASS_VERSION_PRIMARY_TYPE="json"
+export BASHMAIASS_VERSION_SECONDARY_FILES="README.md:txt:Version: "
 
-# Run MAIASS to bump patch version with timeout
-echo -e "${BLUE}Running: $MAIASS_SCRIPT patch --no-push --no-tag${NC}"
+# Run BASHMAIASS to bump patch version with timeout
+echo -e "${BLUE}Running: $BASHMAIASS_SCRIPT patch --no-push --no-tag${NC}"
 
 # Apply timeout with increased duration (20 seconds)
 if command -v timeout &> /dev/null; then
-    timeout 20s "$MAIASS_SCRIPT" patch --no-push --no-tag
+    timeout 20s "$BASHMAIASS_SCRIPT" patch --no-push --no-tag
     TIMEOUT_STATUS=$?
     if [[ $TIMEOUT_STATUS -eq 124 ]]; then
         echo -e "${RED}✗ Patch command timed out after 20 seconds${NC}"
@@ -125,7 +125,7 @@ if command -v timeout &> /dev/null; then
         echo -e "${YELLOW}⚠ Continuing with tests despite timeout${NC}"
     fi
 elif command -v gtimeout &> /dev/null; then
-    gtimeout 20s "$MAIASS_SCRIPT" patch --no-push --no-tag
+    gtimeout 20s "$BASHMAIASS_SCRIPT" patch --no-push --no-tag
     TIMEOUT_STATUS=$?
     if [[ $TIMEOUT_STATUS -eq 124 ]]; then
         echo -e "${RED}✗ Patch command timed out after 20 seconds${NC}"
@@ -134,7 +134,7 @@ elif command -v gtimeout &> /dev/null; then
     fi
 else
     # Fallback to perl timeout with increased duration
-    perl -e 'alarm 20; exec @ARGV' "$MAIASS_SCRIPT" patch --no-push --no-tag
+    perl -e 'alarm 20; exec @ARGV' "$BASHMAIASS_SCRIPT" patch --no-push --no-tag
 fi
 
 # Verify version was updated in package.json
@@ -175,12 +175,12 @@ echo -e "\n${BLUE}Test 3: Setting specific version${NC}"
 TARGET_VERSION="2.0.0"
 echo -e "${BLUE}Current version: $CURRENT_VERSION, Target version: $TARGET_VERSION${NC}"
 
-# Run MAIASS to set specific version with timeout
-echo -e "${BLUE}Running: $MAIASS_SCRIPT $TARGET_VERSION --no-push --no-tag${NC}"
+# Run BASHMAIASS to set specific version with timeout
+echo -e "${BLUE}Running: $BASHMAIASS_SCRIPT $TARGET_VERSION --no-push --no-tag${NC}"
 
 # Apply timeout with increased duration (20 seconds)
 if command -v timeout &> /dev/null; then
-    timeout 20s "$MAIASS_SCRIPT" "$TARGET_VERSION" --no-push --no-tag
+    timeout 20s "$BASHMAIASS_SCRIPT" "$TARGET_VERSION" --no-push --no-tag
     TIMEOUT_STATUS=$?
     if [[ $TIMEOUT_STATUS -eq 124 ]]; then
         echo -e "${RED}✗ Version setting command timed out after 20 seconds${NC}"
@@ -188,7 +188,7 @@ if command -v timeout &> /dev/null; then
         echo -e "${YELLOW}⚠ Continuing with tests despite timeout${NC}"
     fi
 elif command -v gtimeout &> /dev/null; then
-    gtimeout 20s "$MAIASS_SCRIPT" "$TARGET_VERSION" --no-push --no-tag
+    gtimeout 20s "$BASHMAIASS_SCRIPT" "$TARGET_VERSION" --no-push --no-tag
     TIMEOUT_STATUS=$?
     if [[ $TIMEOUT_STATUS -eq 124 ]]; then
         echo -e "${RED}✗ Version setting command timed out after 20 seconds${NC}"
@@ -197,7 +197,7 @@ elif command -v gtimeout &> /dev/null; then
     fi
 else
     # Fallback to perl timeout with increased duration
-    perl -e 'alarm 20; exec @ARGV' "$MAIASS_SCRIPT" "$TARGET_VERSION" --no-push --no-tag
+    perl -e 'alarm 20; exec @ARGV' "$BASHMAIASS_SCRIPT" "$TARGET_VERSION" --no-push --no-tag
 fi
 
 # Verify version was updated in package.json

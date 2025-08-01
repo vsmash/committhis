@@ -1,8 +1,8 @@
 ![MAIASS Banner](https://raw.githubusercontent.com/vsmash/maiass/main/assets/maiass_banner.png)
 
 <div align="center">
-# 🫏 MAIASS v4.11.4
-Modular AI-Assisted Semantic Savant
+# 🫏 MAIASS v4.11.2
+Modular AI-Augmented Semantic Scribe
 
 ---
 
@@ -28,7 +28,7 @@ You can't beat **MAIASS**
 ___
 </div>
 
-**MAIASS** (Modular AI-Assisted Semantic Savant) is an intelligent Git workflow automation script that streamlines version management, changelog generation, and deployment processes with optional AI-powered commit message suggestions.
+**MAIASS** (Modular AI-Augmented Semantic Scribe) is an intelligent Git workflow automation script that streamlines version management, changelog generation, and deployment processes with optional AI-powered commit message suggestions.
 
 ## Key Features
 

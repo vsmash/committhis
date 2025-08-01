@@ -102,3 +102,4 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
+.env.maiass
