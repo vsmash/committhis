@@ -14,8 +14,8 @@ NC='\033[0m' # No Color
 
 # Installation directories
 INSTALL_DIR="$HOME/.local/bin"
-SCRIPT_NAME="maiass"
-SCRIPT_FILE="maiass.sh"
+SCRIPT_NAME="bashmaiass"
+SCRIPT_FILE="bashmaiass.sh"
 
 # committhis install variables
 committhis_SCRIPT_NAME="committhis.sh"
