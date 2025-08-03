@@ -8,8 +8,8 @@ The workspace contains four interconnected projects:
 
 ```
 /workspace
-├── bashmaiass/                    # Core application - Bash-based Git workflow automation
-├── homebrew-bashmaiass/          # Homebrew distribution formula and scripts  
+├── maiass/                    # Core application - Bash-based Git workflow automation
+├── homebrew-maiass/          # Homebrew distribution formula and scripts  
 ├── maiass-proxy/             # Node.js API proxy for OpenAI subscriptions
 └── testrepos/               # Sandbox repositories for testing MAIASS functionality
 ```

@@ -1,4 +1,4 @@
-![MAIASS Banner](https://raw.githubusercontent.com/vsmash/bashmaiass/main/assets/maiassbanner2.png)
+![MAIASS Banner](https://raw.githubusercontent.com/vsmash/maiass/main/assets/maiassbanner2.png)
 
 <div align="center">
 # 4.14.0
