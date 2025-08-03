@@ -1,10 +1,14 @@
-## 5.5.5
+## 5.5.6
 04 August 2025
 
-- Updated README text
-- docs: edited section headers for clarity
+- Refactored directory structure and source paths
+- refactor: changed the script to dynamically get the directory path
+- fix: adjusted hardcoded paths to relative source paths
+- refactor: improved detection of script mode and configuration
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
+- Updated README text
+- docs: edited section headers for clarity
 - Updated documentation
 - docs: modified README title to include full project name
 - # Conflicts:
