@@ -34,25 +34,97 @@ Aqua='\033[0;96m'       # Aqua
 Color_Off='\033[0m'     # Text Reset
 BWhiteBG='\033[47m'     # White Background
 
-# first check for global values
-[ -f "$HOME/.maiass.env" ] && source "$HOME/.maiass.env"
+# Environment variables are now loaded with secure priority system above
+
+# Secure environment variable loading with priority order
+load_environment_variables() {
+    local project_env=".env.maiass"
+
+    # Priority 1: Project-specific env file
+    if [[ -f "$project_env" ]]; then
+        print_info "Loading project configuration from ${BCyan}$project_env${Color_Off}" "debug"
+        source "$project_env"
+    fi
+
+    # Priority 2: Secure storage (cross-platform)
+    load_secure_variables
+
+    # Priority 3: System environment (already exported by shell, nothing to load)
+}
+
+# Load sensitive variables from secure storage
+load_secure_variables() {
+    local secure_vars=("MAIASS_AI_TOKEN" "MAIASS_API_KEY" "MAIASS_SECRET_KEY")
+
+    for var in "${secure_vars[@]}"; do
+        if [[ -n "${!var}" ]]; then
+            continue  # already set via .env or env var
+        fi
+
+        local value=""
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            value=$(security find-generic-password -s "maiass" -a "$var" -w 2>/dev/null)
+        elif command -v secret-tool >/dev/null 2>&1; then
+            value=$(secret-tool lookup service maiass key "$var" 2>/dev/null)
+        fi
+
+        if [[ -n "$value" ]]; then
+            export "$var=$value"
+            print_info "Loaded $var from secure storage" "debug"
+        fi
+    done
+}
+
+# Store sensitive variables in secure storage
+store_secure_variable() {
+    local var_name="$1"
+    local var_value="$2"
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "$var_value" | security add-generic-password -U -s "maiass" -a "$var_name" -w - 2>/dev/null
+    elif command -v secret-tool >/dev/null 2>&1; then
+        echo -n "$var_value" | secret-tool store --label="MAIASS $var_name" service maiass key "$var_name"
+    else
+        print_warning "No secure storage backend available"
+        return 1
+    fi
+}
+
+# Remove sensitive variables from secure storage
+remove_secure_variable() {
+    local var_name="$1"
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        security delete-generic-password -s "maiass" -a "$var_name" 2>/dev/null
+    elif command -v secret-tool >/dev/null 2>&1; then
+        # No direct delete with secret-tool; need to use keyring CLI or let user handle it
+        print_warning "Removing secrets from Linux keyrings requires manual intervention"
+    else
+        print_warning "No secure storage backend available"
+        return 1
+    fi
+}
+
+
+# Load environment variables with new priority system
+load_environment_variables
 
 export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 
 
 mask_api_key() {
     local api_key="$1"
-    
+
     # Check if key is empty or too short
     if [[ -z "$api_key" ]] || [[ ${#api_key} -lt 8 ]]; then
         echo "[INVALID_KEY]"
         return
     fi
-    
+
     # Extract first 4 and last 4 characters using parameter expansion
     local first_four="${api_key:0:4}"
     local last_four="${api_key: -4}"
-    
+
     echo "${first_four}****${last_four}"
 }
 
@@ -1404,7 +1476,7 @@ esac
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response length: ${#api_response} characters" >&2
   # mask the api token
 
-  
+
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: $(mask_api_key "${ai_token}") " >&2
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response : ${api_response} " >&2
@@ -1425,7 +1497,7 @@ esac
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Using jq for JSON parsing" >&2
       suggested_message=$(echo "$api_response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: jq result: '$suggested_message'" >&2
-      
+
       # Extract token usage information if available
       local prompt_tokens completion_tokens total_tokens
       prompt_tokens=$(echo "$api_response" | jq -r '.usage.prompt_tokens // empty' 2>/dev/null)
@@ -2118,6 +2190,101 @@ load_bumpscript_env() {
   fi
 }
 
+generate_machine_fingerprint() {
+    local components=()
+    local has_real_hardware_info=0
+    local fallback_used=0
+
+    # Helper function to safely get command output with fallback
+    safe_command() {
+        local cmd="$1"
+        local fallback="$2"
+        local output
+        output=$($cmd 2>/dev/null || echo "$fallback")
+        # Clean up the output to be a single line
+        echo "$output" | tr -d '\n' | tr -s ' ' ' '
+    }
+
+    # Get CPU info
+    local cpu_info
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        cpu_info=$(sysctl -n machdep.cpu.brand_string 2>/dev/null || uname -m)
+    else
+        cpu_info=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2- | sed 's/^[ \t]*//' || uname -m)
+    fi
+    components+=("${cpu_info:-unknown_cpu}")
+
+    # Get memory info
+    local mem_info
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        mem_info=$(sysctl -n hw.memsize 2>/dev/null || echo "unknown_mem")
+    else
+        mem_info=$(grep -m1 "MemTotal" /proc/meminfo 2>/dev/null || echo "unknown_mem")
+    fi
+    components+=("${mem_info}")
+
+    # Get hardware info
+    local hardware_info
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        hardware_info=$(system_profiler SPHardwareDataType 2>/dev/null | grep -E "Serial Number|Hardware UUID" | head -2 | tr '\n' ' ' || echo "unknown_hardware")
+    else
+        hardware_info=$(dmidecode -t system 2>/dev/null | grep -E "Serial Number|UUID" | head -2 | tr '\n' ' ' || echo "unknown_hardware")
+    fi
+    components+=("${hardware_info}")
+
+    # Add architecture, username, and platform
+    components+=("$(uname -m)")
+    components+=("$(whoami 2>/dev/null || echo "unknown_user")")
+    components+=("$(uname -s)")
+
+    # Check if we have sufficient hardware info for security
+    if [[ "${components[2]}" == *"unknown"* ]]; then
+        has_real_hardware_info=0
+        print_warning "WARNING: Using fallback fingerprint - hardware detection failed"
+        print_warning "This may allow easier abuse. Consider checking system permissions."
+    else
+        has_real_hardware_info=1
+    fi
+
+    # Create a stable hash from all components
+    local fingerprint_data
+    fingerprint_data=$(printf "%s|" "${components[@]}" | tr -d '\n')
+
+    # Debug output if in debug mode
+    if [[ "$debug_mode" == "true" ]]; then
+        print_info "DEBUG: Machine fingerprint components:" "debug"
+        print_info "  CPU: ${components[0]}" "debug"
+        print_info "  Memory: ${components[1]}" "debug"
+        print_info "  Hardware: ${components[2]}" "debug"
+        print_info "  Arch: ${components[3]}" "debug"
+        print_info "  Username: ${components[4]}" "debug"
+        print_info "  Platform: ${components[5]}" "debug"
+        print_info "  HasRealHardwareInfo: $has_real_hardware_info" "debug"
+    fi
+
+    # Generate SHA-256 hash in base64
+    local hash
+    if command -v openssl >/dev/null 2>&1; then
+        hash=$(printf "%s" "$fingerprint_data" | openssl dgst -sha256 -binary | openssl base64 | tr -d '\n')
+    elif command -v sha256sum >/dev/null 2>&1; then
+        hash=$(printf "%s" "$fingerprint_data" | sha256sum | cut -d' ' -f1 | xxd -r -p | base64 | tr -d '\n')
+    else
+        # Last resort fallback
+        print_warning "SECURITY WARNING: Using minimal fallback fingerprint (no hashing tools available)"
+        local fallback="$(uname -s)-$(uname -m)-$(whoami 2>/dev/null || echo "unknown")-FALLBACK"
+        if command -v base64 >/dev/null 2>&1; then
+            hash=$(printf "%s" "$fallback" | base64 | tr -d '\n')
+        else
+            # If even base64 is not available, just use the string as is
+            hash="$fallback"
+        fi
+        fallback_used=1
+    fi
+
+    echo "$hash"
+    return $fallback_used
+}
+
 
 # Function to set up branch and changelog variables with override logic
 setup_bumpscript_variables() {
@@ -2138,8 +2305,9 @@ setup_bumpscript_variables() {
       export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
       export ai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
       export ai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
-      export maiass_endpoint="https://pound.maiass.net/v1/chat/completions"
-
+      export maiass_host="https://pound.maiass.net"
+      export maiass_endpoint="${maiass_host}/v1/chat/completions"
+      export maiass_tokenrequest="${maiass_host}/v1/token"
 
       # Initialize configurable version file system
       export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
@@ -2153,7 +2321,7 @@ setup_bumpscript_variables() {
   # Branch name defaults with MAIASS_* overrides
   export developbranch="${MAIASS_DEVELOPBRANCH:-develop}"
   export stagingbranch="${MAIASS_STAGINGBRANCH:-staging}"
-  export masterbranch="${MAIASS_MASTERBRANCH:-master}"
+  export masterbranch="${MAIASS_MASTERBRANCH:-main}"
 
   # Changelog defaults with MAIASS_* overrides
   export changelog_path="${MAIASS_CHANGELOG_PATH:-.}"

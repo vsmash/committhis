@@ -59,14 +59,14 @@ touch CHANGELOG_internal.md
 # First try to use the repository's maiass.sh if we're in the repo
 if [[ -f "$(pwd)/maiass.sh" ]]; then
     MAIASS_SCRIPT="$(pwd)/maiass.sh"
-# Then try to use dma if it's available in PATH
-elif command -v dma &> /dev/null; then
-    MAIASS_SCRIPT="dma"
+# Then try to use bma if it's available in PATH
+elif command -v bma &> /dev/null; then
+    MAIASS_SCRIPT="bma"
 # Finally fall back to maiass.sh in PATH
 elif command -v maiass.sh &> /dev/null; then
     MAIASS_SCRIPT="maiass.sh"
 else
-    echo -e "${RED}✗ Could not find maiass.sh or dma command${NC}"
+    echo -e "${RED}✗ Could not find maiass.sh or bma command${NC}"
     exit 1
 fi
 
