@@ -1907,162 +1907,133 @@ function mergeDevelop() {
 
   print_section "Git Workflow"
 
-  # Check if develop branch exists
-  if ! branch_exists "$developbranch"; then
-    print_warning "Branch '$developbranch' does not exist"
-    print_info "Using simplified workflow on current branch: $branch_name"
-
-    # Check if we have a remote for pulling latest changes
-    if remote_exists "origin"; then
-      print_info "Pulling latest changes from remote"
-      git pull 2>/dev/null || print_warning "Could not pull from remote (continuing anyway)"
+  # Check for uncommitted changes first
+  if has_uncommitted_changes; then
+    print_warning "You have uncommitted changes."
+    read -n 1 -s -p "$(echo -e ${BYellow}Do you want to commit them now? [y/N]${Color_Off} )" REPLY
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      handle_staged_commit
+      # Check again if there are still uncommitted changes
+      if has_uncommitted_changes; then
+        print_error "Still have uncommitted changes. Please commit or stash them first."
+        exit 1
+      fi
     else
-      print_info "No remote found - working with local repository only"
-    fi
-  else
-    # Standard develop branch workflow
-    print_info "Using standard develop branch workflow"
-
-    # Ensure we are on the 'develop' branch or merge into it
-    if [ "$(git rev-parse --abbrev-ref HEAD)" != "$developbranch" ]; then
-        print_info "Not on $developbranch branch"
-        read -n 1 -s -p "$(echo -e ${BYellow}Do you want to merge $branch_name into $developbranch? [y/N]${Color_Off} )" REPLY
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            git checkout "$developbranch"
-            check_git_success
-
-            # Pull from remote if available
-            if remote_exists "origin"; then
-              # Check if current branch has upstream tracking
-              if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
-                git pull
-                check_git_success
-              else
-                # Try to set up tracking if remote branch exists
-                if git ls-remote --heads origin "$developbranch" | grep -q "$developbranch"; then
-                  print_info "Setting up tracking for $developbranch with origin/$developbranch"
-                  git branch --set-upstream-to=origin/$developbranch "$developbranch"
-                  check_git_success
-                  git pull
-                  check_git_success
-                else
-                  print_info "Remote branch $developbranch does not exist - skipping pull"
-                fi
-              fi
-            else
-              print_info "No remote found - skipping pull"
-            fi
-
-            git merge "$branch_name"
-            check_git_success
-            logthis "Merged $branch_name into $developbranch"
-        else
-            print_error "Cannot proceed without merging into $developbranch"
-            exit 1
-        fi
-    else
-        # Pull from remote if available
-        if remote_exists "origin"; then
-          git pull
-          check_git_success
-        else
-          print_info "No remote found - skipping pull"
-        fi
+      print_error "Cannot proceed with uncommitted changes. Please commit or stash them first."
+      exit 1
     fi
   fi
 
-  # Only do version management if version files exist
-  if [[ "$has_version_files" == "true" ]]; then
-    # we are on $developbranch so we can update the changelog and version
-    # bump the version
-    getVersion "$@"
-    # create a release branch
-    git checkout -b "release/$newversion"
-    check_git_success
-    bumpVersion
-    updateChangelog $changelog_path
-    print_info "updateChanelog completed"
-    # commit and tag the release
-    git add -A
-    check_git_success
-    print_info "git added completed"
-    git commit -m "Bumped version to $newversion"
-    check_git_success
-
-    # Create version tag if it doesn't already exist
-    if git tag -l "$newversion" | grep -q "^$newversion$"; then
-      print_warning "Tag $newversion already exists - skipping tag creation"
-    else
-      git tag -a "$newversion" -m "Release version $newversion"
-      check_git_success
-      print_success "Tagged release as $newversion"
+  # Get current branch name
+  local current_branch=$(git rev-parse --abbrev-ref HEAD)
+  
+  # Check if we're already on develop or need to merge
+  if [ "$current_branch" != "$developbranch" ]; then
+    print_info "Not on $developbranch branch (currently on $current_branch)"
+    read -n 1 -s -p "$(echo -e ${BYellow}Do you want to merge $current_branch into $developbranch? [y/N]${Color_Off} )" REPLY
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      print_error "Cannot proceed without merging into $developbranch"
+      exit 1
     fi
-
-    # push to origin if remote exists
-    if remote_exists "origin"; then
-      git push --set-upstream origin "release/$newversion"
-      check_git_success
-    else
-      print_info "No remote found - skipping push of release branch"
-    fi
-
-    # merge release back to develop
+    
+    # Checkout develop and update it
     git checkout "$developbranch"
     check_git_success
-
-    # Pull from remote if available
+    
+    # Pull latest changes
     if remote_exists "origin"; then
-      # Check if current branch has upstream tracking
-      if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
-        git pull
+      print_info "Pulling latest changes from $developbranch..."
+      git pull origin "$developbranch"
+      check_git_success
+    fi
+    
+    # Merge the branch
+    git merge --no-ff -m "Merge $current_branch into $developbranch" "$current_branch"
+    check_git_success
+    logthis "Merged $current_branch into $developbranch"
+  else
+    # On develop, just pull latest
+    if remote_exists "origin"; then
+      print_info "Pulling latest changes from $developbranch..."
+      git pull origin "$developbranch"
+      check_git_success
+    fi
+  fi
+
+  # Only proceed with version management if version files exist and we're on develop
+  if [[ "$has_version_files" == "true" && "$(git rev-parse --abbrev-ref HEAD)" == "$developbranch" ]]; then
+    # Get the version bump type (major, minor, patch)
+    local bump_type="${1:-patch}"  # Default to patch if not specified
+    shift
+    
+    # Bump the version
+    getVersion "$bump_type"
+    
+    # Determine if we should create a release branch and tag
+    local create_release=true
+    if [ "$bump_type" == "patch" ]; then
+      read -n 1 -s -p "$(echo -e ${BYellow}This is a patch version. Create a release branch and tag? [y/N]${Color_Off} )" REPLY
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        create_release=true
+      else
+        create_release=false
+      fi
+    fi
+    
+    if [ "$create_release" == true ]; then
+      # Create release branch
+      git checkout -b "release/$newversion"
+      check_git_success
+      
+      # Update version and changelog
+      bumpVersion
+      updateChangelog "$changelog_path"
+      
+      # Commit changes
+      git add -A
+      git commit -m "Bumped version to $newversion"
+      check_git_success
+      
+      # Create tag
+      if ! git tag -l "$newversion" | grep -q "^$newversion$"; then
+        git tag -a "$newversion" -m "Release version $newversion"
         check_git_success
+        print_success "Created release tag $newversion"
       else
-        # Try to set up tracking if remote branch exists
-        if git ls-remote --heads origin "$developbranch" | grep -q "$developbranch"; then
-          print_info "Setting up tracking for $developbranch with origin/$developbranch"
-          git branch --set-upstream-to=origin/"$developbranch" "$developbranch"
-          git pull
-          check_git_success
-        else
-          print_info "Remote branch origin/$developbranch doesn't exist - skipping pull"
-        fi
+        print_warning "Tag $newversion already exists"
       fi
-    else
-      print_info "No remote found - skipping pull"
-    fi
-
-    git merge --no-ff "release/$newversion"
-    check_git_success
-    print_success "Merged release/$newversion back to $developbranch"
-
-    # Push develop branch and tags if remote exists
-    if remote_exists "origin"; then
-      # Check if current branch has upstream tracking, if not set it up
-      if ! git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
-        print_info "Setting up upstream tracking for $developbranch"
-        git push --set-upstream origin "$developbranch"
-      else
-        git push
+      
+      # Push the release branch and tag if remote exists
+      if remote_exists "origin"; then
+        git push -u origin "release/$newversion"
+        git push origin "$newversion"
       fi
+      
+      # Go back to develop
+      git checkout "$developbranch"
       check_git_success
-      git push --tags
+      
+      print_success "Release $newversion is ready! Merge the release branch when ready."
+    else
+      # For patch versions without release branch, update directly on develop
+      print_info "Updating version and changelog directly on $developbranch..."
+      bumpVersion
+      updateChangelog "$changelog_path"
+      
+      # Commit changes
+      git add -A
+      git commit -m "Bump version to $newversion (no release)"
       check_git_success
-    else
-      print_info "No remote found - skipping push of $developbranch and tags"
-    fi
-
-    # Return to original branch
-    git checkout "$branch_name"
-    check_git_success
-    print_info "Returned to original branch: $branch_name"
-
-    print_success "Bumped version to $newversion"
-    # Only show merge success if develop branch exists
-    if branch_exists "$developbranch"; then
-      print_success "Merged $branch_name into $developbranch"
-    else
-      print_info "Completed workflow on current branch (no develop branch)"
+      
+      # Push changes if remote exists
+      if remote_exists "origin"; then
+        git push origin "$developbranch"
+      fi
+      
+      print_success "Version updated to $newversion on $developbranch"
     fi
   else
     # Just do the git workflow without version management
