@@ -3,7 +3,7 @@
 # Dual Remote Push Script for MAIASS / committhis
 #
 # This script automates the process of pushing the same codebase to two
-# differently branded Git remotes: `maiass` (main repo) and `committhis`
+# differently branded Git remotes: `bashmaiass` (main repo) and `committhis`
 # (commit-only variant). It ensures the correct README is used for each
 # brand and maintains a clean working tree throughout the process.
 #
@@ -133,11 +133,11 @@ merge_staging_to_main_and_push() {
         print_error "GitHub CLI (gh) not found. Run: brew install gh"
         exit 1
       fi
-      gh repo set-default vsmash/maiass
+      gh repo set-default vsmash/bashmaiass
       gh release create "$version_tag" \
         --title "$version_tag" \
         --notes "Automated release for version $version_tag" \
-        --repo "vsmash/maiass" && print_success "Release created." || print_error "Release failed."
+        --repo "vsmash/bashmaiass" && print_success "Release created." || print_error "Release failed."
     else
       print_info "Skipped release."
     fi
