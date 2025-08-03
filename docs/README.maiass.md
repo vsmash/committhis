@@ -1,7 +1,7 @@
 ![MAIASS Banner](https://raw.githubusercontent.com/vsmash/maiass/main/assets/maiass_banner.png)
 
 <div align="center">
-# 🫏 MAIASS v4.12.9
+# 🫏 MAIASS v4.12.10
 Modular AI-Augmented Semantic Scribe
 
 ---

@@ -1,6 +1,16 @@
-## 4.12.9
+## 4.12.10
 04 August 2025
 
+- Added functionality for deploy options with dynamic menu based on available branches.
+- feat: Add deployOptions function to show deploy options based on available branches
+- feat: Build dynamic menu for deploy options with merge, push, and do nothing actions
+- feat: Implement handling of user choice for deploy actions
+- feat: Update README for deploy options usage
+- Added function to load MAIASS_* variables from .env files.
+- feat: Add load_bumpscript_env function to load MAIASS_* variables from .env files
+- feat: Process and set MAIASS_* assignments from .env file
+- docs: Update README with details on loading MAIASS_* variables
+- Removed redundant deployOptions function from
 - feat: implement mergeDevelop function for handling branch merging and version management
 - feat: add changeManagement function for checking uncommitted changes
 - Add user authentication feature and AI commit message handling
