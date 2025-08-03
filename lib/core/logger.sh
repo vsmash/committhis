@@ -1,4 +1,25 @@
 
+supports_unicode() {
+  case "$OSTYPE" in
+    msys*|cygwin*|win32)
+      [[ -n "$WT_SESSION" || "$TERM_PROGRAM" == "vscode" ]] && return 0
+      return 1
+      ;;
+    *)
+      [[ "$LANG" =~ UTF-8 || "$LC_ALL" =~ UTF-8 ]] && return 0
+      return 1
+      ;;
+  esac
+}
+export unicode_supported=supports_unicode
+
+
+
+
+
+
+
+
 # Color and style definitions
 # Bold colors (for emphasis and important messages)
 BCyan='\033[1;36m'      # Bold Cyan
@@ -10,6 +31,7 @@ BPurple='\033[1;35m'    # Bold Purple
 BWhite='\033[1;37m'     # Bold White
 BMagenta='\033[1;35m'   # Bold Magenta
 BAqua='\033[1;96m'      # Bold Aqua
+BSoftPink='\033[38;5;218m' # Bold Soft Pink
 
 # Regular colors (for standard messages)
 Cyan='\033[0;36m'       # Cyan
@@ -21,6 +43,7 @@ Purple='\033[0;35m'     # Purple
 White='\033[0;37m'      # White
 Magenta='\033[0;35m'    # Magenta
 Aqua='\033[0;96m'       # Aqua
+SoftPink='\033[38;5;218m' # Soft Pink
 
 # Special formatting
 Color_Off='\033[0m'     # Text Reset
@@ -120,6 +143,25 @@ print_error() {
 print_section() {
     echo -e "\n${White}▶ $1${Color_Off}"
     log_message "SECTION: $1"
+}
+
+
+print_debug(){
+    local message="$1"
+    # For backward compatibility, treat debug_mode=true as verbosity_level=debug
+    if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
+        # Only log this when not already in debug verbosity to avoid noise
+        log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
+        # Treat as if verbosity_level is debug
+        local effective_verbosity="debug"
+    else
+        local effective_verbosity="$verbosity_level"
+    fi
+    if [[ "$effective_verbosity" == "debug" ]]; then
+        echo -e "${Aqua}🐛$message${Color_Off}"
+        log_message "DEBUG: $message"
+    fi
+
 }
 
 
