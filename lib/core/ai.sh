@@ -55,10 +55,10 @@ Git diff:
   if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
     # Only log this when not already in debug verbosity to avoid noise
     log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
-    print_info "DEBUG: AI function called with debug_mode=$debug_mode (deprecated, use MAIASS_VERBOSITY=debug instead)" "debug" >&2
-    print_info "DEBUG: MAIASS_DEBUG=$MAIASS_DEBUG" "debug" >&2
+    print_debug "DEBUG: AI function called with debug_mode=$debug_mode (deprecated, use MAIASS_VERBOSITY=debug instead)" "debug" >&2
+    print_debug "DEBUG: MAIASS_DEBUG=$MAIASS_DEBUG" "debug" >&2
   elif [[ "$verbosity_level" == "debug" ]]; then
-    print_info "DEBUG: AI function called with verbosity_level=$verbosity_level" "debug" >&2
+    print_debug "DEBUG: AI function called with verbosity_level=$verbosity_level" "debug" >&2
   fi
 
   # Get git diff for context
@@ -71,7 +71,7 @@ Git diff:
     git_diff="${git_diff:0:$ai_max_characters}...[truncated]"
     print_debug "DEBUG: Git diff truncated to $ai_max_characters characters" >&2
   fi
-    print_info "DEBUG: prompt mode: $ai_commit_style" >&2
+    print_debug "DEBUG: prompt mode: $ai_commit_style" >&2
   get_ai_commit_message_style
   # Create AI prompt based on commit style
   case "$ai_commit_style" in
