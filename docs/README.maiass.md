@@ -1,7 +1,7 @@
 ![MAIASS Banner](https://raw.githubusercontent.com/vsmash/maiass/main/assets/maiassbanner2.png)
 
 <div align="center">
-# |)) MAIASS v5.5.0
+# 5.5.2
 Modular AI-Augmented Semantic Scribe
 
 ---
@@ -62,20 +62,20 @@ This will install both `maiass.sh` (symlinked as `maiass`, `myass`, and `miass`)
 ### Basic Usage
 
 ```bash
-# 4.14.1
+# 5.5.2
 maiass
 
-# 4.14.1
+# 5.5.2
 maiass minor
 
-# 4.14.1
+# 5.5.2
 maiass major
 
-# 4.14.1
+# 5.5.2
 maiass 2.1.0
 
-# 4.14.1
-# 4.14.1
+# 5.5.2
+# 5.5.2
 committhis
 * committhis is already integrated into maiass. this is only 
 for people who want to use the commit functionality on its 
@@ -86,11 +86,11 @@ own without the git flow, version managment and changelog generation
 ### AI-Powered Commit Messages
 
 ```bash
-# 4.14.1
+# 5.5.2
 export MAIASS_AI_TOKEN="your_api_key"
 export MAIASS_AI_MODE="ask"
 
-# 4.14.1
+# 5.5.2
 maiass patch
 ```
 

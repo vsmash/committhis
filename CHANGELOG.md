@@ -1,6 +1,12 @@
-## 5.5.1
+## 5.5.2
 04 August 2025
 
+- # Conflicts:
+- #	CHANGELOG.md
+- #	docs/README.maiass.md
+- Updated changelog and README versions
+- feat: Updated the version number in CHANGELOG.md
+- docs: Updated the version number in README.maiass.md
 - fix to branding
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
