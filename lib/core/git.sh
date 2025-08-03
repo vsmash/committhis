@@ -387,7 +387,17 @@ function mergeDevelop() {
       git checkout "$developbranch"
       check_git_success
 
-      print_success "Release $newversion is ready! Merge the release branch when ready."
+      # Merge release branch into develop
+      git merge --no-ff -m "Merge release/$newversion into $developbranch" "release/$newversion"
+      check_git_success
+
+      print_success "Merged release/$newversion into $developbranch"
+      # Push develop
+      if remote_exists "origin"; then
+        git push origin "$developbranch"
+      fi
+
+      check_git_success
     else
       # For patch versions without release branch, update directly on develop
       print_info "Updating version and changelog directly on $developbranch..."
