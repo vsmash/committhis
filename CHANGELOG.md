@@ -1,6 +1,10 @@
-## 4.12.6
+## 4.12.7
 03 August 2025
 
+- Added error handling for git operations
+- Added function for performing merge operation between branches
+- Defined color and style definitions for logging
+- Implemented version comparison function based on semantic version strings
 - Added functions for git command execution with verbosity control and handling of .gitignore for log files.
 - Added color and style definitions to `colours.sh` file
 - Added secure environment variable loading with priority system to `envars.sh` file
