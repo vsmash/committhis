@@ -1,6 +1,13 @@
-## 4.12.10
+## 4.12.11
 04 August 2025
 
+- Added help utility script
+- feat: added new help.sh utility script to lib/utils
+- docs: added extensive documentation within help.sh for user guidance
+- Enhanced git and initialization functionalities
+- feat: added function to check if directory is a git repository
+- feat: added setup for branch and changelog variables with override logic
+- feat: added auto-detection of repository provider and extraction of repo info from git remote
 - Added functionality for deploy options with dynamic menu based on available branches.
 - feat: Add deployOptions function to show deploy options based on available branches
 - feat: Build dynamic menu for deploy options with merge, push, and do nothing actions
