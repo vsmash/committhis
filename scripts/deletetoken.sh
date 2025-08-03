@@ -1,2 +1,2 @@
 #!/bin/bash
-security delete-generic-password -s "maiass" -a "$var_name" 2>/dev/null
+security delete-generic-password -s "maiass" -a "MAIASS_AI_TOKEN" 2>/dev/null
