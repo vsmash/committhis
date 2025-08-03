@@ -50,7 +50,7 @@ Navy='\033[0;34m'       # Navy
 # Special formatting
 Color_Off='\033[0m'     # Text Reset
 BWhiteBG='\033[47m'     # White Background
-
+NC='\033[0m'
 
 # Print a decorated header
 print_header() {
