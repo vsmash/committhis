@@ -1,13 +1,13 @@
 ![MAIASS Banner](https://raw.githubusercontent.com/vsmash/maiass/main/assets/maiassbanner2.png)
 
 <div align="center">
-# MAIASS v5.5.3
+# MAIASS v5.5.5
 Modular AI-Augmented Semantic Scribe
 
 ---
 
 
-### 👩‍💻 Are you tired of playing translator between code and English?
+### 👩‍💻 Are you tired of switching from code-mode to explain-brain?
 
 ### 🧑‍💼 Are you sick of opening a repo and finding 20 commits named “fix”?
 
