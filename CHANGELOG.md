@@ -1,3 +1,13 @@
+## 4.12.2
+3 August 2025
+
+- Refactor project and enhance environment variable handling
+	- refactor: renamed directories from maiass/ to bashmaiass/ and from homebrew-maiass/ to homebrew-bashmaiass/
+	- feat: implemented prioritized, secure environment variable loading system
+	- chore: added machine fingerprint generation for enhanced security
+	- refactor: updated default master branch name to 'main'
+	- fix: corrected script reference from 'dma' to 'bma' in test script
+
 ## 4.12.1
 03 August 2025
 
