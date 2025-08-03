@@ -1,3 +1,14 @@
+## 4.14.0
+04 August 2025
+
+- Updated mergeDevelop function in git.sh
+- feat: added automatic merging of release branch into develop
+- feat: implemented push to origin after successful merge
+- * release/4.13.0:
+-  Bumped version to 4.13.0
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+
 ## 4.13.0
 04 August 2025
 
@@ -17,8 +28,8 @@
 - fix: updated default repository for gh release to `bashmaiass`
 - fix: set `bashmaiass` as target repo for gh release creation
 - Update MAIASS banner and readme
--  - feat: added new MAIASS banner image
--  - docs: updated README to link to the new banner image
+- - feat: added new MAIASS banner image
+- - docs: updated README to link to the new banner image
 - # Conflicts:
 - #	docs/README.maiass.md
 - Updated README and Banner URL
@@ -101,8 +112,8 @@
 - fix: updated default repository for gh release to `bashmaiass`
 - fix: set `bashmaiass` as target repo for gh release creation
 - Update MAIASS banner and readme
-- - feat: added new MAIASS banner image
-- - docs: updated README to link to the new banner image
+- feat: added new MAIASS banner image
+- docs: updated README to link to the new banner image
 - # Conflicts:
 - #	docs/README.maiass.md
 - Updated README and Banner URL
@@ -168,8 +179,6 @@
 - Checkout develop branch if not already on it and merge current branch
 - Pull latest changes from develop branch
 - Bump version and handle release branch creation if version files exist and on develop branch
-- feat: added new MAIASS banner image
-- docs: updated README to link to the new banner image
 - Conflicts:
 - docs/README.maiass.md
 
