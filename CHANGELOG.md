@@ -1,6 +1,8 @@
-## 4.12.8
+## 4.12.9
 04 August 2025
 
+- feat: implement mergeDevelop function for handling branch merging and version management
+- feat: add changeManagement function for checking uncommitted changes
 - Add user authentication feature and AI commit message handling
 - feat: add function get_commit_message to extract Jira ticket number and handle AI commit message modes
 - feat: add function run_ai_commit_only to handle AI commit message suggestion
