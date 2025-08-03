@@ -1,6 +1,6 @@
 # MAIASS Development Guidelines
 
-This document provides essential information for developers working on the MAIASS (Modular AI-Assisted Semantic Savant) project.
+This document provides essential information for developers working on the MAIASS (Modular AI-Augmented Semantic Scribe) project.
 
 ## Build/Configuration Instructions
 

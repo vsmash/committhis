@@ -18,7 +18,7 @@ The workspace contains four interconnected projects:
 
 ### maiass/ → Core Application
 - **Language**: Bash shell script
-- **Purpose**: Git workflow automation with AI-assisted commit messages
+- **Purpose**: Git workflow automation with AI-Augmented commit messages
 - **Key Files**: `maiass.sh`, `install.sh`, `test_maiass.sh`
 - **Dependencies**: Bash, Git, jq, standard Unix utilities
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------------------------------------------
-# MAIASS (Modular AI-Assisted Semantic Savant) v4.11.2
+# MAIASS (Modular AI-Augmented Semantic Scribe) v4.11.2
 # Intelligent Git workflow automation script
 # Copyright (c) 2025 Velvary Pty Ltd
 # All rights reserved.
@@ -833,9 +833,9 @@ open_url() {
       app_path="/Applications/Firefox.app"
       binary_path="$app_path/Contents/MacOS/firefox"
       ;;
-    "Savant")
-      app_path="/Applications/Savant.app"
-      binary_path="$app_path/Contents/MacOS/Savant"
+    "Scribe")
+      app_path="/Applications/Scribe.app"
+      binary_path="$app_path/Contents/MacOS/Scribe"
       ;;
     "Safari")
       open -a "Safari" "$url"
@@ -2138,7 +2138,7 @@ setup_bumpscript_variables() {
       export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
       export ai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
       export ai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
-      export maiass_endpoint="https://pound.maiass.net/v1/chat/completions}"
+      export maiass_endpoint="https://pound.maiass.net/v1/chat/completions"
 
 
       # Initialize configurable version file system
@@ -2457,7 +2457,7 @@ show_help() {
        █ ██▄██ █   ▄   █   █   ▄   █▄▄▄▄▄█ █▄▄▄▄▄█ █
        █▄█   █▄█▄▄█ █▄▄█▄▄▄█▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█
 EOF
-  echo -e "${BAqua}\n       Modular AI-Assisted Semantic Savant\n${BYellow}\n       * AI Commit Messages\n${BLime}       * Intelligent Git Workflow Automation${Color_Off}\n"
+  echo -e "${BAqua}\n       Modular AI-Augmented Semantic Scribe\n${BYellow}\n       * AI Commit Messages\n${BLime}       * Intelligent Git Workflow Automation${Color_Off}\n"
 
 
 
@@ -2548,7 +2548,7 @@ EOF
 
   echo -e "${BWhite}🌐 BROWSER INTEGRATION:${Color_Off}"
   echo -e "  MAIASS_BROWSER               ${Gray}(system default)${Color_Off} Browser for URLs"
-  echo -e "                                   Supported: Chrome, Firefox, Safari, Brave, Savant"
+  echo -e "                                   Supported: Chrome, Firefox, Safari, Brave, Scribe"
   echo -e "  MAIASS_BROWSER_PROFILE       ${Gray}('Default')${Color_Off} Browser profile to use\n"
 
   echo -e "${BWhite}📁 CUSTOM VERSION FILES:${Color_Off}"

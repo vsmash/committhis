@@ -1,6 +1,6 @@
 # GitHub Copilot Guidelines - MAIASS Project
 
-This document provides essential information for GitHub Copilot when assisting with the MAIASS (Modular AI-Assisted Semantic Savant) project development.
+This document provides essential information for GitHub Copilot when assisting with the MAIASS (Modular AI-Augmented Semantic Scribe) project development.
 
 ## Project Overview
 
