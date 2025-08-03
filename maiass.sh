@@ -7,7 +7,7 @@
 # This function is part of the Velvary bash scripts library.
 # Author: vsmash <670252+vsmash@users.noreply.github.com>
 # ---------------------------------------------------------------
-
+# Resolve this script’s real path even if symlinked
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
   DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
@@ -16,13 +16,11 @@ while [ -h "$SOURCE" ]; do
 done
 SCRIPT_PATH="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
 
-# Detect mode
+# Detect libexec layout: in dev, lib is next to the script; in brew, it's nested
 if [[ -d "$SCRIPT_PATH/lib/core" ]]; then
-  # Dev mode: ./lib exists relative to script
   LIBEXEC_DIR="$SCRIPT_PATH/lib"
 else
-  # Installed via Homebrew: libexec is one level up
-  LIBEXEC_DIR="$SCRIPT_PATH/../libexec"
+  LIBEXEC_DIR="$SCRIPT_PATH/../libexec/lib"
 fi
 PROJECT_DIR="$(pwd)"
 
