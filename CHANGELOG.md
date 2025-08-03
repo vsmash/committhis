@@ -1,6 +1,11 @@
-## 4.12.5
+## 4.12.6
 03 August 2025
 
+- Added functions for git command execution with verbosity control and handling of .gitignore for log files.
+- Added color and style definitions to `colours.sh` file
+- Added secure environment variable loading with priority system to `envars.sh` file
+- Exported variables and set primary version file details in `init.sh` file
+- Implemented functions for printing headers, sections, messages, and handling logging in `logger.sh` file
 - Check for uncommitted changes and prompt for commit
 - Get current branch name and compare with developbranch
 - Checkout develop branch if not already on it and merge current branch
