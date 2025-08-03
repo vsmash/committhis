@@ -1,6 +1,8 @@
-## 5.5.2
+## 5.5.3
 04 August 2025
 
+- Updated documentation
+- docs: modified README title to include full project name
 - # Conflicts:
 - #	CHANGELOG.md
 - #	docs/README.maiass.md
