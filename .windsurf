@@ -4,6 +4,7 @@
 ## Project Structure
 - `maiass.sh` - Main script with Git workflow automation
 - `README.md` - Comprehensive documentation
+- `DEVELOPER.md` - Developers information
 - Version files supported: package.json, composer.json, PHP defines, text files
 
 ## Key Functions to Focus On
