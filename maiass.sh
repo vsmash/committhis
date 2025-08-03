@@ -54,7 +54,8 @@ load_environment_variables() {
 
 # Load sensitive variables from secure storage
 load_secure_variables() {
-    local secure_vars=("MAIASS_AI_TOKEN" "MAIASS_API_KEY" "MAIASS_SECRET_KEY")
+    local secure_vars=("MAIASS_AI_TOKEN")
+    local token_prompted=0
 
     for var in "${secure_vars[@]}"; do
         if [[ -n "${!var}" ]]; then
@@ -69,12 +70,43 @@ load_secure_variables() {
         fi
 
         if [[ -n "$value" ]]; then
-            export "$var=$value"
-            print_info "Loaded $var from secure storage" "debug"
+            export "$var"="$value"
+            [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Loaded $var from secure storage" "debug"
+        elif [[ "$var" == "MAIASS_AI_TOKEN" && -z "$value" && -z "${!var}" && "$token_prompted" -eq 0 ]]; then
+            # Only prompt for AI token if not found and not in non-interactive mode
+            if [[ ! -t 0 ]]; then
+                print_warning "AI token not found and terminal is not interactive. Please set MAIASS_AI_TOKEN environment variable."
+                continue
+            fi
+
+            echo -e "${Yellow}No AI token found in secure storage.${Color_Off}"
+            echo -e "To get started, you'll need an AI token for commit message generation."
+            echo -e "Please enter your AI token (input will be hidden): "
+
+            # Read token with hidden input
+            if read -s token; then
+                if [[ -z "$token" ]]; then
+                    print_warning "No token provided. AI features will be disabled."
+                    token="DISABLED"
+                fi
+
+                # Store the token
+                if [[ "$OSTYPE" == "darwin"* ]]; then
+                    security add-generic-password -a "$var" -s "maiass" -w "$token" -U
+                elif command -v secret-tool >/dev/null 2>&1; then
+                    echo -n "$token" | secret-tool store --label="MAIASS AI Token" service maiass key "$var"
+                fi
+
+                export MAIASS_AI_TOKEN="$token"
+                print_success "AI token stored successfully."
+                token_prompted=1
+            else
+                print_warning "Failed to read token. AI features will be disabled."
+                export MAIASS_AI_TOKEN="DISABLED"
+            fi
         fi
     done
 }
-
 # Store sensitive variables in secure storage
 store_secure_variable() {
     local var_name="$1"
