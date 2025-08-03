@@ -1,13 +1,14 @@
-## 4.14.0
+## 4.14.1
 04 August 2025
 
+- fix to branding
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - Updated mergeDevelop function in git.sh
 - feat: added automatic merging of release branch into develop
 - feat: implemented push to origin after successful merge
 - * release/4.13.0:
--  Bumped version to 4.13.0
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
+- Bumped version to 4.13.0
 
 ## 4.13.0
 04 August 2025
@@ -28,8 +29,8 @@
 - fix: updated default repository for gh release to `bashmaiass`
 - fix: set `bashmaiass` as target repo for gh release creation
 - Update MAIASS banner and readme
-- - feat: added new MAIASS banner image
-- - docs: updated README to link to the new banner image
+- feat: added new MAIASS banner image
+- docs: updated README to link to the new banner image
 - # Conflicts:
 - #	docs/README.maiass.md
 - Updated README and Banner URL
