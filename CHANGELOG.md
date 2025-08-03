@@ -6,10 +6,10 @@
 - fix: updated default repository for gh release to `bashmaiass`
 - fix: set `bashmaiass` as target repo for gh release creation
 - Update MAIASS banner and readme
--  - feat: added new MAIASS banner image
--  - docs: updated README to link to the new banner image
-- # Conflicts:
-- #	docs/README.maiass.md
+  - feat: added new MAIASS banner image
+  - docs: updated README to link to the new banner image
+- Conflicts:
+- docs/README.maiass.md
 - Updated README and Banner URL
 - docs: updated README version display
 - fix: corrected banner URL in README
