@@ -152,8 +152,9 @@ function get_commit_message() {
             commit_message+="$line"$'\n\n'
             first_line=false
         else
-            # Subsequent lines are body - add with single newline
-            commit_message+="\t$line"$'\n'
+            # Subsequent lines are body - add with tab indent and single newline
+            commit_message+="    $line"$'\n'
+
         fi
     done
     # Remove one trailing newline if present:
