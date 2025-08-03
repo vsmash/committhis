@@ -396,3 +396,108 @@ function getVersion(){
     print_success "New version: ${BWhite}$newversion${Color_Off}"
 }
 
+function bumpVersion() {
+    # if $newversion is not set, exit with an error
+    if [ -z "$newversion" ]; then
+        print_error "No new version set. Exiting."
+        exit 1
+    fi
+
+    # if $version_source is not set, exit with an error
+    if [ -z "$version_source" ]; then
+        print_error "No version source determined. Please run getVersion first. Exiting."
+        exit 1
+    fi
+
+    print_section "Updating Version Numbers"
+
+    # Update the primary version source first
+    if [ "$version_source" = "custom_primary" ]; then
+        print_info "Updating custom primary version source: $version_source_file..."
+        was_executable=$(test -x "$version_source_file" && echo "yes" || echo "no")
+
+        if update_version_in_file "$version_source_file" "$version_source_type" "$version_source_line_start" "$newversion"; then
+            if [[ "$was_executable" == "yes" ]]; then
+                chmod +x "$version_source_file"
+                print_info "Restored +x on $version_source_file"
+            fi
+            print_success "Updated version to $newversion in $version_source_file"
+        else
+            print_error "Failed to update version in $version_source_file"
+            exit 1
+        fi
+    elif [ "$version_source" = "package.json" ]; then
+        print_info "Updating primary version source: package.json..."
+        local package_json_file="${package_json_path}/package.json"
+        if update_version_in_file "$package_json_file" "json" "" "$newversion"; then
+            print_success "Updated version to $newversion in package.json"
+        else
+            print_error "Failed to update version in package.json"
+            exit 1
+        fi
+
+        # Also update VERSION file if it exists (for compatibility)
+        if [ -f "$version_file_path/VERSION" ]; then
+            print_info "Updating VERSION file for compatibility..."
+            if update_version_in_file "$version_file_path/VERSION" "txt" "" "$newversion"; then
+                print_success "Updated version to $newversion in VERSION file"
+            fi
+        fi
+    else
+        # VERSION file is the primary source
+        print_info "Updating primary version source: VERSION file..."
+        if update_version_in_file "$version_file_path/VERSION" "txt" "" "$newversion"; then
+            print_success "Updated version to $newversion in VERSION file"
+        else
+            print_error "Failed to update version in VERSION file"
+            exit 1
+        fi
+
+        # Also update package.json if it exists (for compatibility)
+        local package_json_file="${package_json_path}/package.json"
+        if [ -f "$package_json_file" ]; then
+            print_info "Updating package.json for compatibility..."
+            if update_version_in_file "$package_json_file" "json" "" "$newversion"; then
+                print_success "Updated version to $newversion in package.json"
+            fi
+        fi
+    fi
+
+    # Update secondary version files if configured
+    if [[ -n "$version_secondary_files" ]]; then
+        print_info "Updating secondary version files..."
+        while IFS= read -r file_config; do
+            if [[ -n "$file_config" ]]; then
+                IFS=':' read -ra config_parts <<< "$file_config"
+                local sec_file="${config_parts[0]}"
+                local sec_type="${config_parts[1]:-txt}"
+                local sec_line_start="${config_parts[2]:-}"
+                # Track which files were executable before
+                was_executable=$(test -x "$sec_file" && echo "yes" || echo "no")
+                print_info "Updating $sec_file, as $sec_type" "debug"
+
+                if update_version_in_file "$sec_file" "$sec_type" "$sec_line_start" "$newversion"; then
+                    if [[ "$was_executable" == "yes" ]]; then
+                        chmod +x "$sec_file"
+                        print_info "Restored +x on $sec_file"
+                    fi
+                    print_success "Updated version to $newversion in $sec_file"
+                else
+                    print_warning "Failed to update version in $sec_file"
+                fi
+            fi
+        done <<< "$(parse_secondary_version_files "$version_secondary_files")"
+    fi
+
+    # Update WordPress files if applicable (legacy support)
+    if [[ -n "$wordpress_files_path" ]]; then
+        if sed_inplace "s/Version: .*/Version: $newversion/" "$wordpress_files_path/style.css"; then
+            print_success "Updated version in style.css"
+        fi
+
+        if sed_inplace "s/^define.*.$wpVersionConstant.*/define('$wpVersionConstant','$newversion');/" "$wordpress_files_path/functions.php"; then
+            print_success "Updated version in functions.php"
+        fi
+    fi
+}
+

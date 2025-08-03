@@ -209,3 +209,58 @@ perform_merge_operation() {
         logthis "Merged $source_branch into $target_branch"
     fi
 }
+
+
+function getBitbucketUrl(){
+    print_section "Getting Bitbucket URL"
+    REMOTE_URL=$(git remote get-url origin)
+    if [[ "$REMOTE_URL" =~ bitbucket.org[:/]([^/]+)/([^/.]+) ]]; then
+        WORKSPACE="${BASH_REMATCH[1]}"
+        REPO="${BASH_REMATCH[2]}"
+    else
+        echo "Failed to extract workspace and repo from remote URL"
+        exit 1
+    fi
+}
+
+
+
+function branchDetection() {
+    print_section "Branch Detection"
+    echo -e "Currently on branch: ${BWhite}$branch_name${Color_Off}"
+    # if we are on the master branch, advise user not to use this script for hot fixes
+    # if on master or a release branch, advise the user
+    if [[ "$branch_name" == "$masterbranch" || "$branch_name" == release/* || "$branch_name" == releases/* ]]; then
+        print_warning "You are currently on the $branch_name branch"
+        read -n 1 -s -p "$(echo -e ${BYellow}Do you want to continue on $developbranch? [y/N]${Color_Off} )" REPLY
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_error "Operation cancelled by user"
+            exit 1
+        fi
+    fi
+    # if branch starts with release/ or releases/ offer do same as masterbranch
+
+
+
+    # if we are on the master or staging branch, switch to develop
+    if [ "$branch_name" == "$masterbranch" ] || [ "$branch_name" == "$stagingbranch" ]; then
+        print_info "Switching to $developbranch branch..."
+        git checkout "$developbranch"
+        check_git_success
+        branch_name="$developbranch"
+        print_success "Switched to $developbranch branch"
+
+    fi
+}
+
+has_staged_changes() {
+  [ -n "$(git diff --cached)" ]
+}
+
+
+
+
+has_uncommitted_changes() {
+  [ -n "$(git status --porcelain)" ]
+}
