@@ -1,3 +1,11 @@
+## 5.5.1
+04 August 2025
+
+- Conflicts:
+- 	package.json
+- Updated package version
+- chore: upgraded package version from 4.14.0 to 5.5.0
+
 ## 4.14.1
 04 August 2025
 
