@@ -1,6 +1,6 @@
-# BASHMAIASS Development Guidelines
+# MAIASS Development Guidelines
 
-This document provides essential information for developers working on the BASHMAIASS (Modular AI-Augmented Semantic Scribe) project.
+This document provides essential information for developers working on the MAIASS (Modular AI-Assisted Semantic Savant) project.
 
 ## Build/Configuration Instructions
 
@@ -8,41 +8,41 @@ This document provides essential information for developers working on the BASHM
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/vsmash/bashmaiass.git
-   cd bashmaiass
+   git clone https://github.com/vsmash/maiass.git
+   cd maiass
    ```
 
 2. Development Scripts:
-   - `./bashmaiass.sh` - Main script for running BASHMAIASS
-   - `dma` - Development alternative to `./bashmaiass.sh` (symlink in development environment)
+   - `./maiass.sh` - Main script for running MAIASS
+   - `dma` - Development alternative to `./maiass.sh` (symlink in development environment)
    
-   > **Note:** `dma` is a symlink to `./bashmaiass.sh` in the development environment. It's not included in the repository documentation but works the same way as `./bashmaiass.sh`.
+   > **Note:** `dma` is a symlink to `./maiass.sh` in the development environment. It's not included in the repository documentation but works the same way as `./maiass.sh`.
 
 3. Environment Variables:
-   BASHMAIASS uses several environment variables for configuration. The most important ones are:
+   MAIASS uses several environment variables for configuration. The most important ones are:
    
    ```bash
    # Version management
-   export BASHMAIASS_VERSION_PRIMARY_FILE="package.json"  # Primary file containing version
-   export BASHMAIASS_VERSION_PRIMARY_TYPE="json"          # Type of primary version file
+   export MAIASS_VERSION_PRIMARY_FILE="package.json"  # Primary file containing version
+   export MAIASS_VERSION_PRIMARY_TYPE="json"          # Type of primary version file
    
    # OpenAI integration (for AI-powered commit messages)
-   export BASHMAIASS_AI_TOKEN="your-api-key"          # Your OpenAI API key
-   export BASHMAIASS_AI_MODE="ask"                    # Mode for AI integration (ask, auto, off)
+   export MAIASS_AI_TOKEN="your-api-key"          # Your OpenAI API key
+   export MAIASS_AI_MODE="ask"                    # Mode for AI integration (ask, auto, off)
    
    # Verbosity
-   export BASHMAIASS_VERBOSITY="brief"                    # Output verbosity (brief, normal, verbose)
+   export MAIASS_VERBOSITY="brief"                    # Output verbosity (brief, normal, verbose)
    ```
 
 ## Testing Information
 
 ### Running Tests
 
-BASHMAIASS includes a test script that verifies basic functionality:
+MAIASS includes a test script that verifies basic functionality:
 
 ```bash
 # Run the test script
-./test_bashmaiass.sh
+./test_maiass.sh
 ```
 
 The test script creates a temporary test environment and verifies:
@@ -52,7 +52,7 @@ The test script creates a temporary test environment and verifies:
 
 ### Adding New Tests
 
-When adding new tests to `test_bashmaiass.sh`:
+When adding new tests to `test_maiass.sh`:
 
 1. Follow the existing pattern of creating isolated test environments
 2. Use clear test descriptions with the echo statements
@@ -64,10 +64,10 @@ Example test structure:
 ```bash
 echo -e "\n${BLUE}Test X: Description of test${NC}"
 # Set environment variables for the test
-export BASHMAIASS_VARIABLE="value"
+export MAIASS_VARIABLE="value"
 
-# Run BASHMAIASS with specific parameters
-"$BASHMAIASS_SCRIPT" parameter --flag
+# Run MAIASS with specific parameters
+"$MAIASS_SCRIPT" parameter --flag
 
 # Verify results
 RESULT=$(grep "pattern" file)
@@ -98,17 +98,17 @@ The project includes a deployment script (`scripts/dply.sh`) that handles:
 
 1. Increase verbosity for more detailed output:
    ```bash
-   export BASHMAIASS_VERBOSITY="verbose"
+   export MAIASS_VERBOSITY="verbose"
    ```
 
 2. Use the `--dry-run` flag to see what would happen without making changes:
    ```bash
-   ./bashmaiass.sh patch --dry-run
+   ./maiass.sh patch --dry-run
    ```
 
 3. Check the version detection with:
    ```bash
-   ./bashmaiass.sh --version-only
+   ./maiass.sh --version-only
    ```
 
 ### Common Issues

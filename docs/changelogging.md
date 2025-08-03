@@ -97,7 +97,7 @@ docs: update installation instructions
 refactor: optimize database queries
 ```
 
-These prefixes allow for manual or script-augmented categorization.
+These prefixes allow for manual or script-assisted categorization.
 
 ## Manual Changelog Categorization
 

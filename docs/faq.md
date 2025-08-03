@@ -3,7 +3,7 @@
 ## General Questions
 
 ### What does MAIASS stand for?
-MAIASS stands for **Modular AI-Augmented Semantic Scribe**. It's a Git workflow automation script that intelligently handles version bumping, changelog management, and AI-powered commit messages.
+MAIASS stands for **Modular AI-Assisted Semantic Savant**. It's a Git workflow automation script that intelligently handles version bumping, changelog management, and AI-powered commit messages.
 
 ### How do you pronounce it?
 However you would like to. I hope it introduces some mirth to your day on a regular basis.
