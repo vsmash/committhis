@@ -1,23 +1,36 @@
+## 4.12.1
+03 August 2025
+
+- # Conflicts:
+- #	package.json
+- Updated MAIASS terminology to Modular AI-Augmented Semantic Scribe
+-  - docs: Refactored AI-Assisted terminology to AI-Augmented in documentation
+-  - fix(script): Renamed app from Savant to Scribe in maiass.sh
+-  - chore: Updated .gitignore to track .env.maiass files
+-  - fix(api): Corrected maiass_endpoint URL in maiass.sh
+-  - docs: Adjusted package.json to reflect new description
+- Revert "Updated codebase reflecting project's renamed: MAIASS to BASHMAIASS"
+- This reverts commit 076d21ea84599e92789292dcb5df9b0957f3e55c.
+
 ## 4.12.0
 2 August 2025
 
 - # Conflicts:
-	- #	bashmaiass.sh
-	- #	docs/README.bashmaiass.md
-	- #	package.json
+- #	bashmaiass.sh
+- #	docs/README.bashmaiass.md
+- #	package.json
 - Updated codebase reflecting project's renamed: MAIASS to BASHMAIASS
-	- feat: renamed main script from maiass.sh to bashmaiass.sh
-	- feat: updated internal documentation with project's new name
-	- fix: handled potential issue with undefined WordPress version constant
-	- chore: added .env.maiass to gitignore
-	- docs: updated all instances of the project name MAIASS to BASHMAIASS
+- feat: renamed main script from maiass.sh to bashmaiass.sh
+- feat: updated internal documentation with project's new name
+- fix: handled potential issue with undefined WordPress version constant
+- chore: added .env.maiass to gitignore
+- docs: updated all instances of the project name MAIASS to BASHMAIASS
 
 ## 4.11.5
 27 July 2025
 
 - Updated logging function in maiass.sh
-	- fix: modified logthis function debugmsg argument in maiass.sh
-
+- fix: modified logthis function debugmsg argument in maiass.sh
 - Endpoint verification changes
 - corrected endpoint
 
