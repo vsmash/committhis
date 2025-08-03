@@ -1,10 +1,10 @@
-## 5.5.9
+## 5.5.10
 04 August 2025
 
-- Added new color configuration file
-- feat: added colours.sh for color and style definitions
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
+- Added new color configuration file
+- feat: added colours.sh for color and style definitions
 - Updated script for path and layout detection
 - feat: added ability to resolve real script path even if symlinked
 - refactor: adjusted layout detection to specify if it is in development or nested in brew, streamlined condition handling
