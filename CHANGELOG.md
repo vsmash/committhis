@@ -1,10 +1,13 @@
-## 5.5.7
+## 5.5.8
 04 August 2025
 
-- Removed colour configuration script
-- feat: deleted colours.sh from lib/config
+- Updated script for path and layout detection
+- feat: added ability to resolve real script path even if symlinked
+- refactor: adjusted layout detection to specify if it is in development or nested in brew, streamlined condition handling
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
+- Removed colour configuration script
+- feat: deleted colours.sh from lib/config
 - Refactored directory structure and source paths
 - refactor: changed the script to dynamically get the directory path
 - fix: adjusted hardcoded paths to relative source paths
