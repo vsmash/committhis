@@ -86,14 +86,14 @@ generate_machine_fingerprint() {
 
     # Debug output if in debug mode
     if [[ "$debug_mode" == "true" ]]; then
-        print_info "DEBUG: Machine fingerprint components:" "debug"
-        print_info "  CPU: ${components[0]}" "debug"
-        print_info "  Memory: ${components[1]}" "debug"
-        print_info "  Hardware: ${components[2]}" "debug"
-        print_info "  Arch: ${components[3]}" "debug"
-        print_info "  Username: ${components[4]}" "debug"
-        print_info "  Platform: ${components[5]}" "debug"
-        print_info "  HasRealHardwareInfo: $has_real_hardware_info" "debug"
+        print_debug "  DEBUG: Machine fingerprint components:" "debug"
+        print_debug "  CPU: ${components[0]}" "debug"
+        print_debug "  Memory: ${components[1]}" "debug"
+        print_debug "  Hardware: ${components[2]}" "debug"
+        print_debug "  Arch: ${components[3]}" "debug"
+        print_debug "  Username: ${components[4]}" "debug"
+        print_debug "  Platform: ${components[5]}" "debug"
+        print_debug "  HasRealHardwareInfo: $has_real_hardware_info" "debug"
     fi
 
     # Generate SHA-256 hash in base64
