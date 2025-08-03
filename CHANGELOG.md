@@ -1,12 +1,22 @@
+## 4.12.3
+03 August 2025
+
+- Refactor project and enhance environment variable handling
+-  - refactor: renamed directories from maiass/ to bashmaiass/ and from homebrew-maiass/ to homebrew-bashmaiass/
+-  - feat: implemented prioritized, secure environment variable loading system
+-  - chore: added machine fingerprint generation for enhanced security
+-  - refactor: updated default master branch name to 'main'
+-  - fix: corrected script reference from 'dma' to 'bma' in test script
+
 ## 4.12.2
 3 August 2025
 
 - Refactor project and enhance environment variable handling
-	- refactor: renamed directories from maiass/ to bashmaiass/ and from homebrew-maiass/ to homebrew-bashmaiass/
-	- feat: implemented prioritized, secure environment variable loading system
-	- chore: added machine fingerprint generation for enhanced security
-	- refactor: updated default master branch name to 'main'
-	- fix: corrected script reference from 'dma' to 'bma' in test script
+- refactor: renamed directories from maiass/ to bashmaiass/ and from homebrew-maiass/ to homebrew-bashmaiass/
+- feat: implemented prioritized, secure environment variable loading system
+- chore: added machine fingerprint generation for enhanced security
+- refactor: updated default master branch name to 'main'
+- fix: corrected script reference from 'dma' to 'bma' in test script
 
 ## 4.12.1
 03 August 2025
@@ -14,11 +24,11 @@
 - # Conflicts:
 - #	package.json
 - Updated MAIASS terminology to Modular AI-Augmented Semantic Scribe
--  - docs: Refactored AI-Assisted terminology to AI-Augmented in documentation
--  - fix(script): Renamed app from Savant to Scribe in maiass.sh
--  - chore: Updated .gitignore to track .env.maiass files
--  - fix(api): Corrected maiass_endpoint URL in maiass.sh
--  - docs: Adjusted package.json to reflect new description
+- - docs: Refactored AI-Assisted terminology to AI-Augmented in documentation
+- - fix(script): Renamed app from Savant to Scribe in maiass.sh
+- - chore: Updated .gitignore to track .env.maiass files
+- - fix(api): Corrected maiass_endpoint URL in maiass.sh
+- - docs: Adjusted package.json to reflect new description
 - Revert "Updated codebase reflecting project's renamed: MAIASS to BASHMAIASS"
 - This reverts commit 076d21ea84599e92789292dcb5df9b0957f3e55c.
 
