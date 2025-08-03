@@ -1,25 +1,25 @@
 #!/bin/bash
 # ------------------------------------------------------------------------
-# Dual Remote Push Script for BASHMAIASS / committhis
+# Dual Remote Push Script for MAIASS / committhis
 #
 # This script automates the process of pushing the same codebase to two
-# differently branded Git remotes: `bashmaiass` (main repo) and `committhis`
+# differently branded Git remotes: `maiass` (main repo) and `committhis`
 # (commit-only variant). It ensures the correct README is used for each
 # brand and maintains a clean working tree throughout the process.
 #
 # ⚠ This script is intended for maintainers of the project only.
-#    It is not part of the functionality of BASHMAIASS or committhis themselves.
-# 
+#    It is not part of the functionality of MAIASS or committhis themselves.
+#
 # Features:
 # - Merges `staging` into `main`
 # - Ensures correct `README.md` for each target brand
-# - Pushes to `origin` (BASHMAIASS) and `ai` (committhis) in sequence
+# - Pushes to `origin` (MAIASS) and `ai` (committhis) in sequence
 # - Stashes local changes and restores original branch after push
 #
 # Requires:
-# - Two configured remotes: `origin` (BASHMAIASS) and `ai` (committhis)
+# - Two configured remotes: `origin` (MAIASS) and `ai` (committhis)
 # - `main` and optionally `staging` branches
-# - `docs/README.bashmaiass.md` and `docs/README.committhis.md`
+# - `docs/README.maiass.md` and `docs/README.committhis.md`
 #
 # Usage:
 #   bash scripts/dply.sh
@@ -41,13 +41,13 @@ print_warning() { echo -e "${YELLOW}⚠ $1${Color_Off}"; }
 print_error() { echo -e "${RED}✗ $1${Color_Off}"; }
 # --- Copy correct README before pushing to main ---
 prepare_maiass_readme() {
-  echo -e "${BGreen}📄 Copying BASHMAIASS README...${Color_Off}"
-  cp docs/README.bashmaiass.md README.md
+  echo -e "${BGreen}📄 Copying MAIASS README...${Color_Off}"
+  cp docs/README.maiass.md README.md
   if ! git diff --quiet README.md; then
     git add README.md
-    git commit -m "Revert README to BASHMAIASS"
+    git commit -m "Revert README to MAIASS"
   else
-    echo -e "${BYellow}ℹ️ BASHMAIASS README unchanged. No commit needed.${Color_Off}"
+    echo -e "${BYellow}ℹ️ MAIASS README unchanged. No commit needed.${Color_Off}"
   fi
 }
 
@@ -71,7 +71,7 @@ with_clean_worktree () {
   local stash_needed=false
   if [[ -n "$(git status --porcelain)" ]]; then
     echo -e "${BYellow}🔒 Stashing local changes...${Color_Off}"
-    git stash push -u -m "auto-stash for bashmaiass/committhis push"
+    git stash push -u -m "auto-stash for maiass/committhis push"
     stash_needed=true
   fi
 
@@ -122,7 +122,7 @@ merge_staging_to_main_and_push() {
 
   prepare_maiass_readme
   git add README.md
-  git commit -m "Update README for BASHMAIASS" || true
+  git commit -m "Update README for MAIASS" || true
   git push origin main
   version_tag=$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
 
@@ -133,11 +133,11 @@ merge_staging_to_main_and_push() {
         print_error "GitHub CLI (gh) not found. Run: brew install gh"
         exit 1
       fi
-      gh repo set-default vsmash/bashmaiass
+      gh repo set-default vsmash/maiass
       gh release create "$version_tag" \
         --title "$version_tag" \
         --notes "Automated release for version $version_tag" \
-        --repo "vsmash/bashmaiass" && print_success "Release created." || print_error "Release failed."
+        --repo "vsmash/maiass" && print_success "Release created." || print_error "Release failed."
     else
       print_info "Skipped release."
     fi
@@ -177,10 +177,10 @@ push_to_committhis() {
       print_info "Skipped release."
     fi
 
-  echo -e "${BGreen}↩️ Reverting README to BASHMAIASS...${Color_Off}"
+  echo -e "${BGreen}↩️ Reverting README to MAIASS...${Color_Off}"
   prepare_maiass_readme
   git add README.md
-  git commit -m "Revert README to BASHMAIASS" || true
+  git commit -m "Revert README to MAIASS" || true
 }
 
 push_version_tag_to_committhis() {
@@ -212,7 +212,7 @@ full_push_flow() {
     local stash_needed=false
     if [[ -n "$(git status --porcelain)" ]]; then
       echo -e "${BYellow}🔒 Stashing local changes...${Color_Off}"
-      git stash push -u -m "auto-stash for bashmaiass/committhis push"
+      git stash push -u -m "auto-stash for maiass/committhis push"
       stash_needed=true
     fi
 

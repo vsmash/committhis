@@ -438,7 +438,7 @@
 - docs: removed Windows compatibility warning and prerequisites
 - docs: streamlined quick start installation instructions
 - docs: eliminated detailed configuration and workflow examples for brevity
-- Add AI-augmented commit functionality to script
+- Add AI-Augmented commit functionality to script
 - feat: introduced `run_ai_commit_only` function for AI-suggested commit messages
 - feat: added `-ai` and `--ai-only` options to trigger AI commit flow
 - feat: implemented environment variable check for `MAIASS_MODE` to enable AI-only mode
@@ -652,7 +652,7 @@
 13 July 2025
 
 - [1;33m⚠ Unknown commit message style: '"bullet"'. Skipping AI suggestion.[0m
-- Add AI-augmented commit functionality to script
+- Add AI-Augmented commit functionality to script
 - feat: introduced `run_ai_commit_only` function for AI-suggested commit messages
 - feat: added `-ai` and `--ai-only` options to trigger AI commit flow
 - feat: implemented environment variable check for `MAIASS_MODE` to enable AI-only mode

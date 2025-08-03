@@ -42,17 +42,17 @@ export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 
 mask_api_key() {
     local api_key="$1"
-
+    
     # Check if key is empty or too short
     if [[ -z "$api_key" ]] || [[ ${#api_key} -lt 8 ]]; then
         echo "[INVALID_KEY]"
         return
     fi
-
+    
     # Extract first 4 and last 4 characters using parameter expansion
     local first_four="${api_key:0:4}"
     local last_four="${api_key: -4}"
-
+    
     echo "${first_four}****${last_four}"
 }
 
@@ -1213,21 +1213,9 @@ function bumpVersion() {
         if sed_inplace "s/Version: .*/Version: $newversion/" "$wordpress_files_path/style.css"; then
             print_success "Updated version in style.css"
         fi
-        # if $wpVersionConstant is not defined or is empty
-        if [[ -z "$wpVersionConstant" ]]; then
-          # get the folder name from last folder of $wordpress_files_path
-          theme_name=$(basename "$wordpress_files_path")
-          # use the folder name of the theme replacing '-' with '_' and uppercase
-          wpVersionConstant="$(echo "${theme_name//[-]/_}" | tr '[:lower:]' '[:upper:]')_RELEASE_VERSION"
-          print_warning "wpVersionConstant is not defined. Using $wpVersionConstant instead."
-        fi
-        # only update if wpVersionConstant is defined and not empty
-        if [[ -n "$wpVersionConstant" ]]; then
+
         if sed_inplace "s/^define.*.$wpVersionConstant.*/define('$wpVersionConstant','$newversion');/" "$wordpress_files_path/functions.php"; then
             print_success "Updated version in functions.php"
-        fi
-        else
-            print_warning "wpVersionConstant is not defined. Skipping update in functions.php."
         fi
     fi
 }
@@ -1416,7 +1404,7 @@ esac
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response length: ${#api_response} characters" >&2
   # mask the api token
 
-
+  
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: $(mask_api_key "${ai_token}") " >&2
 
   [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response : ${api_response} " >&2
@@ -1437,7 +1425,7 @@ esac
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Using jq for JSON parsing" >&2
       suggested_message=$(echo "$api_response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
       [[ "$debug_mode" == "true" ]] && print_info "DEBUG: jq result: '$suggested_message'" >&2
-
+      
       # Extract token usage information if available
       local prompt_tokens completion_tokens total_tokens
       prompt_tokens=$(echo "$api_response" | jq -r '.usage.prompt_tokens // empty' 2>/dev/null)
@@ -2150,7 +2138,7 @@ setup_bumpscript_variables() {
       export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
       export ai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
       export ai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
-      export maiass_endpoint="${MAIASS_AI_ENDPOINT:=https://pound.maiass.net/v1/chat/completions}"
+      export maiass_endpoint="https://pound.maiass.net/v1/chat/completions"
 
 
       # Initialize configurable version file system

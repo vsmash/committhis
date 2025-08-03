@@ -1,6 +1,6 @@
-# GitHub Copilot Guidelines - BASHMAIASS Project
+# GitHub Copilot Guidelines - MAIASS Project
 
-This document provides essential information for GitHub Copilot when assisting with the BASHMAIASS (Modular AI-Augmented Semantic Scribe) project development.
+This document provides essential information for GitHub Copilot when assisting with the MAIASS (Modular AI-Augmented Semantic Scribe) project development.
 
 ## Project Overview
 

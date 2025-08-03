@@ -1,8 +1,8 @@
-# BASHMAIASS Project Configuration
+# MAIASS Project Configuration
 # Modular AI-Augmented Semantic Scribe
 
 ## Project Structure
-- `bashmaiass.sh` - Main script with Git workflow automation
+- `maiass.sh` - Main script with Git workflow automation
 - `README.md` - Comprehensive documentation
 - Version files supported: package.json, composer.json, PHP defines, text files
 
@@ -25,7 +25,7 @@
 - Cross-platform compatibility
 
 ## Environment Variables
-- BASHMAIASS_* variables loaded from .env files
+- MAIASS_* variables loaded from .env files
 - OpenAI integration for commit messages
 - Jira ticket integration
 - Custom branch naming support

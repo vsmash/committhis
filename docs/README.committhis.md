@@ -1,6 +1,6 @@
 # 🤖 committhis
 
-**committhis** is a streamlined AI-augmented Git commit message tool, built for speed and semantic clarity. It uses OpenAI to analyze your changes and generate intelligent, well-formatted commit messages — so you can stay focused on writing code, not prose.
+**committhis** is a streamlined AI-Augmented Git commit message tool, built for speed and semantic clarity. It uses OpenAI to analyze your changes and generate intelligent, well-formatted commit messages — so you can stay focused on writing code, not prose.
 
 > 🧠 Derived from the full-featured [MAIASS](https://github.com/vsmash/maiass) script, committhis is stripped down to do one thing extremely well: suggest commit messages based on your code diff.
 ---
