@@ -1,12 +1,14 @@
-## 5.5.6
+## 5.5.7
 04 August 2025
 
+- Removed colour configuration script
+- feat: deleted colours.sh from lib/config
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - Refactored directory structure and source paths
 - refactor: changed the script to dynamically get the directory path
 - fix: adjusted hardcoded paths to relative source paths
 - refactor: improved detection of script mode and configuration
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
 - Updated README text
 - docs: edited section headers for clarity
 - Updated documentation
