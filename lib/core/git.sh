@@ -254,3 +254,13 @@ function branchDetection() {
     fi
 }
 
+has_staged_changes() {
+  [ -n "$(git diff --cached)" ]
+}
+
+
+
+
+has_uncommitted_changes() {
+  [ -n "$(git status --porcelain)" ]
+}
