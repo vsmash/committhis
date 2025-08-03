@@ -1,6 +1,10 @@
-## 5.5.3
+## 5.5.4
 04 August 2025
 
+- Updated README text
+- docs: edited section headers for clarity
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - Updated documentation
 - docs: modified README title to include full project name
 - # Conflicts:
@@ -10,8 +14,6 @@
 - feat: Updated the version number in CHANGELOG.md
 - docs: Updated the version number in README.maiass.md
 - fix to branding
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
 - Updated mergeDevelop function in git.sh
 - feat: added automatic merging of release branch into develop
 - feat: implemented push to origin after successful merge
