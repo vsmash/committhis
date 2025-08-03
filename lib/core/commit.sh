@@ -11,38 +11,38 @@ function get_commit_message() {
   fi
 
   # Handle AI commit message modes
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: ai_mode='$ai_mode', ai_token length=${#ai_token}"
+  print_debug "DEBUG: ai_mode='$ai_mode', ai_token length=${#ai_token}"
 
   case "$ai_mode" in
     "ask")
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'ask'"
+      print_debug "DEBUG: AI mode is 'ask'"
       if [[ -n "$ai_token" ]]; then
-        [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Token available, showing AI prompt"
+        print_debug "DEBUG: Token available, showing AI prompt"
         read -n 1 -s -p "$(echo -e ${BYellow}Would you like to use AI to suggest a commit message? [y/N]${Color_Off} )" REPLY
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-          [[ "$debug_mode" == "true" ]] && print_info "DEBUG: User chose to use AI"
+          print_debug "DEBUG: User chose to use AI"
           use_ai=true
         else
-          [[ "$debug_mode" == "true" ]] && print_info "DEBUG: User declined AI (reply='$REPLY')"
+          print_debug "DEBUG: User declined AI (reply='$REPLY')"
         fi
       else
-        [[ "$debug_mode" == "true" ]] && print_info "DEBUG: No token available for AI"
+        print_debug "DEBUG: No token available for AI"
       fi
       ;;
     "autosuggest")
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'autosuggest'"
+      print_debug "DEBUG: AI mode is 'autosuggest'"
       if [[ -n "$ai_token" ]]; then
         use_ai=true
       fi
       ;;
     "off"|*)
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI mode is 'off' or unknown: '$ai_mode'"
+      print_debug "DEBUG: AI mode is 'off' or unknown: '$ai_mode'"
       use_ai=false
       ;;
   esac
 
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: use_ai=$use_ai"
+  print_debug "DEBUG: use_ai=$use_ai"
 
   # Try to get AI suggestion if requested
   if [[ "$use_ai" == true ]]; then

@@ -35,7 +35,7 @@ load_secure_variables() {
 
         if [[ -n "$value" ]]; then
             export "$var"="$value"
-            [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Loaded $var from secure storage" "debug"
+            print_debug "DEBUG: Loaded $var from secure storage" "debug"
         elif [[ "$var" == "MAIASS_AI_TOKEN" && -z "$value" && -z "${!var}" && "$token_prompted" -eq 0 ]]; then
             # Only prompt for AI token if not found and not in non-interactive mode
             if [[ ! -t 0 ]]; then
