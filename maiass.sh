@@ -7,570 +7,32 @@
 # This function is part of the Velvary bash scripts library.
 # Author: vsmash <670252+vsmash@users.noreply.github.com>
 # ---------------------------------------------------------------
-# Color and style definitions
-# Bold colors (for emphasis and important messages)
-BCyan='\033[1;36m'      # Bold Cyan
-BRed='\033[1;31m'       # Bold Red
-BGreen='\033[1;32m'     # Bold Green
-BBlue='\033[1;34m'      # Bold Blue
-BYellow='\033[1;33m'    # Bold Yellow
-BPurple='\033[1;35m'    # Bold Purple
-BWhite='\033[1;37m'     # Bold White
-BMagenta='\033[1;35m'   # Bold Magenta
-BAqua='\033[1;96m'      # Bold Aqua
 
-# Regular colors (for standard messages)
-Cyan='\033[0;36m'       # Cyan
-Red='\033[0;31m'        # Red
-Green='\033[0;32m'      # Green
-Blue='\033[0;34m'       # Blue
-Yellow='\033[0;33m'     # Yellow
-Purple='\033[0;35m'     # Purple
-White='\033[0;37m'      # White
-Magenta='\033[0;35m'    # Magenta
-Aqua='\033[0;96m'       # Aqua
+# Set script directory and project directory
+# Get the script's directory, resolving any symlinks (cross-platform)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS uses BSD readlink which doesn't support -f
+    SCRIPT_DIR="$( cd "$(dirname "$(readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd )"
+else
+    # Linux uses GNU readlink which supports -f
+    SCRIPT_DIR="$( cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )"
+fi
+PROJECT_DIR="$(pwd)"
 
-# Special formatting
-Color_Off='\033[0m'     # Text Reset
-BWhiteBG='\033[47m'     # White Background
-
-# Environment variables are now loaded with secure priority system above
-
-# Secure environment variable loading with priority order
-load_environment_variables() {
-    local project_env=".env.maiass"
-
-    # Priority 1: Project-specific env file
-    if [[ -f "$project_env" ]]; then
-        print_info "Loading project configuration from ${BCyan}$project_env${Color_Off}" "debug"
-        source "$project_env"
-    fi
-
-    # Priority 2: Secure storage (cross-platform)
-    load_secure_variables
-
-    # Priority 3: System environment (already exported by shell, nothing to load)
-}
-
-# Load sensitive variables from secure storage
-load_secure_variables() {
-    local secure_vars=("MAIASS_AI_TOKEN")
-    local token_prompted=0
-
-    for var in "${secure_vars[@]}"; do
-        if [[ -n "${!var}" ]]; then
-            continue  # already set via .env or env var
-        fi
-
-        local value=""
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            value=$(security find-generic-password -s "maiass" -a "$var" -w 2>/dev/null)
-        elif command -v secret-tool >/dev/null 2>&1; then
-            value=$(secret-tool lookup service maiass key "$var" 2>/dev/null)
-        fi
-
-        if [[ -n "$value" ]]; then
-            export "$var"="$value"
-            [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Loaded $var from secure storage" "debug"
-        elif [[ "$var" == "MAIASS_AI_TOKEN" && -z "$value" && -z "${!var}" && "$token_prompted" -eq 0 ]]; then
-            # Only prompt for AI token if not found and not in non-interactive mode
-            if [[ ! -t 0 ]]; then
-                print_warning "AI token not found and terminal is not interactive. Please set MAIASS_AI_TOKEN environment variable."
-                continue
-            fi
-
-            echo -e "${Yellow}No AI token found in secure storage.${Color_Off}"
-            echo -e "To get started, you'll need an AI token for commit message generation."
-            echo -e "Please enter your AI token (input will be hidden): "
-
-            # Read token with hidden input
-            if read -s token; then
-                if [[ -z "$token" ]]; then
-                    print_warning "No token provided. AI features will be disabled."
-                    token="DISABLED"
-                fi
-
-                # Store the token
-                if [[ "$OSTYPE" == "darwin"* ]]; then
-                    security add-generic-password -a "$var" -s "maiass" -w "$token" -U
-                elif command -v secret-tool >/dev/null 2>&1; then
-                    echo -n "$token" | secret-tool store --label="MAIASS AI Token" service maiass key "$var"
-                fi
-
-                export MAIASS_AI_TOKEN="$token"
-                print_success "AI token stored successfully."
-                token_prompted=1
-            else
-                print_warning "Failed to read token. AI features will be disabled."
-                export MAIASS_AI_TOKEN="DISABLED"
-            fi
-        fi
-    done
-}
-# Store sensitive variables in secure storage
-store_secure_variable() {
-    local var_name="$1"
-    local var_value="$2"
-
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "$var_value" | security add-generic-password -U -s "maiass" -a "$var_name" -w - 2>/dev/null
-    elif command -v secret-tool >/dev/null 2>&1; then
-        echo -n "$var_value" | secret-tool store --label="MAIASS $var_name" service maiass key "$var_name"
-    else
-        print_warning "No secure storage backend available"
-        return 1
-    fi
-}
-
-# Remove sensitive variables from secure storage
-remove_secure_variable() {
-    local var_name="$1"
-
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        security delete-generic-password -s "maiass" -a "$var_name" 2>/dev/null
-    elif command -v secret-tool >/dev/null 2>&1; then
-        # No direct delete with secret-tool; need to use keyring CLI or let user handle it
-        print_warning "Removing secrets from Linux keyrings requires manual intervention"
-    else
-        print_warning "No secure storage backend available"
-        return 1
-    fi
-}
-
+source "$SCRIPT_DIR/lib/config/colours.sh"
+source "$SCRIPT_DIR/lib/config/envars.sh"
 
 # Load environment variables with new priority system
 load_environment_variables
 
 export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 
-
-mask_api_key() {
-    local api_key="$1"
-
-    # Check if key is empty or too short
-    if [[ -z "$api_key" ]] || [[ ${#api_key} -lt 8 ]]; then
-        echo "[INVALID_KEY]"
-        return
-    fi
-
-    # Extract first 4 and last 4 characters using parameter expansion
-    local first_four="${api_key:0:4}"
-    local last_four="${api_key: -4}"
-
-    echo "${first_four}****${last_four}"
-}
-
-
-escape_regex() {
-  # Escapes all regex metacharacters
-  echo "$1" | sed -e 's/[][\/.^$*+?(){}|]/\\&/g'
-}
-
-
-# devlog.sh is my personal script for logging work in google sheets.
-# if devlog.sh is not a bash script, create an empty function to prevent errors
-if [ -z "$(type -t devlog.sh)" ]; then
-    function devlog.sh() {
-        :
-    }
-fi
-
-
-function logthis(){
-    # shellcheck disable=SC1073
-    debugmsg=$(devlog.sh "$1" "?" "${project:=MAIASSS}" "${client:=VVelvary1}" "${client:=VVelvary}" "${jira_ticket_number:=Ddevops}")
-}
-
-export total_tokens=''
-export completion_tokens=''
-export prompt_tokens=''
-export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
-export version_primary_type="${MAIASS_VERSION_PRIMARY_TYPE:-}"
-export version_primary_line_start="${MAIASS_VERSION_PRIMARY_LINE_START:-}"
-export version_secondary_files="${MAIASS_VERSION_SECONDARY_FILES:-}"
-
-
-# Helper function to read version from a file based on type and line start
-read_version_from_file() {
-    local file="$1"
-    local file_type="$2"
-    local line_start="$3"
-    local version=""
-
-    if [[ ! -f "$file" ]]; then
-        return 1
-    fi
-
-    case "$file_type" in
-        "json")
-            # JSON file - look for "version" property
-            if command -v jq >/dev/null 2>&1; then
-                version=$(jq -r '.version' "$file" 2>/dev/null)
-            else
-                # Fallback method using grep and sed
-                version=$(grep '"version"' "$file" | head -1 | sed 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
-            fi
-            ;;
-        "txt")
-            # Text file - look for line starting with specified prefix
-            if [[ -n "$line_start" ]]; then
-                version=$(grep "^${line_start}" "$file" | head -1 | sed "s/^${line_start}//" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
-            else
-                # If no line start specified, assume entire file content is the version
-                version=$(cat "$file" | tr -d '\n\r')
-            fi
-            ;;
-        "pattern")
-            # Pattern-based matching - extract version from regex pattern
-            # line_start contains the pattern with {version} placeholder
-            if [[ -n "$line_start" ]]; then
-                # For PHP define statements, extract the version directly
-                if [[ "$line_start" == *"define("* ]]; then
-                    # Extract constant name from pattern
-                    local const_name
-                    const_name=$(echo "$line_start" | sed "s/.*define('\([^']*\)'.*/\1/" | sed "s/.*define(\"\([^\"]*\)\".*/\1/")
-                    if [[ -n "$const_name" ]]; then
-                        # Find the define line and extract version
-                        version=$(grep "define('${const_name}'" "$file" | sed "s/.*'[^']*'[[:space:]]*,[[:space:]]*'\([^']*\)'.*/\1/")
-                        if [[ -z "$version" ]]; then
-                            version=$(grep "define(\"${const_name}\"" "$file" | sed "s/.*\"[^\"]*\"[[:space:]]*,[[:space:]]*\"\([^\"]*\)\".*/\1/")
-                        fi
-                    fi
-                else
-                    # Generic pattern matching - replace {version} with capture group
-                    local search_pattern
-                    search_pattern=$(echo "$line_start" | sed "s/{version}/\\([^'\"]*\\)/g")
-                    version=$(sed -n "s/.*${search_pattern}.*/\1/p" "$file" | head -1)
-                fi
-            fi
-            ;;
-        *)
-            print_error "Unsupported file type: $file_type"
-            return 1
-            ;;
-    esac
-
-    if [[ -n "$version" && "$version" != "null" ]]; then
-        echo "$version"
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Helper function to update version in a file based on type and line start
-update_version_in_file() {
-    local file="$1"
-    local file_type="$2"
-    local line_start="$3"
-    local new_version="$4"
-
-    if [[ ! -f "$file" ]]; then
-        print_warning "File not found: $file"
-        return 1
-    fi
-
-    case "$file_type" in
-        "json")
-            # JSON file - update "version" property
-            if command -v jq >/dev/null 2>&1; then
-                jq ".version = \"$new_version\"" "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
-            else
-                # Fallback to sed
-                sed_inplace "s/\"version\": \".*\"/\"version\": \"$new_version\"/" "$file"
-            fi
-            ;;
-        "txt")
-            # Text file - update line starting with specified prefix
-            if [[ -n "$line_start" ]]; then
-
-                awk -v prefix="$line_start" -v version="$new_version" '
-                  BEGIN { len = length(prefix) }
-                  substr($0, 1, len) == prefix { print prefix version; next }
-                  { print }
-                ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
-            else
-                # If no line start specified, replace entire file content
-                echo "$new_version" > "$file"
-            fi
-            ;;
-        "pattern")
-            # Pattern-based replacement - replace version in regex pattern
-            # line_start contains the pattern with {version} placeholder
-            if [[ -n "$line_start" ]]; then
-                # For PHP define statements, use a specific approach
-                if [[ "$line_start" == *"define("* ]]; then
-                    # Extract the constant name from the pattern
-                    local const_name
-                    const_name=$(echo "$line_start" | sed "s/.*define('\([^']*\)'.*/\1/" | sed "s/.*define(\"\([^\"]*\)\".*/\1/")
-                    if [[ -n "$const_name" ]]; then
-                        # Replace PHP define statement with new version
-                        sed_inplace "s/define('${const_name}'[[:space:]]*,[[:space:]]*'[^']*')/define('${const_name}','${new_version}')/g" "$file"
-                        sed_inplace "s/define(\"${const_name}\"[[:space:]]*,[[:space:]]*\"[^\"]*\")/define(\"${const_name}\",\"${new_version}\")/g" "$file"
-                    fi
-                else
-                    # Generic pattern replacement - replace {version} with new version
-                    local replacement_text
-                    replacement_text=$(echo "$line_start" | sed "s/{version}/$new_version/g")
-                    # Create a pattern to match the structure (replace {version} with wildcard)
-                    local match_pattern
-                    match_pattern=$(echo "$line_start" | sed "s/{version}/.*/g" | sed 's/[[\/.\*^$()+?{|]/\\&/g')
-                    # Replace matching lines
-                    sed_inplace "s/${match_pattern}/${replacement_text}/g" "$file"
-                fi
-            fi
-            ;;
-        *)
-            print_error "Unsupported file type: $file_type"
-            return 1
-            ;;
-    esac
-
-    return 0
-}
-
-# Helper function to parse secondary version files configuration
-parse_secondary_version_files() {
-    local config="$1"
-    local -a files_array
-
-    if [[ -z "$config" ]]; then
-        return 0
-    fi
-
-    IFS='|' read -ra files_array <<< "$config"
-
-    for file_config in "${files_array[@]}"; do
-        if [[ -n "$file_config" ]]; then
-            IFS=':' read -ra config_parts <<< "$file_config"
-            local file="${config_parts[0]}"
-            local type="${config_parts[1]:-txt}"
-            local line_start="${config_parts[2]:-}"
-
-            if [[ -f "$file" ]]; then
-                echo "$file:$type:$line_start"
-            else
-                echo "Skipping $file (not found)" >&2
-            fi
-        fi
-    done
-}
-
-# sets value to $currentversion and newversion.
-# usage: getVersion [major|minor|patch|specific_version]
-# if the second argument is not set, bumps the patch version
-
-# main script starts below the functions
-
-# Print a decorated header
-print_header() {
-    echo -e "\n${BPurple}════════════════════════════════════════════════════════════════${Color_Off}"
-    echo -e "${BBlue}                    $1 MAIASS Script${Color_Off}"
-    echo -e "${BPurple}════════════════════════════════════════════════════════════════${Color_Off}\n"
-}
-
-# Print a section header
-print_section() {
-    echo -e "\n${Yellow}▶ $1${Color_Off}"
-}
-
-# Logging function - writes to log file if logging is enabled
-log_message() {
-    if [[ "$enable_logging" == "true" ]]; then
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$log_file"
-    fi
-}
-
-# Print a success message
-print_success() {
-    echo -e "${Green}✔ $1${Color_Off}"
-    log_message "SUCCESS: $1"
-}
-
-# Print a message that's always shown regardless of verbosity level
-print_always(){
-  local message="$1"
-  echo -e "${Aqua}ℹ $message${Color_Off}"
-  log_message "INFO: $message"
-}
-
-# Print an info message with verbosity level support
-# Usage: print_info "message" [level]
-# Levels: brief, normal, debug (default: normal)
-print_info() {
-    local message="$1"
-    local level="${2:-normal}"
-
-    # For backward compatibility, treat debug_mode=true as verbosity_level=debug
-    if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
-        # Only log this when not already in debug verbosity to avoid noise
-        log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
-        # Treat as if verbosity_level is debug
-        local effective_verbosity="debug"
-    else
-        local effective_verbosity="$verbosity_level"
-    fi
-
-    # Show based on verbosity level
-    case "$effective_verbosity" in
-        "brief")
-            # Only show essential messages in brief mode
-            if [[ "$level" == "brief" ]]; then
-                echo -e "${Cyan}ℹ $message${Color_Off}"
-            fi
-            ;;
-        "normal")
-            # Show brief and normal messages
-            if [[ "$level" == "brief" || "$level" == "normal" ]]; then
-                echo -e "${Cyan}ℹ $message${Color_Off}"
-            fi
-            ;;
-        "debug")
-            # Show all messages, use bold for debug level messages
-            if [[ "$level" == "debug" ]]; then
-                echo -e "${BCyan}ℹ $message${Color_Off}"
-            else
-                echo -e "${Cyan}ℹ $message${Color_Off}"
-            fi
-            ;;
-    esac
-
-    log_message "INFO: $message"
-}
-
-# Print a warning message
-print_warning() {
-    echo -e "${Yellow}⚠ $1${Color_Off}"
-    log_message "WARNING: $1"
-}
-
-# Print an error message (using bold for emphasis as errors are important)
-print_error() {
-    echo -e "${BRed}✘ $1${Color_Off}"
-    log_message "ERROR: $1"
-}
-
-# Execute git command with verbosity-controlled output
-# Usage: run_git_command "git command" [show_output_level]
-# show_output_level: brief, normal, debug (default: normal)
-run_git_command() {
-    local git_cmd="$1"
-    local show_level="${2:-normal}"
-
-    # For backward compatibility, treat debug_mode=true as verbosity_level=debug
-    if [[ "$debug_mode" == "true" && "$verbosity_level" != "debug" ]]; then
-        # Only log this when not already in debug verbosity to avoid noise
-        log_message "DEPRECATED: Using debug_mode=true is deprecated. Please use MAIASS_VERBOSITY=debug instead."
-        # Treat as if verbosity_level is debug
-        local effective_verbosity="debug"
-    else
-        local effective_verbosity="$verbosity_level"
-    fi
-
-    # Control output based on verbosity level
-    case "$effective_verbosity" in
-        "brief")
-            if [[ "$show_level" == "brief" ]]; then
-                eval "$git_cmd"
-            else
-                eval "$git_cmd" >/dev/null 2>&1
-            fi
-            ;;
-        "normal")
-            if [[ "$show_level" == "debug" ]]; then
-                eval "$git_cmd" >/dev/null 2>&1
-            else
-                eval "$git_cmd"
-            fi
-            ;;
-        "debug")
-            eval "$git_cmd"
-            ;;
-    esac
-
-    return $?
-}
-
-# Print a section header (always shown regardless of verbosity)
-print_section() {
-    echo -e "\n${White}▶ $1${Color_Off}"
-    log_message "SECTION: $1"
-}
-
-# Check and handle .gitignore for log files
-check_gitignore_for_logs() {
-    if [[ "$enable_logging" != "true" ]]; then
-        return 0
-    fi
-
-    local gitignore_file=".gitignore"
-    local log_pattern_found=false
-
-    # Check if .gitignore exists and contains log file patterns
-    if [[ -f "$gitignore_file" ]]; then
-        # Check for specific log file or *.log pattern
-        if grep -q "^${log_file}$" "$gitignore_file" 2>/dev/null || \
-           grep -q "^\*.log$" "$gitignore_file" 2>/dev/null || \
-           grep -q "^\*\.log$" "$gitignore_file" 2>/dev/null; then
-            log_pattern_found=true
-        fi
-    fi
-
-    # If log file is not ignored, warn user and offer to add it
-    if [[ "$log_pattern_found" == "false" ]]; then
-        print_warning "Log file '$log_file' is not in .gitignore"
-        echo -n "Add '$log_file' to .gitignore to avoid committing log files? [Y/n]: "
-        read -r add_to_gitignore
-
-        if [[ "$add_to_gitignore" =~ ^[Nn]$ ]]; then
-            print_info "Continuing without adding to .gitignore" "brief"
-        else
-            # Add log file to .gitignore
-            if [[ ! -f "$gitignore_file" ]]; then
-                echo "# Log files" > "$gitignore_file"
-                echo "$log_file" >> "$gitignore_file"
-                print_success "Created .gitignore and added '$log_file'"
-            else
-                echo "" >> "$gitignore_file"
-                echo "# MAIASS log file" >> "$gitignore_file"
-                echo "$log_file" >> "$gitignore_file"
-                print_success "Added '$log_file' to .gitignore"
-            fi
-        fi
-    fi
-}
-
-# Get the latest version from git tags
-# Returns the highest semantic version tag, or empty string if no tags found
-get_latest_version_from_tags() {
-    local latest_tag
-    # Get all tags that match semantic versioning pattern, sort them, and get the latest
-    latest_tag=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
-    echo "$latest_tag"
-}
-
-# Check if a git branch exists locally
-branch_exists() {
-    local branch_name="$1"
-    git show-ref --verify --quiet "refs/heads/$branch_name"
-}
-
-# Check if a git remote exists
-remote_exists() {
-    local remote_name="${1:-origin}"
-    git remote | grep -q "^$remote_name$"
-}
-
-# Check if we can push to a remote (tests connectivity)
-can_push_to_remote() {
-    local remote_name="${1:-origin}"
-    if ! remote_exists "$remote_name"; then
-        return 1
-    fi
-    # Test if we can reach the remote (this is a dry-run)
-    git ls-remote "$remote_name" >/dev/null 2>&1
-}
-
+source "$SCRIPT_DIR/lib/utils/utils.sh"
+source "$SCRIPT_DIR/lib/core/logger.sh"
+source "$SCRIPT_DIR/lib/core/init.sh"
+source "$SCRIPT_DIR/lib/core/version.sh"
+source "$SCRIPT_DIR/lib/core/logger.sh"
+source "$SCRIPT_DIR/lib/core/git.sh"
 # Cross-platform sed -i helper function with file existence check
 # Usage: sed_inplace 'pattern' file
 # Returns 0 if successful, 1 if file doesn't exist (non-fatal)
@@ -1649,7 +1111,7 @@ function get_commit_message() {
         print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"
       fi
 
-      echo -e "${BMagenta}${BWhiteBG}$ai_suggestion${Color_Off}"
+      echo -e "${BBlue}${BWhiteBG}$ai_suggestion${Color_Off}"
       echo
 
       # Ask user if they want to use the AI suggestion
@@ -1927,7 +1389,7 @@ function mergeDevelop() {
 
   # Get current branch name
   local current_branch=$(git rev-parse --abbrev-ref HEAD)
-  
+
   # Check if we're already on develop or need to merge
   if [ "$current_branch" != "$developbranch" ]; then
     print_info "Not on $developbranch branch (currently on $current_branch)"
@@ -1937,18 +1399,18 @@ function mergeDevelop() {
       print_error "Cannot proceed without merging into $developbranch"
       exit 1
     fi
-    
+
     # Checkout develop and update it
     git checkout "$developbranch"
     check_git_success
-    
+
     # Pull latest changes
     if remote_exists "origin"; then
       print_info "Pulling latest changes from $developbranch..."
       git pull origin "$developbranch"
       check_git_success
     fi
-    
+
     # Merge the branch
     git merge --no-ff -m "Merge $current_branch into $developbranch" "$current_branch"
     check_git_success
@@ -1967,10 +1429,10 @@ function mergeDevelop() {
     # Get the version bump type (major, minor, patch)
     local bump_type="${1:-patch}"  # Default to patch if not specified
     shift
-    
+
     # Bump the version
     getVersion "$bump_type"
-    
+
     # Determine if we should create a release branch and tag
     local create_release=true
     if [ "$bump_type" == "patch" ]; then
@@ -1982,21 +1444,21 @@ function mergeDevelop() {
         create_release=false
       fi
     fi
-    
+
     if [ "$create_release" == true ]; then
       # Create release branch
       git checkout -b "release/$newversion"
       check_git_success
-      
+
       # Update version and changelog
       bumpVersion
       updateChangelog "$changelog_path"
-      
+
       # Commit changes
       git add -A
       git commit -m "Bumped version to $newversion"
       check_git_success
-      
+
       # Create tag
       if ! git tag -l "$newversion" | grep -q "^$newversion$"; then
         git tag -a "$newversion" -m "Release version $newversion"
@@ -2005,34 +1467,34 @@ function mergeDevelop() {
       else
         print_warning "Tag $newversion already exists"
       fi
-      
+
       # Push the release branch and tag if remote exists
       if remote_exists "origin"; then
         git push -u origin "release/$newversion"
         git push origin "$newversion"
       fi
-      
+
       # Go back to develop
       git checkout "$developbranch"
       check_git_success
-      
+
       print_success "Release $newversion is ready! Merge the release branch when ready."
     else
       # For patch versions without release branch, update directly on develop
       print_info "Updating version and changelog directly on $developbranch..."
       bumpVersion
       updateChangelog "$changelog_path"
-      
+
       # Commit changes
       git add -A
       git commit -m "Bump version to $newversion (no release)"
       check_git_success
-      
+
       # Push changes if remote exists
       if remote_exists "origin"; then
         git push origin "$developbranch"
       fi
-      
+
       print_success "Version updated to $newversion on $developbranch"
     fi
   else
