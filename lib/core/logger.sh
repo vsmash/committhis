@@ -87,6 +87,13 @@ print_error() {
 }
 
 
+# Print a section header (always shown regardless of verbosity)
+print_section() {
+    echo -e "\n${White}▶ $1${Color_Off}"
+    log_message "SECTION: $1"
+}
+
+
 # devlog.sh is my personal script for logging work in google sheets.
 # if devlog.sh is not a bash script, create an empty function to prevent errors
 if [ -z "$(type -t devlog.sh)" ]; then
