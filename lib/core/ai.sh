@@ -64,12 +64,12 @@ Git diff:
   # Get git diff for context
   git_diff=$(git diff --cached --no-color 2>/dev/null || git diff --no-color 2>/dev/null || echo "No changes detected")
   git_diff=$(echo "$git_diff" | tr -cd '\11\12\15\40-\176')
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff length: ${#git_diff} characters" >&2
+  print_debug "DEBUG: Git diff length: ${#git_diff} characters" >&2
 
   # Truncate diff if too long (API has token limits)
   if [[ ${#git_diff} -gt $ai_max_characters ]]; then
     git_diff="${git_diff:0:$ai_max_characters}...[truncated]"
-    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Git diff truncated to $ai_max_characters characters" >&2
+    print_debug "DEBUG: Git diff truncated to $ai_max_characters characters" >&2
   fi
     print_info "DEBUG: prompt mode: $ai_commit_style" >&2
   get_ai_commit_message_style
@@ -121,59 +121,60 @@ esac
 
 
   # Call OpenAI API
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Calling OpenAI API with model: $ai_model" >&2
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: AI prompt style: $ai_commit_style" >&2
+  print_debug "DEBUG: Calling OpenAI API with model: $ai_model" >&2
+  print_debug "DEBUG: AI prompt style: $ai_commit_style" >&2
+  print_debug "AI temperature: $ai_temperature"  >&2
 
   # Build JSON payload using jq if available (handles escaping automatically)
   local json_payload
   if command -v jq >/dev/null 2>&1; then
-    json_payload=$(jq -n --arg model "$ai_model" --arg prompt "$ai_prompt" '{
+    json_payload=$(jq -n --arg model "$ai_model" --argjson temperature "$ai_temperature" --arg prompt "$ai_prompt" '{
       "model": $model,
       "messages": [
         {"role": "system", "content": "You are a helpful assistant that writes concise, descriptive git commit messages based on code changes."},
         {"role": "user", "content": $prompt}
       ],
       "max_tokens": 150,
-      "temperature": 0.7
+      "temperature": $temperature
     }')
   else
     # Simple fallback - replace quotes and newlines only
     local safe_prompt
     safe_prompt=$(printf '%s' "$ai_prompt" | sed 's/"/\\"/g' | tr '\n' ' ')
-    json_payload='{"model":"'$ai_model'","messages":[{"role":"system","content":"You are a helpful assistant that writes concise, descriptive git commit messages based on code changes."},{"role":"user","content":"'$safe_prompt'"}],"max_tokens":150,"temperature":0.7}'
+    json_payload='{"model":"'$ai_model'","messages":[{"role":"system","content":"You are a helpful assistant that writes concise, descriptive git commit messages based on code changes."},{"role":"user","content":"'$safe_prompt'"}],"max_tokens":150,"temperature":'$ai_temperature'}'
   fi
 
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: JSON payload length: ${#json_payload} characters" >&2
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: endpoint: ${maiass_endpoint}" >&2
+  print_debug "DEBUG: JSON payload length: ${#json_payload} characters" >&2
+  print_debug "DEBUG: endpoint: ${maiass_endpoint}" >&2
   api_response=$(curl -s -X POST "$maiass_endpoint" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $ai_token" \
     -d "$json_payload" 2>/dev/null)
 
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response length: ${#api_response} characters" >&2
+  print_debug "DEBUG: API response length: ${#api_response} characters" >&2
   # mask the api token
 
 
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API token: $(mask_api_key "${ai_token}") " >&2
+  print_debug "DEBUG: API token: $(mask_api_key "${ai_token}") " >&2
 
-  [[ "$debug_mode" == "true" ]] && print_info "DEBUG: API response : ${api_response} " >&2
+  print_debug "DEBUG: API response : ${api_response} " >&2
   # Extract the suggested message from API response
   if [[ -n "$api_response" ]]; then
     # Check for API error first
     if echo "$api_response" | grep -q '"error"'; then
       error_msg=$(echo "$api_response" | grep -o '"message":"[^"]*"' | sed 's/"message":"//' | sed 's/"$//' | head -1)
       print_warning "API Error: $error_msg"
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Full error response: $api_response" >&2
+      print_debug "DEBUG: Full error response: $api_response" >&2
       return 1
     fi
 
-    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Attempting to parse JSON response" >&2
+    print_debug "DEBUG: Attempting to parse JSON response" >&2
 
     # Try jq first if available (most reliable)
     if command -v jq >/dev/null 2>&1; then
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Using jq for JSON parsing" >&2
+      print_debug "DEBUG: Using jq for JSON parsing" >&2
       suggested_message=$(echo "$api_response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: jq result: '$suggested_message'" >&2
+      print_debug "DEBUG: jq result: '$suggested_message'" >&2
 
       # Extract token usage information if available
       local prompt_tokens completion_tokens total_tokens
@@ -187,26 +188,26 @@ esac
 
     # Fallback to sed parsing if jq not available or failed
     if [[ -z "$suggested_message" ]]; then
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: jq failed, trying sed parsing" >&2
+      print_debug "DEBUG: jq failed, trying sed parsing" >&2
       # Handle the actual AI response structure with nested objects
       suggested_message=$(echo "$api_response" | sed -n 's/.*"content":"\([^"]*\)".*/\1/p' | tail -1)
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: sed result: '$suggested_message'"
+      print_debug "DEBUG: sed result: '$suggested_message'"
     fi
 
     # Last resort: simple grep approach
     if [[ -z "$suggested_message" ]]; then
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: sed failed, trying grep approach"
+      print_debug "DEBUG: sed failed, trying grep approach"
       suggested_message=$(echo "$api_response" | grep -o '"content":"[^"]*"' | sed 's/"content":"//' | sed 's/"$//' | tail -1)
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: grep result: '$suggested_message'"
+      print_debug "DEBUG: grep result: '$suggested_message'"
     fi
 
     # Show raw API response if debug mode and parsing failed
     if [[ "$debug_mode" == "true" && -z "$suggested_message" ]]; then
-      print_info "DEBUG: All parsing methods failed. Raw API response:"
+      print_debug "All parsing methods failed. Raw API response:"
       if [[ ${#api_response} -lt 1000 ]]; then
-        print_info "$api_response"
+        print_debug "$api_response"
       else
-        print_info "${api_response:0:1000}...[truncated]"
+        print_debug "${api_response:0:1000}...[truncated]"
       fi
     fi
 
@@ -219,16 +220,16 @@ esac
     # Clean up the message (remove leading/trailing whitespace)
     suggested_message=$(echo "$suggested_message" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
 
-    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Final cleaned message: '$suggested_message'" >&2
+    print_debug "DEBUG: Final cleaned message: '$suggested_message'" >&2
 
     if [[ -n "$suggested_message" && "$suggested_message" != "null" ]]; then
       echo "$suggested_message"
       return 0
     else
-      [[ "$debug_mode" == "true" ]] && print_info "DEBUG: No valid message extracted (empty or null)"
+      print_debug "DEBUG: No valid message extracted (empty or null)"
     fi
   else
-    [[ "$debug_mode" == "true" ]] && print_info "DEBUG: Empty API response"
+    print_debug "DEBUG: Empty API response"
   fi
 
   # Return empty if AI suggestion failed
