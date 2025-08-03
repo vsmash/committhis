@@ -1,3 +1,20 @@
+## 5.5.12
+4 August 2025
+
+- Update logger and deletetoken scripts
+	- feat: added NC variable to logger.sh for color reset
+	- fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
+- Added shell script to delete security token
+	- feat: added a shell script that deletes a "maiass" security token
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+- Revert README to MAIASS
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+- Revert README to MAIASS
+
 ## 5.5.10
 04 August 2025
 
