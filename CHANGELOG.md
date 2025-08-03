@@ -1,3 +1,90 @@
+## 4.13.0
+04 August 2025
+
+- Replaced print_info with print_debug for debugging messages
+- feat: Replaced `print_info` debug messages with `print_debug` in `ai.sh`
+- feat: Replaced `print_info` debug messages with `print_debug` in `utils.sh`
+- Refactored debug print statements
+- refactor: replaced print_info with print_debug in envars.sh
+- refactor: replaced print_info with print_debug in commit.sh
+- Updated README and refined AI debug logs
+- docs: clarified conflicts in README.maiass.md
+- refactor(ai): replaced all debug_mode print_info with print_debug
+- refactor(ai): added AI temperature to debug output
+- refactor(ai): modified ai_temperature as an argument in json_payload
+- Updated remote repository references
+- refactor: changed `maiass` to `bashmaiass` in script comments
+- fix: updated default repository for gh release to `bashmaiass`
+- fix: set `bashmaiass` as target repo for gh release creation
+- Update MAIASS banner and readme
+-  - feat: added new MAIASS banner image
+-  - docs: updated README to link to the new banner image
+- # Conflicts:
+- #	docs/README.maiass.md
+- Updated README and Banner URL
+- docs: updated README version display
+- fix: corrected banner URL in README
+- Updated color options and AI suggestion display
+- feat: added Navy color to logger.sh
+- fix: changed AI suggestion color from Blue to Navy in commit.sh
+- Update README and improve commit message formatting
+- docs: update README with new version number
+- refactor: modify commit.sh to add tab indent to commit message body
+- Update commit.sh for improved formatting
+- fix(core): added tab indentation to commit message lines
+- Enhanced logger functionality and added new color options
+- feat(logger): added unicode support check
+- feat(logger): added print_debug function for debug logging
+- feat(colors): introduced soft pink color for logging
+- Added help utility script
+- feat: added new help.sh utility script to lib/utils
+- docs: added extensive documentation within help.sh for user guidance
+- Enhanced git and initialization functionalities
+- feat: added function to check if directory is a git repository
+- feat: added setup for branch and changelog variables with override logic
+- feat: added auto-detection of repository provider and extraction of repo info from git remote
+- Added functionality for deploy options with dynamic menu based on available branches.
+- feat: Add deployOptions function to show deploy options based on available branches
+- feat: Build dynamic menu for deploy options with merge, push, and do nothing actions
+- feat: Implement handling of user choice for deploy actions
+- feat: Update README for deploy options usage
+- Added function to load MAIASS_* variables from .env files.
+- feat: Add load_bumpscript_env function to load MAIASS_* variables from .env files
+- feat: Process and set MAIASS_* assignments from .env file
+- docs: Update README with details on loading MAIASS_* variables
+- Removed redundant deployOptions function from
+- feat: implement mergeDevelop function for handling branch merging and version management
+- feat: add changeManagement function for checking uncommitted changes
+- Add user authentication feature and AI commit message handling
+- feat: add function get_commit_message to extract Jira ticket number and handle AI commit message modes
+- feat: add function run_ai_commit_only to handle AI commit message suggestion
+- feat: add function handle_staged_commit to manage staged changes and get commit message
+- Added AI-related functions to handle generating commit message suggestions based on different styles.
+- feat: Implement functions to determine and get the AI commit message style.
+- feat: Implement function to suggest AI-generated commit message based on different prompt styles.
+- feat: Implement logic to handle different styles of commit message prompts (bullet, conventional, simple, custom).
+- feat: Integrate OpenAI API to generate commit message suggestions based on the provided prompt.
+- fix: Handle debug mode and verbosity level checks to ensure proper logging and information display.
+- fix: Truncate git diff if it exceeds the maximum character limit for the AI suggestion.
+- fix: Properly handle different custom and global custom prompt styles and fallback to bullet format
+- Add developer information file
+- feat: add DEVELOPER.md to provide developers information
+- updated maiass
+- Added error handling for git operations
+- Added function for performing merge operation between branches
+- Defined color and style definitions for logging
+- Implemented version comparison function based on semantic version strings
+- Added functions for git command execution with verbosity control and handling of .gitignore for log files.
+- Added color and style definitions to `colours.sh` file
+- Added secure environment variable loading with priority system to `envars.sh` file
+- Exported variables and set primary version file details in `init.sh` file
+- Implemented functions for printing headers, sections, messages, and handling logging in `logger.sh` file
+- Check for uncommitted changes and prompt for commit
+- Get current branch name and compare with developbranch
+- Checkout develop branch if not already on it and merge current branch
+- Pull latest changes from develop branch
+- Bump version and handle release branch creation if version files exist and on develop branch
+
 ## 4.12.17
 04 August 2025
 
@@ -14,8 +101,8 @@
 - fix: updated default repository for gh release to `bashmaiass`
 - fix: set `bashmaiass` as target repo for gh release creation
 - Update MAIASS banner and readme
--  - feat: added new MAIASS banner image
--  - docs: updated README to link to the new banner image
+- - feat: added new MAIASS banner image
+- - docs: updated README to link to the new banner image
 - # Conflicts:
 - #	docs/README.maiass.md
 - Updated README and Banner URL
