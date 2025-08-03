@@ -1,6 +1,12 @@
-## 4.12.11
+## 4.12.12
 04 August 2025
 
+- Update commit.sh for improved formatting
+- fix(core): added tab indentation to commit message lines
+- Enhanced logger functionality and added new color options
+- feat(logger): added unicode support check
+- feat(logger): added print_debug function for debug logging
+- feat(colors): introduced soft pink color for logging
 - Added help utility script
 - feat: added new help.sh utility script to lib/utils
 - docs: added extensive documentation within help.sh for user guidance
