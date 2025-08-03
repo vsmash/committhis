@@ -55,7 +55,7 @@ function get_commit_message() {
         print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"
       fi
 
-      echo -e "${BBlue}${BWhiteBG}$ai_suggestion${Color_Off}"
+      echo -e "${BNavy}${BWhiteBG}$ai_suggestion${Color_Off}"
       echo
 
       # Ask user if they want to use the AI suggestion
