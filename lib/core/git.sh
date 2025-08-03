@@ -532,3 +532,22 @@ function deployOptions() {
   unset tagmessage
 }
 
+# Function to check if we're in a git repository
+check_git_repository() {
+  if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    print_error "This directory is not a git repository!"
+    print_error "Please run this script from within a git repository."
+    exit 1
+  fi
+
+  # Get the repository root directory
+  local git_root
+  git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+  if [[ -z "$git_root" ]]; then
+    print_error "Unable to determine git repository root!"
+    exit 1
+  fi
+
+  export git_root
+  print_success "Git repository detected: $git_root"
+}
