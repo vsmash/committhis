@@ -264,3 +264,156 @@ has_staged_changes() {
 has_uncommitted_changes() {
   [ -n "$(git status --porcelain)" ]
 }
+
+
+
+
+function changeManagement(){
+  checkUncommittedChanges
+}
+
+function mergeDevelop() {
+  local has_version_files="${1:-true}"  # Default to true for backward compatibility
+  shift  # Remove the first argument so remaining args can be passed to getVersion
+
+  print_section "Git Workflow"
+
+  # Check for uncommitted changes first
+  if has_uncommitted_changes; then
+    print_warning "You have uncommitted changes."
+    read -n 1 -s -p "$(echo -e ${BYellow}Do you want to commit them now? [y/N]${Color_Off} )" REPLY
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      handle_staged_commit
+      # Check again if there are still uncommitted changes
+      if has_uncommitted_changes; then
+        print_error "Still have uncommitted changes. Please commit or stash them first."
+        exit 1
+      fi
+    else
+      print_error "Cannot proceed with uncommitted changes. Please commit or stash them first."
+      exit 1
+    fi
+  fi
+
+  # Get current branch name
+  local current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+  # Check if we're already on develop or need to merge
+  if [ "$current_branch" != "$developbranch" ]; then
+    print_info "Not on $developbranch branch (currently on $current_branch)"
+    read -n 1 -s -p "$(echo -e ${BYellow}Do you want to merge $current_branch into $developbranch? [y/N]${Color_Off} )" REPLY
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      print_error "Cannot proceed without merging into $developbranch"
+      exit 1
+    fi
+
+    # Checkout develop and update it
+    git checkout "$developbranch"
+    check_git_success
+
+    # Pull latest changes
+    if remote_exists "origin"; then
+      print_info "Pulling latest changes from $developbranch..."
+      git pull origin "$developbranch"
+      check_git_success
+    fi
+
+    # Merge the branch
+    git merge --no-ff -m "Merge $current_branch into $developbranch" "$current_branch"
+    check_git_success
+    logthis "Merged $current_branch into $developbranch"
+  else
+    # On develop, just pull latest
+    if remote_exists "origin"; then
+      print_info "Pulling latest changes from $developbranch..."
+      git pull origin "$developbranch"
+      check_git_success
+    fi
+  fi
+
+  # Only proceed with version management if version files exist and we're on develop
+  if [[ "$has_version_files" == "true" && "$(git rev-parse --abbrev-ref HEAD)" == "$developbranch" ]]; then
+    # Get the version bump type (major, minor, patch)
+    local bump_type="${1:-patch}"  # Default to patch if not specified
+    shift
+
+    # Bump the version
+    getVersion "$bump_type"
+
+    # Determine if we should create a release branch and tag
+    local create_release=true
+    if [ "$bump_type" == "patch" ]; then
+      read -n 1 -s -p "$(echo -e ${BYellow}This is a patch version. Create a release branch and tag? [y/N]${Color_Off} )" REPLY
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        create_release=true
+      else
+        create_release=false
+      fi
+    fi
+
+    if [ "$create_release" == true ]; then
+      # Create release branch
+      git checkout -b "release/$newversion"
+      check_git_success
+
+      # Update version and changelog
+      bumpVersion
+      updateChangelog "$changelog_path"
+
+      # Commit changes
+      git add -A
+      git commit -m "Bumped version to $newversion"
+      check_git_success
+
+      # Create tag
+      if ! git tag -l "$newversion" | grep -q "^$newversion$"; then
+        git tag -a "$newversion" -m "Release version $newversion"
+        check_git_success
+        print_success "Created release tag $newversion"
+      else
+        print_warning "Tag $newversion already exists"
+      fi
+
+      # Push the release branch and tag if remote exists
+      if remote_exists "origin"; then
+        git push -u origin "release/$newversion"
+        git push origin "$newversion"
+      fi
+
+      # Go back to develop
+      git checkout "$developbranch"
+      check_git_success
+
+      print_success "Release $newversion is ready! Merge the release branch when ready."
+    else
+      # For patch versions without release branch, update directly on develop
+      print_info "Updating version and changelog directly on $developbranch..."
+      bumpVersion
+      updateChangelog "$changelog_path"
+
+      # Commit changes
+      git add -A
+      git commit -m "Bump version to $newversion (no release)"
+      check_git_success
+
+      # Push changes if remote exists
+      if remote_exists "origin"; then
+        git push origin "$developbranch"
+      fi
+
+      print_success "Version updated to $newversion on $developbranch"
+    fi
+  else
+    # Just do the git workflow without version management
+    print_info "Skipping version bump and changelog update (no version files)"
+    # Only show merge success if develop branch exists
+    if branch_exists "$developbranch"; then
+      print_success "Merged $branch_name into $developbranch"
+    else
+      print_info "Completed workflow on current branch (no develop branch)"
+    fi
+  fi
+}
