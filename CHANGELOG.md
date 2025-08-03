@@ -1,6 +1,9 @@
-## 4.12.12
+## 4.12.13
 04 August 2025
 
+- Update README and improve commit message formatting
+- docs: update README with new version number
+- refactor: modify commit.sh to add tab indent to commit message body
 - Update commit.sh for improved formatting
 - fix(core): added tab indentation to commit message lines
 - Enhanced logger functionality and added new color options

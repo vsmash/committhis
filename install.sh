@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# MAIASS Installation Script v4.12.12
+# MAIASS Installation Script v4.12.13
 # Installs maiass.sh to a system location and creates a symlink in PATH
 
 set -e
