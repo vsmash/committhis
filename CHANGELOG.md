@@ -1,3 +1,36 @@
+## 4.12.8
+04 August 2025
+
+- Add user authentication feature and AI commit message handling
+- feat: add function get_commit_message to extract Jira ticket number and handle AI commit message modes
+- feat: add function run_ai_commit_only to handle AI commit message suggestion
+- feat: add function handle_staged_commit to manage staged changes and get commit message
+- Added AI-related functions to handle generating commit message suggestions based on different styles.
+- feat: Implement functions to determine and get the AI commit message style.
+- feat: Implement function to suggest AI-generated commit message based on different prompt styles.
+- feat: Implement logic to handle different styles of commit message prompts (bullet, conventional, simple, custom).
+- feat: Integrate OpenAI API to generate commit message suggestions based on the provided prompt.
+- fix: Handle debug mode and verbosity level checks to ensure proper logging and information display.
+- fix: Truncate git diff if it exceeds the maximum character limit for the AI suggestion.
+- fix: Properly handle different custom and global custom prompt styles and fallback to bullet format
+- Add developer information file
+- feat: add DEVELOPER.md to provide developers information
+- updated maiass
+- Added error handling for git operations
+- Added function for performing merge operation between branches
+- Defined color and style definitions for logging
+- Implemented version comparison function based on semantic version strings
+- Added functions for git command execution with verbosity control and handling of .gitignore for log files.
+- Added color and style definitions to `colours.sh` file
+- Added secure environment variable loading with priority system to `envars.sh` file
+- Exported variables and set primary version file details in `init.sh` file
+- Implemented functions for printing headers, sections, messages, and handling logging in `logger.sh` file
+- Check for uncommitted changes and prompt for commit
+- Get current branch name and compare with developbranch
+- Checkout develop branch if not already on it and merge current branch
+- Pull latest changes from develop branch
+- Bump version and handle release branch creation if version files exist and on develop branch
+
 ## 4.12.7
 03 August 2025
 
