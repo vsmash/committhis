@@ -1,4 +1,16 @@
 
+
+# Error handling for git operations
+function check_git_success() {
+    if [ $? -ne 0 ]; then
+        print_error "Git operation failed"
+        print_error "Please complete this process manually"
+        print_info "You are currently on branch: $(git rev-parse --abbrev-ref HEAD)"
+        exit 1
+    fi
+}
+
+
 # Execute git command with verbosity-controlled output
 # Usage: run_git_command "git command" [show_output_level]
 # show_output_level: brief, normal, debug (default: normal)
@@ -113,4 +125,87 @@ can_push_to_remote() {
     fi
     # Test if we can reach the remote (this is a dry-run)
     git ls-remote "$remote_name" >/dev/null 2>&1
+}
+
+
+# Perform merge operation between two branches with remote and PR support
+perform_merge_operation() {
+    local source_branch="$1"
+    local target_branch="$2"
+
+    if [[ -z "$source_branch" || -z "$target_branch" ]]; then
+        print_error "Source and target branches must be specified"
+        return 1
+    fi
+
+    # Note: Tags are created during version bump workflow, not during merge operations
+
+    # Determine which pull request setting to use based on target branch
+    local use_pullrequest="off"
+    if [[ "$target_branch" == "$stagingbranch" ]]; then
+        use_pullrequest="$staging_pullrequests"
+    elif [[ "$target_branch" == "$masterbranch" ]]; then
+        use_pullrequest="$master_pullrequests"
+    fi
+
+    # Handle pull requests vs direct merge
+    if [[ "$use_pullrequest" == "on" ]] && can_push_to_remote "origin"; then
+        print_info "Creating pull request for merge"
+
+        # Ensure source branch is pushed
+        git push --set-upstream origin "$source_branch" 2>/dev/null || git push origin "$source_branch"
+        check_git_success
+
+        # Create pull request URL
+        if [[ "$REPO_PROVIDER" == "bitbucket" ]]; then
+            open_url "https://bitbucket.org/$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG/pull-requests/new?source=$source_branch&dest=$target_branch&title=Release%20${newversion:-merge}"
+        elif [[ "$REPO_PROVIDER" == "github" ]]; then
+            open_url "https://github.com/$GITHUB_OWNER/$GITHUB_REPO/compare/$target_branch...$source_branch?quick_pull=1&title=Release%20${newversion:-merge}"
+        else
+            print_warning "Unknown repository provider. Cannot create pull request URL."
+        fi
+
+        logthis "Created pull request for ${newversion:-merge}"
+    else
+        # Direct merge
+        print_info "Performing direct merge: $source_branch → $target_branch"
+
+        git checkout "$target_branch"
+        check_git_success
+
+        # Pull latest changes if remote available
+        if remote_exists "origin"; then
+            # Check if current branch has upstream tracking
+            if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+                git pull 2>/dev/null || print_warning "Could not pull latest changes (continuing anyway)"
+            else
+                # Try to set up tracking if remote branch exists
+                if git ls-remote --heads origin "$target_branch" | grep -q "$target_branch"; then
+                    print_info "Setting up tracking for $target_branch with origin/$target_branch"
+                    git branch --set-upstream-to=origin/"$target_branch" "$target_branch"
+                    git pull 2>/dev/null || print_warning "Could not pull latest changes (continuing anyway)"
+                else
+                    print_info "Remote branch origin/$target_branch doesn't exist - skipping pull"
+                fi
+            fi
+        fi
+
+        run_git_command "git merge '$source_branch'" "debug"
+        check_git_success
+
+        # Push to remote if available
+        if can_push_to_remote "origin"; then
+            # Check if current branch has upstream tracking, if not set it up
+            if ! git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+                print_info "Setting up upstream tracking for $target_branch"
+                run_git_command "git push --set-upstream origin '$target_branch'" "debug"
+            else
+                run_git_command "git push" "debug"
+            fi
+            check_git_success
+        fi
+
+        print_success "Merged $source_branch into $target_branch"
+        logthis "Merged $source_branch into $target_branch"
+    fi
 }

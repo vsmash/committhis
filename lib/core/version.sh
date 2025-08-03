@@ -169,3 +169,230 @@ parse_secondary_version_files() {
         fi
     done
 }
+
+
+
+# Compare two semantic version strings
+# Returns 0 (true) if version1 > version2, 1 (false) otherwise
+version_is_greater() {
+    local version1="$1"
+    local version2="$2"
+
+    # Split versions into major.minor.patch components
+    local v1_major
+    local v1_minor
+    local v1_patch
+    local v2_major
+    local v2_minor
+    local v2_patch
+
+    v1_major=$(echo "$version1" | cut -d. -f1)
+    v1_minor=$(echo "$version1" | cut -d. -f2)
+    v1_patch=$(echo "$version1" | cut -d. -f3)
+
+    v2_major=$(echo "$version2" | cut -d. -f1)
+    v2_minor=$(echo "$version2" | cut -d. -f2)
+    v2_patch=$(echo "$version2" | cut -d. -f3)
+
+    # Compare major version
+    if [ "$v1_major" -gt "$v2_major" ]; then
+        return 0  # version1 > version2
+    elif [ "$v1_major" -lt "$v2_major" ]; then
+        return 1  # version1 < version2
+    fi
+
+    # Major versions are equal, compare minor version
+    if [ "$v1_minor" -gt "$v2_minor" ]; then
+        return 0  # version1 > version2
+    elif [ "$v1_minor" -lt "$v2_minor" ]; then
+        return 1  # version1 < version2
+    fi
+
+    # Major and minor versions are equal, compare patch version
+    if [ "$v1_patch" -gt "$v2_patch" ]; then
+        return 0  # version1 > version2
+    else
+        return 1  # version1 <= version2
+    fi
+}
+
+
+function getVersion(){
+# ---------------------------------------------------------------
+# Copyright (c) 2025 Velvary Pty Ltd
+# All rights reserved.
+# This function is part of the Velvary bash scripts library.
+# Licensed under the End User License Agreement (eula.txt) provided with this software.
+# ---------------------------------------------------------------
+    local version_arg="$1"  # major, minor, patch, or specific version
+
+    # Initialize global variables (compatible with older bash versions)
+    version_source=""
+    version_source_file=""
+    version_source_type=""
+    version_source_line_start=""
+    currentversion=""
+    newversion=""
+
+    print_section "Determining Version Source"
+
+    # Check for custom primary version file first
+    if [[ -n "$version_primary_file" && -n "$version_primary_type" ]]; then
+        print_info "Checking custom primary version file: $version_primary_file"
+        if currentversion=$(read_version_from_file "$version_primary_file" "$version_primary_type" "$version_primary_line_start"); then
+            print_info "Found custom primary version file: $version_primary_file - using as version source"
+            version_source="custom_primary"
+            version_source_file="$version_primary_file"
+            version_source_type="$version_primary_type"
+            version_source_line_start="$version_primary_line_start"
+        else
+            print_error "Could not read version from custom primary file: $version_primary_file"
+            return 1
+        fi
+    # Fallback to package.json (legacy behavior)
+    elif [ -f "${package_json_path}/package.json" ]; then
+        local package_json_file="${package_json_path}/package.json"
+        print_info "Found package.json at $package_json_file - using as version source"
+        version_source="package.json"
+        version_source_file="$package_json_file"
+        version_source_type="json"
+        version_source_line_start=""
+
+        if currentversion=$(read_version_from_file "$package_json_file" "json" ""); then
+            : # Success, currentversion is set
+        else
+            print_error "Could not read version from package.json. Exiting."
+            return 1
+        fi
+    # Fallback to VERSION file (legacy behavior)
+    elif [ -f "$version_file_path/VERSION" ]; then
+        print_info "No package.json found - using VERSION file at $version_file_path/VERSION"
+        version_source="VERSION"
+        version_source_file="$version_file_path/VERSION"
+        version_source_type="txt"
+        version_source_line_start=""
+
+        if currentversion=$(read_version_from_file "$version_file_path/VERSION" "txt" ""); then
+            : # Success, currentversion is set
+        else
+            print_error "VERSION file is empty. Exiting."
+            return 1
+        fi
+    else
+        print_error "No version source found! Please create either:"
+        if [[ -n "$version_primary_file" ]]; then
+            print_error "  - Custom primary version file: $version_primary_file, or"
+        fi
+        print_error "  - package.json at $package_json_path/package.json with version field, or"
+        print_error "  - VERSION file at $version_file_path/VERSION"
+        return 1
+    fi
+
+    # Calculate new version based on argument
+    if [ -z "$version_arg" ]; then
+       print_info "No version specified, bumping patch version..."
+       newversion=$(echo "$currentversion" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+    else
+        print_info "Setting version based on argument: $version_arg"
+        if [ "$version_arg" == "major" ]; then
+            newversion=$(echo "$currentversion" | awk -F. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1' | sed 's/ /./g')
+        elif [ "$version_arg" == "minor" ]; then
+            newversion=$(echo "$currentversion" | awk -F. '{$2 = $2 + 1; $3 = 0;} 1' | sed 's/ /./g')
+        elif [ "$version_arg" == "patch" ]; then
+            newversion=$(echo "$currentversion" | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
+        else
+            # Validate specific version format (X.Y.Z)
+            if [[ ! "$version_arg" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                print_error "Invalid version format: $version_arg"
+                print_error "Version must be in major.minor.patch format (e.g., 1.2.3)"
+                return 1
+            fi
+
+            # Get latest version from git tags for comparison
+            local latest_tag_version
+            latest_tag_version=$(get_latest_version_from_tags)
+
+            if [[ -n "$latest_tag_version" ]]; then
+                print_info "Latest git tag version: $latest_tag_version"
+                # Check if new version is greater than latest tag
+                if ! version_is_greater "$version_arg" "$latest_tag_version"; then
+                    print_error "Version $version_arg is lower than latest version $latest_tag_version"
+                    echo "Would you like to:"
+                    echo "1) Bump the patch version (${latest_tag_version} → $(echo "$latest_tag_version" | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g'))"
+                    echo "2) Try entering another version number"
+                    echo "3) Exit (default)"
+                    read -p "$(echo -e ${BCyan}Enter choice [1/2/3]: ${Color_Off})" choice
+
+                    case "$choice" in
+                        1)
+                            newversion=$(echo "$latest_tag_version" | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
+                            print_success "Using patch bump: $newversion"
+                            ;;
+                        2)
+                            read -p "$(echo -e ${BCyan}Enter new version: ${Color_Off})" new_input
+                            if [[ -n "$new_input" ]]; then
+                                # Recursively call getVersion with new input
+                                getVersion "$new_input"
+                                return $?
+                            else
+                                print_error "No version entered. Exiting."
+                                return 1
+                            fi
+                            ;;
+                        *)
+                            print_error "Exiting."
+                            return 1
+                            ;;
+                    esac
+                fi
+            else
+                # No git tags exist yet - this is the first version tag
+                print_info "No version tags found in repository"
+                print_info "This will be the first version tag: $version_arg"
+                # Compare against current version in file to ensure we're not going backwards
+                if ! version_is_greater "$version_arg" "$currentversion"; then
+                    print_warning "Specified version $version_arg is not greater than current file version $currentversion"
+                    echo "Would you like to:"
+                    echo "1) Use current file version and bump patch (${currentversion} → $(echo "$currentversion" | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g'))"
+                    echo "2) Try entering another version number"
+                    echo "3) Continue with $version_arg anyway"
+                    echo "4) Exit (default)"
+                    read -p "$(echo -e ${BCyan}Enter choice [1/2/3/4]: ${Color_Off})" choice
+
+                    case "$choice" in
+                        1)
+                            newversion=$(echo "$currentversion" | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
+                            print_success "Using file version patch bump: $newversion"
+                            ;;
+                        2)
+                            read -p "$(echo -e ${BCyan}Enter new version: ${Color_Off})" new_input
+                            if [[ -n "$new_input" ]]; then
+                                # Recursively call getVersion with new input
+                                getVersion "$new_input"
+                                return $?
+                            else
+                                print_error "No version entered. Exiting."
+                                return 1
+                            fi
+                            ;;
+                        3)
+                            print_info "Continuing with version $version_arg"
+                            newversion="$version_arg"
+                            ;;
+                        *)
+                            print_info "Exiting."
+                            return 1
+                            ;;
+                    esac
+                else
+                    newversion="$version_arg"
+                fi
+            fi
+        fi
+    fi
+
+    print_info "Version source: ${BWhite}$version_source${Color_Off}"
+    print_info "Current version: ${BWhite}$currentversion${Color_Off}"
+    print_success "New version: ${BWhite}$newversion${Color_Off}"
+}
+
