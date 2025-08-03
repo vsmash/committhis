@@ -8,38 +8,45 @@
 # Author: vsmash <670252+vsmash@users.noreply.github.com>
 # ---------------------------------------------------------------
 
-# Set script directory and project directory
-# Get the script's directory, resolving any symlinks (cross-platform)
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS uses BSD readlink which doesn't support -f
-    SCRIPT_DIR="$( cd "$(dirname "$(readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd )"
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_PATH="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+
+# Detect mode
+if [[ -d "$SCRIPT_PATH/lib/core" ]]; then
+  # Dev mode: ./lib exists relative to script
+  LIBEXEC_DIR="$SCRIPT_PATH/lib"
 else
-    # Linux uses GNU readlink which supports -f
-    SCRIPT_DIR="$( cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )"
+  # Installed via Homebrew: libexec is one level up
+  LIBEXEC_DIR="$SCRIPT_PATH/../libexec"
 fi
 PROJECT_DIR="$(pwd)"
 
-source "$SCRIPT_DIR/lib/core/logger.sh"
-source "$SCRIPT_DIR/lib/config/envars.sh"
+source "$LIBEXEC_DIR/core/logger.sh"
+source "$LIBEXEC_DIR/config/envars.sh"
 
 # Load environment variables with new priority system
 load_environment_variables
 
 export ignore_local_env="${MAIASS_IGNORE_LOCAL_ENV:=false}"
 
-source "$SCRIPT_DIR/lib/utils/utils.sh"
-source "$SCRIPT_DIR/lib/core/logger.sh"
-source "$SCRIPT_DIR/lib/core/init.sh"
-source "$SCRIPT_DIR/lib/core/version.sh"
-source "$SCRIPT_DIR/lib/core/logger.sh"
-source "$SCRIPT_DIR/lib/utils/helpers.sh"
-source "$SCRIPT_DIR/lib/core/git.sh"
+source "$LIBEXEC_DIR/utils/utils.sh"
+source "$LIBEXEC_DIR/core/logger.sh"
+source "$LIBEXEC_DIR/core/init.sh"
+source "$LIBEXEC_DIR/core/version.sh"
+source "$LIBEXEC_DIR/core/logger.sh"
+source "$LIBEXEC_DIR/utils/helpers.sh"
+source "$LIBEXEC_DIR/core/git.sh"
 
-source "$SCRIPT_DIR/lib/core/changelog.sh"
+source "$LIBEXEC_DIR/core/changelog.sh"
 
-source "$SCRIPT_DIR/lib/core/ai.sh"
-source "$SCRIPT_DIR/lib/core/commit.sh"
-source "$SCRIPT_DIR/lib/utils/help.sh"
+source "$LIBEXEC_DIR/core/ai.sh"
+source "$LIBEXEC_DIR/core/commit.sh"
+source "$LIBEXEC_DIR/utils/help.sh"
 
 
 
