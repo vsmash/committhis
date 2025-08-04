@@ -16,8 +16,12 @@ function get_commit_message() {
   case "$ai_mode" in
     "ask")
       print_debug "DEBUG: AI mode is 'ask'"
-      if [[ -n "$ai_token" ]]; then
-        print_debug "DEBUG: Token available, showing AI prompt"
+      if [[ -n "$ai_token" || "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
+        if [[ -n "$ai_token" ]]; then
+          print_debug "DEBUG: Token available, showing AI prompt"
+        else
+          print_debug "DEBUG: Anonymous token will be created, showing AI prompt"
+        fi
         read -n 1 -s -p "$(echo -e ${BYellow}Would you like to use AI to suggest a commit message? [y/N]${Color_Off} )" REPLY
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -32,7 +36,7 @@ function get_commit_message() {
       ;;
     "autosuggest")
       print_debug "DEBUG: AI mode is 'autosuggest'"
-      if [[ -n "$ai_token" ]]; then
+      if [[ -n "$ai_token" || "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
         use_ai=true
       fi
       ;;

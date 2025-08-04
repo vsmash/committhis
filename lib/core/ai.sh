@@ -26,6 +26,31 @@ function handle_invalid_api_key_error() {
   print_warning "❌ Invalid API Key" >&2
   echo ""
   print_info "Your MAIASS AI token is invalid or has expired." >&2
+  
+  # Check if we should automatically create anonymous subscription
+  if [[ "$ai_invalid_token_choices" == "false" ]]; then
+    # Check if we already tried to create anonymous subscription this session
+    if [[ "$_MAIASS_ANON_ATTEMPTED" == "true" ]]; then
+      print_warning "Anonymous subscription already attempted this session. Continuing without AI assistance." >&2
+      export ai_mode="off"
+      return 1
+    fi
+    
+    print_info "Automatically creating anonymous subscription..." >&2
+    export _MAIASS_ANON_ATTEMPTED="true"
+    
+    if create_anonymous_subscription; then
+      print_info "Retrying AI commit message generation..." >&2
+      echo ""
+      # Return success to indicate retry should happen in calling context
+      return 0
+    else
+      print_warning "Failed to create anonymous subscription. Continuing without AI assistance." >&2
+      export ai_mode="off"
+      return 1
+    fi
+  fi
+  
   print_info "You have the following options:" >&2
   echo ""
   print_info "  ${BCyan}1.${Color_Off} Enter a new AI token" >&2
@@ -339,6 +364,22 @@ function get_ai_commit_suggestion() {
   local suggested_message
   local retry_count=0
   local max_retries=2
+
+  # Check if we need to create an anonymous token (set by envars.sh)
+  if [[ "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
+    print_debug "DEBUG: Anonymous token creation requested from environment loading" >&2
+    
+    # Clear the flag to prevent repeated attempts
+    export _MAIASS_NEED_ANON_TOKEN=""
+    
+    if create_anonymous_subscription; then
+      print_info "Anonymous subscription created successfully. Proceeding with AI commit suggestion..." >&2
+      # Token should now be set, continue with normal flow
+    else
+      print_warning "Failed to create anonymous subscription. AI features will be disabled." >&2
+      return 1
+    fi
+  fi
 
   # Main retry loop for handling authentication errors
   while [[ $retry_count -lt $max_retries ]]; do

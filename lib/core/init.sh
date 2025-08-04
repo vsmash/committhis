@@ -54,6 +54,7 @@ setup_bumpscript_variables() {
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
 
       # Initialize AI variables early so they're available when get_commit_message is called
+      export ai_invalid_token_choices="${MAIASS_AI_INVALID_TOKEN_CHOICES:-false}"
       export ai_mode="${MAIASS_AI_MODE:-ask}"
       export ai_token="${MAIASS_AI_TOKEN:-}"
       export ai_model="${MAIASS_AI_MODEL:=gpt-3.5-turbo}"
@@ -232,9 +233,14 @@ fi
   # Validate AI configuration - prevent ask/autosuggest modes without token
   if [[ "$ai_mode" == "ask" || "$ai_mode" == "autosuggest" ]]; then
     if [[ -z "$ai_token" ]]; then
-      print_warning "AI commit message mode '$ai_mode' requires MAIASS_AI_TOKEN"
-      print_warning "Falling back to 'off' mode"
-      export ai_mode="off"
+      # Check if we're planning to create an anonymous token
+      if [[ "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
+        print_info "AI mode '$ai_mode' enabled - anonymous token will be created automatically"
+      else
+        print_warning "AI commit message mode '$ai_mode' requires MAIASS_AI_TOKEN"
+        print_warning "Falling back to 'off' mode"
+        export ai_mode="off"
+      fi
     fi
   fi
 
