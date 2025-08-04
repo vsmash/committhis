@@ -1,6 +1,8 @@
-## 5.5.15
+## 5.5.16
 04 August 2025
 
+- Refactored signoff message
+- 	- refactor(core): replaced 'print_thank_you' with 'print_signoff_with_topup' in commit.sh, git.sh, and maiass.sh.
 - Refactored helper shell scripts
 - 	- refactor: replaced 'print_colour' function with 'echo' in helpers.sh
 - 	- refactor: used 'echo' for empty new line and for MAIASS_TOPUP_ENDPOINT message in helpers.sh
