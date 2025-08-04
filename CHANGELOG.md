@@ -1,4 +1,4 @@
-## 5.5.14
+## 5.5.15
 04 August 2025
 
 - Refactored helper shell scripts
@@ -24,8 +24,8 @@
 - feat: Expanded implementation to handle anonymous subscription creation
 - feat: Included a new secure variable MAIASS_SUBSCRIPTION_ID for loading secure variables
 - Update logger and deletetoken scripts
-- - feat: added NC variable to logger.sh for color reset
-- - fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
+- feat: added NC variable to logger.sh for color reset
+- fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
 - Added shell script to delete security token
 - feat: added a shell script that deletes a "maiass" security token
 - Revert README to MAIASS
