@@ -1,3 +1,24 @@
+## 5.5.18
+05 August 2025
+
+- Updated secure variable handling and top-up URL messaging
+- 	- feat: added MAIASS_TOPUP_URL to secure variables list in envars.sh
+- 	- feat: adjusted secure storage handling in ai.sh to include MAIASS_TOPUP_URL
+- 	- refactor: updated sign-off message in helpers.sh to include MAIASS_TOPUP_URL for credit top-ups
+- Improved helper function for credit top-up
+- 	- feat: add support for subscription ID in top-up URL
+- 	- refactor: extract top-up URL to local variable for readability
+- Refactored signoff message
+- 	- refactor(core): replaced 'print_thank_you' with 'print_signoff_with_topup' in commit.sh, git.sh, and maiass.sh.
+- Refactored helper shell scripts
+- 	- refactor: replaced 'print_colour' function with 'echo' in helpers.sh
+- 	- refactor: used 'echo' for empty new line and for MAIASS_TOPUP_ENDPOINT message in helpers.sh
+- Refactored code to centralize thank you message
+- 	- refactor: centralized thank you message in commit.sh
+- 	- refactor: updated thank you message in git.sh
+- 	- feat: created print_signoff_with_topup() function in helpers.sh
+- 	- refactor: applied centralized thank you message in maiass.sh
+
 ## 5.5.17
 04 August 2025
 
