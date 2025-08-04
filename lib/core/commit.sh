@@ -47,7 +47,9 @@ function get_commit_message() {
   # Try to get AI suggestion if requested
   if [[ "$use_ai" == true ]]; then
     print_info "Getting AI commit message suggestion..." "brief"
+    
     if ai_suggestion=$(get_ai_commit_suggestion); then
+      # Success - we got a valid AI suggestion
       print_success "AI suggested commit message:"
       ai_suggestion="$(echo "$ai_suggestion" | sed "1s/^'//; \$s/'$//")"
       ai_suggestion="$(echo "$ai_suggestion" | sed 's/\r$//')"

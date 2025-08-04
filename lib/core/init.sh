@@ -48,9 +48,9 @@ setup_bumpscript_variables() {
       export debug_mode="${MAIASS_DEBUG:=false}"
       export autopush_commits="${MAIASS_AUTOPUSH_COMMITS:=false}"
       export brand="${MAIASS_BRAND:=MAIASS}"
-      # Initialize brevity and logging configuration+6
-      export verbosity_level="${MAIASS_VERBOSITY:=brief}"
-      export enable_logging="${MAIASS_LOGGING:=false}"
+      # Initialize brevity and logging configuration - set debug for testing
+      export verbosity_level="${MAIASS_VERBOSITY:=debug}"
+      export enable_logging="${MAIASS_LOGGING:=true}"
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
 
       # Initialize AI variables early so they're available when get_commit_message is called
@@ -60,9 +60,13 @@ setup_bumpscript_variables() {
       export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
       export ai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
       export ai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
-      export maiass_host="https://pound.maiass.net"
+      export maiass_host="${MAIASS_AI_HOST:-https://pound.maiass.net}"
       export maiass_endpoint="${maiass_host}/v1/chat/completions"
       export maiass_tokenrequest="${maiass_host}/v1/token"
+      export maiass_validate_endpoint="${maiass_host}/v1/validate"
+      # Legacy endpoints - proxy should provide payment URLs dynamically with subscription_id
+      export maiass_register_endpoint="${MAIASS_REGISTER_ENDPOINT:-https://maiass.net/register}"
+      export maiass_topup_endpoint="${MAIASS_TOPUP_ENDPOINT:-https://maiass.net/topup}"
 
       # Initialize configurable version file system
       export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
