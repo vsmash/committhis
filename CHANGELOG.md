@@ -1,6 +1,10 @@
-## 5.5.18
+## 5.5.19
 05 August 2025
 
+- Refactored AI response handling in core library
+- 	- feat: switched from token to credit usage metrics
+- 	- feat: added handling for multiple warning messages
+- 	- fix: improved validation for received API response fields
 - Updated secure variable handling and top-up URL messaging
 - 	- feat: added MAIASS_TOPUP_URL to secure variables list in envars.sh
 - 	- feat: adjusted secure storage handling in ai.sh to include MAIASS_TOPUP_URL
