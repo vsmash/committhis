@@ -81,7 +81,14 @@ print_signoff_with_topup() {
   # Add top-up URL if MAIASS_TOPUP_ENDPOINT is set
   if [[ -n "$MAIASS_TOPUP_ENDPOINT" ]]; then
     echo ""
-    echo "💳 Need more credits? Visit: $MAIASS_TOPUP_ENDPOINT"
+    local topup_url="$MAIASS_TOPUP_ENDPOINT"
+    
+    # Add subscription ID parameter if available
+    if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
+      topup_url="${topup_url}?sub=${MAIASS_SUBSCRIPTION_ID}"
+    fi
+    
+    echo "💳 Need more credits? Visit: $topup_url"
   fi
 }
 
