@@ -75,6 +75,31 @@ open_url() {
 # Generate sign-off message with optional top-up URL
 print_signoff_with_topup() {
   echo ""
+  
+  # Display credit summary if available from AI operations
+  if [[ -n "$MAIASS_AI_CREDITS_USED" || -n "$MAIASS_AI_CREDITS_REMAINING" ]]; then
+    echo "📊 Credit Summary:"
+    if [[ -n "$MAIASS_AI_CREDITS_USED" ]]; then
+      echo "   Credits used this session: $MAIASS_AI_CREDITS_USED"
+    fi
+    if [[ -n "$MAIASS_AI_CREDITS_REMAINING" ]]; then
+      echo "   Credits remaining: $MAIASS_AI_CREDITS_REMAINING"
+    fi
+    echo ""
+  fi
+  
+  # Display AI warning messages if any
+  if [[ -n "$MAIASS_AI_WARNINGS" ]]; then
+    echo "⚠️  AI Service Notifications:"
+    # Handle multiple warning messages
+    while IFS= read -r warning_line; do
+      if [[ -n "$warning_line" && "$warning_line" != "empty" && "$warning_line" != "null" ]]; then
+        echo "   $warning_line"
+      fi
+    done <<< "$MAIASS_AI_WARNINGS"
+    echo ""
+  fi
+  
   echo "🎉 Thank you for using MAIASS!"
   echo ""
   
