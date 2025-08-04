@@ -162,7 +162,7 @@ print_debug(){
         local effective_verbosity="$verbosity_level"
     fi
     if [[ "$effective_verbosity" == "debug" ]]; then
-        echo -e "${Grey}🐛$message${Color_Off}"
+        echo -e "${Color_Off}🐛$message${Color_Off}"
         log_message "DEBUG: $message"
     fi
 

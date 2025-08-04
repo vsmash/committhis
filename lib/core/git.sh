@@ -305,8 +305,10 @@ function mergeDevelop() {
     read -n 1 -s -p "$(echo -e ${BYellow}Do you want to merge $current_branch into $developbranch? [y/N]${Color_Off} )" REPLY
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-      print_error "Cannot proceed without merging into $developbranch"
-      exit 1
+      print_info "User chose not to merge into $developbranch. Staying on $current_branch."
+      print_info "All done. You are on branch: ${BWhite}$current_branch${Color_Off}"
+      print_signoff_with_topup
+      exit 0
     fi
 
     # Checkout develop and update it
