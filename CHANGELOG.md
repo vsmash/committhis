@@ -1,4 +1,4 @@
-## 5.5.21
+## 5.5.22
 05 August 2025
 
 - Refactored AI credit and warning message handling, updated logging and links
