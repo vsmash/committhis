@@ -535,7 +535,7 @@ function deployOptions() {
   git checkout "$branch_name"
 
   print_info "All done. You are on branch: ${BWhite}$branch_name${Color_Off}"
-  print_success "Thank you for using $brand."
+  print_thank_you
 
   # Clean up
   unset GIT_MERGE_AUTOEDIT
