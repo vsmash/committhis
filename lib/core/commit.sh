@@ -283,12 +283,12 @@ function checkUncommittedChanges(){
             fi
           if [[ $ai_commits_only == 'true' ]]; then
             echo -e "${BGreen}Commit process completed.${Color_Off}"
-            print_thank_you
+            print_signoff_with_topup
             exit 0
           else
             print_success "Commit process completed."
             print_error "Cannot proceed on release/changelog pipeline with uncommitted changes"
-            print_thank_you
+            print_signoff_with_topup
             exit 1
           fi
       fi
@@ -298,7 +298,7 @@ function checkUncommittedChanges(){
     fi
     if [[ $ai_commits_only == 'true' ]]; then
       echo -e "${BGreen}No changes found.${Color_Off}"
-      print_thank_you
+      print_signoff_with_topup
       exit 0
     fi
   fi
