@@ -752,11 +752,19 @@ esac
     # Remove extra quotes that might wrap the entire message
     suggested_message=$(echo "$suggested_message" | sed "s/^'\\(.*\\)'$/\\1/" | sed 's/^"\\(.*\\)"$/\\1/')
 
-    # Clean up the message (remove leading/trailing whitespace)
-    suggested_message=$(echo "$suggested_message" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
+    # Clean up the message - remove leading empty lines and format bullet points
+    # Remove leading empty lines
+    suggested_message=$(printf '%s' "$suggested_message" | sed '/./,$!d')
+    
+    # Remove leading/trailing whitespace from each line and add proper formatting
+    suggested_message=$(printf '%s' "$suggested_message" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
+    
+    # Add tab before bullet points for proper indentation
+    suggested_message=$(printf '%s' "$suggested_message" | sed 's/^[[:space:]]*-[[:space:]]*/\t- /')
 
     print_debug "DEBUG: Final cleaned message: '$suggested_message'" >&2
     print_debug "DEBUG: Message length: ${#suggested_message} characters" >&2
+    print_debug "DEBUG: First 100 chars with visible newlines: $(printf '%q' "${suggested_message:0:100}")" >&2
     print_debug "DEBUG: Message validation: non-empty=$(test -n "$suggested_message" && echo "true" || echo "false"), not-null=$(test "$suggested_message" != "null" && echo "true" || echo "false")" >&2
 
     if [[ -n "$suggested_message" && "$suggested_message" != "null" ]]; then

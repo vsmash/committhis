@@ -51,7 +51,7 @@ function get_commit_message() {
     if ai_suggestion=$(get_ai_commit_suggestion); then
       # Success - we got a valid AI suggestion
       print_success "AI suggested commit message:"
-      ai_suggestion="$(echo "$ai_suggestion" | sed "1s/^'//; \$s/'$//")"
+      # Only remove carriage returns, quotes are already handled in the AI function
       ai_suggestion="$(echo "$ai_suggestion" | sed 's/\r$//')"
       if [[ -n "$total_tokens" && "$total_tokens" != "null" && "$total_tokens" != "empty" ]]; then
         print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"
