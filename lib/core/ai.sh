@@ -740,28 +740,36 @@ esac
       suggested_message=$(echo "$api_response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
       print_debug "DEBUG: jq result: '$suggested_message'" >&2
 
-      # Extract token usage information if available
-      local prompt_tokens completion_tokens total_tokens tokens_remaining warning_msg
-      prompt_tokens=$(echo "$api_response" | jq -r '.usage.prompt_tokens // empty' 2>/dev/null)
-      completion_tokens=$(echo "$api_response" | jq -r '.usage.completion_tokens // empty' 2>/dev/null)
-      total_tokens=$(echo "$api_response" | jq -r '.usage.total_tokens // empty' 2>/dev/null)
+      # Extract credit usage information from billing section if available
+      local credits_used credits_remaining cost warning_msgs
+      credits_used=$(echo "$api_response" | jq -r '.billing.credits_used // empty' 2>/dev/null)
+      credits_remaining=$(echo "$api_response" | jq -r '.billing.credits_remaining // empty' 2>/dev/null)
+      cost=$(echo "$api_response" | jq -r '.billing.cost // empty' 2>/dev/null)
       
-      # Extract proxy-specific fields
-      tokens_remaining=$(echo "$api_response" | jq -r '.tokens_remaining // empty' 2>/dev/null)
-      warning_msg=$(echo "$api_response" | jq -r '.warning // empty' 2>/dev/null)
+      # Extract warning messages from messages array
+      warning_msgs=$(echo "$api_response" | jq -r '.messages[]? // empty' 2>/dev/null)
 
-      # Display token usage and remaining quota
-      if [[ -n "$total_tokens" && "$total_tokens" != "empty" && "$total_tokens" != "null" ]]; then
-        print_always "Tokens used: ${total_tokens}" >&2
+      # Display credit usage and remaining balance
+      if [[ -n "$credits_used" && "$credits_used" != "empty" && "$credits_used" != "null" ]]; then
+        print_always "Credits used: ${credits_used}" >&2
       fi
       
-      if [[ -n "$tokens_remaining" && "$tokens_remaining" != "empty" && "$tokens_remaining" != "null" ]]; then
-        print_always "Tokens remaining: ${tokens_remaining}" >&2
+      if [[ -n "$credits_remaining" && "$credits_remaining" != "empty" && "$credits_remaining" != "null" ]]; then
+        print_always "Credits remaining: ${credits_remaining}" >&2
       fi
       
-      # Show proxy warnings (low tokens, etc.)
-      if [[ -n "$warning_msg" && "$warning_msg" != "empty" && "$warning_msg" != "null" ]]; then
-        print_warning "⚠️  $warning_msg" >&2
+      if [[ -n "$cost" && "$cost" != "empty" && "$cost" != "null" ]]; then
+        print_debug "Cost: $${cost}" >&2
+      fi
+      
+      # Show warnings (low credits, etc.)
+      if [[ -n "$warning_msgs" && "$warning_msgs" != "empty" && "$warning_msgs" != "null" ]]; then
+        # Handle multiple warning messages
+        while IFS= read -r warning_line; do
+          if [[ -n "$warning_line" && "$warning_line" != "empty" && "$warning_line" != "null" ]]; then
+            print_warning "⚠️  $warning_line" >&2
+          fi
+        done <<< "$warning_msgs"
       fi
     fi
 
