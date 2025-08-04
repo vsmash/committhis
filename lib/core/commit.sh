@@ -16,8 +16,12 @@ function get_commit_message() {
   case "$ai_mode" in
     "ask")
       print_debug "DEBUG: AI mode is 'ask'"
-      if [[ -n "$ai_token" ]]; then
-        print_debug "DEBUG: Token available, showing AI prompt"
+      if [[ -n "$ai_token" || "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
+        if [[ -n "$ai_token" ]]; then
+          print_debug "DEBUG: Token available, showing AI prompt"
+        else
+          print_debug "DEBUG: Anonymous token will be created, showing AI prompt"
+        fi
         read -n 1 -s -p "$(echo -e ${BYellow}Would you like to use AI to suggest a commit message? [y/N]${Color_Off} )" REPLY
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -32,7 +36,7 @@ function get_commit_message() {
       ;;
     "autosuggest")
       print_debug "DEBUG: AI mode is 'autosuggest'"
-      if [[ -n "$ai_token" ]]; then
+      if [[ -n "$ai_token" || "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
         use_ai=true
       fi
       ;;
@@ -47,9 +51,11 @@ function get_commit_message() {
   # Try to get AI suggestion if requested
   if [[ "$use_ai" == true ]]; then
     print_info "Getting AI commit message suggestion..." "brief"
+    
     if ai_suggestion=$(get_ai_commit_suggestion); then
+      # Success - we got a valid AI suggestion
       print_success "AI suggested commit message:"
-      ai_suggestion="$(echo "$ai_suggestion" | sed "1s/^'//; \$s/'$//")"
+      # Only remove carriage returns, quotes are already handled in the AI function
       ai_suggestion="$(echo "$ai_suggestion" | sed 's/\r$//')"
       if [[ -n "$total_tokens" && "$total_tokens" != "null" && "$total_tokens" != "empty" ]]; then
         print_always "Token usage: ${total_tokens} total (${prompt_tokens:-0} prompt + ${completion_tokens:-0} completion)"

@@ -33,6 +33,7 @@ BMagenta='\033[1;35m'   # Bold Magenta
 BAqua='\033[1;96m'      # Bold Aqua
 BSoftPink='\033[38;5;218m' # Bold Soft Pink
 BNavy='\033[1;34m'      # Bold Navy
+BGrey='\033[1;30m'      # Bold Grey
 
 # Regular colors (for standard messages)
 Cyan='\033[0;36m'       # Cyan
@@ -46,6 +47,7 @@ Magenta='\033[0;35m'    # Magenta
 Aqua='\033[0;96m'       # Aqua
 SoftPink='\033[38;5;218m' # Soft Pink
 Navy='\033[0;34m'       # Navy
+Grey='\033[0;30m'      # Grey
 
 # Special formatting
 Color_Off='\033[0m'     # Text Reset
@@ -106,21 +108,21 @@ print_info() {
         "brief")
             # Only show essential messages in brief mode
             if [[ "$level" == "brief" ]]; then
-                echo -e "${Cyan}ℹ $message${Color_Off}"
+                echo -e "${BSoftPink}|)) ${Aqua}$message${Color_Off}"
             fi
             ;;
         "normal")
             # Show brief and normal messages
             if [[ "$level" == "brief" || "$level" == "normal" ]]; then
-                echo -e "${Cyan}ℹ $message${Color_Off}"
+                echo -e "${BSoftPink}|)) ${Aqua}$message${Color_Off}"
             fi
             ;;
         "debug")
             # Show all messages, use bold for debug level messages
             if [[ "$level" == "debug" ]]; then
-                echo -e "${BCyan}ℹ $message${Color_Off}"
+                echo -e "${BSoftPink}|)) ${Aqua}$message${Color_Off}"
             else
-                echo -e "${Cyan}ℹ $message${Color_Off}"
+                echo -e "${BSoftPink}|)) ${Aqua}$message${Color_Off}"
             fi
             ;;
     esac
@@ -160,7 +162,7 @@ print_debug(){
         local effective_verbosity="$verbosity_level"
     fi
     if [[ "$effective_verbosity" == "debug" ]]; then
-        echo -e "${Aqua}🐛$message${Color_Off}"
+        echo -e "${Grey}🐛$message${Color_Off}"
         log_message "DEBUG: $message"
     fi
 
