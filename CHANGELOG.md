@@ -1,6 +1,14 @@
-## 5.5.13
+## 5.5.14
 04 August 2025
 
+- Refactored helper shell scripts
+- 	- refactor: replaced 'print_colour' function with 'echo' in helpers.sh
+- 	- refactor: used 'echo' for empty new line and for MAIASS_TOPUP_ENDPOINT message in helpers.sh
+- Refactored code to centralize thank you message
+- 	- refactor: centralized thank you message in commit.sh
+- 	- refactor: updated thank you message in git.sh
+- 	- feat: created print_signoff_with_topup() function in helpers.sh
+- 	- refactor: applied centralized thank you message in maiass.sh
 - Enhanced AI token authentication and added anonymous subscription handling
 - 	- feat: improved handling of invalid AI tokens in 'envars.sh'
 - 	- feat: added automatic anonymous subscription generation on token absence in 'envars.sh' and 'ai.sh'
@@ -16,8 +24,8 @@
 - feat: Expanded implementation to handle anonymous subscription creation
 - feat: Included a new secure variable MAIASS_SUBSCRIPTION_ID for loading secure variables
 - Update logger and deletetoken scripts
--  - feat: added NC variable to logger.sh for color reset
--  - fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
+- - feat: added NC variable to logger.sh for color reset
+- - fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
 - Added shell script to delete security token
 - feat: added a shell script that deletes a "maiass" security token
 - Revert README to MAIASS
