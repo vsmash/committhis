@@ -224,16 +224,22 @@ function create_anonymous_subscription() {
         print_info "   💡 Save this URL to add more credits later!" >&2
       fi
       
-      # Store both the token and subscription ID securely
+      # Store the token, subscription ID, and top-up URL securely
       if [[ "$OSTYPE" == "darwin"* ]]; then
         security add-generic-password -a "MAIASS_AI_TOKEN" -s "maiass" -w "$new_api_key" -U 2>/dev/null
         if [[ -n "$subscription_id" && "$subscription_id" != "null" ]]; then
           security add-generic-password -a "MAIASS_SUBSCRIPTION_ID" -s "maiass" -w "$subscription_id" -U 2>/dev/null
         fi
+        if [[ -n "$top_up_url" && "$top_up_url" != "null" ]]; then
+          security add-generic-password -a "MAIASS_TOPUP_URL" -s "maiass" -w "$top_up_url" -U 2>/dev/null
+        fi
       elif command -v secret-tool >/dev/null 2>&1; then
         echo -n "$new_api_key" | secret-tool store --label="MAIASS AI Token" service maiass key "MAIASS_AI_TOKEN"
         if [[ -n "$subscription_id" && "$subscription_id" != "null" ]]; then
           echo -n "$subscription_id" | secret-tool store --label="MAIASS Subscription ID" service maiass key "MAIASS_SUBSCRIPTION_ID"
+        fi
+        if [[ -n "$top_up_url" && "$top_up_url" != "null" ]]; then
+          echo -n "$top_up_url" | secret-tool store --label="MAIASS Top-up URL" service maiass key "MAIASS_TOPUP_URL"
         fi
       fi
       

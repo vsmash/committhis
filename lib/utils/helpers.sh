@@ -74,21 +74,20 @@ open_url() {
 
 # Generate sign-off message with optional top-up URL
 print_signoff_with_topup() {
-  local message="${1:-Thank you for using $brand}"
+  echo ""
+  echo "🎉 Thank you for using MAIASS!"
+  echo ""
   
-  echo -e "${BWhite}$message${Color_Off}"
-  
-  # Add top-up URL if MAIASS_TOPUP_ENDPOINT is set
-  if [[ -n "$MAIASS_TOPUP_ENDPOINT" ]]; then
-    echo ""
+  # Check if we have a stored top-up URL from anonymous subscription
+  if [[ -n "$MAIASS_TOPUP_URL" ]]; then
+    echo "💳 Need more credits? Visit: $MAIASS_TOPUP_URL"
+  # Fallback to simple method if MAIASS_TOPUP_ENDPOINT is set but no stored URL  
+  elif [[ -n "$MAIASS_TOPUP_ENDPOINT" ]]; then
     local topup_url="$MAIASS_TOPUP_ENDPOINT"
-    
-    # Add subscription ID parameter if available
+    # Add subscription ID to path if available (new simple format)
     if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
-      topup_url="${topup_url}?sub=${MAIASS_SUBSCRIPTION_ID}"
+      topup_url="${topup_url}/${MAIASS_SUBSCRIPTION_ID}"
     fi
-    
     echo "💳 Need more credits? Visit: $topup_url"
   fi
 }
-
