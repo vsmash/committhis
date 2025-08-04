@@ -754,6 +754,7 @@ esac
         print_always "Credits used: ${credits_used}" >&2
         # Store for summary display in temp file
         echo "CREDITS_USED=$credits_used" > /tmp/maiass_session_data.tmp
+        echo "AI_MODEL=$ai_model" >> /tmp/maiass_session_data.tmp
       fi
       
       if [[ -n "$credits_remaining" && "$credits_remaining" != "empty" && "$credits_remaining" != "null" ]]; then
