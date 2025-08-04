@@ -76,12 +76,12 @@ open_url() {
 print_signoff_with_topup() {
   local message="${1:-Thank you for using $brand}"
   
-  print_colour "$BWhite" "$message"
+  echo -e "${BWhite}$message${Color_Off}"
   
   # Add top-up URL if MAIASS_TOPUP_ENDPOINT is set
   if [[ -n "$MAIASS_TOPUP_ENDPOINT" ]]; then
-    print_colour "$Color_Off" ""
-    print_colour "$Color_Off" "💳 Need more credits? Visit: $MAIASS_TOPUP_ENDPOINT"
+    echo ""
+    echo "💳 Need more credits? Visit: $MAIASS_TOPUP_ENDPOINT"
   fi
 }
 
