@@ -1,6 +1,12 @@
-## 5.5.20
+## 5.5.21
 05 August 2025
 
+- Refactored AI credit and warning message handling, updated logging and links
+- 	- refactor(ai): store AI credit usage and warning messages in a temporary file
+- 	- refactor(logging): replace echo calls with print_info for branch and git repository detection
+- 	- feat(init): add detailed debug logging for ai_mode and ai_token during initialization
+- 	- fix: correct top-up URL in setup_bumpscript_variables
+- 	- refactor(print_signoff): process AI credits and warnings stored in temporary file
 - Improved handling and display of AI service warnings
 - 	- feat: altered extraction process of warning messages from the API response
 - 	- feat: save API usage metrics for later display
