@@ -56,6 +56,7 @@ setup_bumpscript_variables() {
       # Initialize AI variables early so they're available when get_commit_message is called
       export ai_invalid_token_choices="${MAIASS_AI_INVALID_TOKEN_CHOICES:-false}"
       export ai_mode="${MAIASS_AI_MODE:-ask}"
+      print_debug "DEBUG INIT: First ai_mode assignment - MAIASS_AI_MODE='${MAIASS_AI_MODE:-}', ai_mode='$ai_mode'"
       export ai_token="${MAIASS_AI_TOKEN:-}"
       export ai_model="${MAIASS_AI_MODEL:=gpt-3.5-turbo}"
       export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
@@ -67,7 +68,7 @@ setup_bumpscript_variables() {
       export maiass_validate_endpoint="${maiass_host}/v1/validate"
       # Legacy endpoints - proxy should provide payment URLs dynamically with subscription_id
       export maiass_register_endpoint="${MAIASS_REGISTER_ENDPOINT:-https://maiass.net/register}"
-      export maiass_topup_endpoint="${MAIASS_TOPUP_ENDPOINT:-https://maiass.net/topup}"
+      export maiass_topup_endpoint="${MAIASS_TOPUP_ENDPOINT:-https://maiass.net/top-up}"
 
       # Initialize configurable version file system
       export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
@@ -75,6 +76,7 @@ setup_bumpscript_variables() {
       export version_primary_line_start="${MAIASS_VERSION_PRIMARY_LINE_START:-}"
       export version_secondary_files="${MAIASS_VERSION_SECONDARY_FILES:-}"
 
+  # Initialize branch names with MAIASS_* overrides
 
 
 
@@ -204,9 +206,17 @@ fi
     print_info "  WordPress files: $wordpress_files_path" "normal"
   fi
 
-  # AI commit message configuration
-  export ai_mode="${MAIASS_AI_MODE:-off}"
+  # AI commit message configuration - Don't override if already set
+  print_debug "DEBUG INIT: Before second assignment - MAIASS_AI_MODE='${MAIASS_AI_MODE:-}', current ai_mode='$ai_mode'"
+  if [[ -z "$ai_mode" ]]; then
+    export ai_mode="${MAIASS_AI_MODE:-ask}"
+    print_debug "DEBUG INIT: ai_mode was empty, setting to: '$ai_mode'"
+  else
+    print_debug "DEBUG INIT: ai_mode already set to: '$ai_mode', keeping it"
+  fi
+  
   export ai_token="${MAIASS_AI_TOKEN:-}"
+  print_debug "DEBUG INIT: ai_token length=${#ai_token}"
   export ai_model="${MAIASS_AI_MODEL:-gpt-3.5-turbo}"
 
 
@@ -231,18 +241,28 @@ fi
   export debug_mode="${MAIASS_DEBUG:-false}"
 
   # Validate AI configuration - prevent ask/autosuggest modes without token
+  print_debug "DEBUG INIT: AI validation - ai_mode='$ai_mode', ai_token length=${#ai_token}"
   if [[ "$ai_mode" == "ask" || "$ai_mode" == "autosuggest" ]]; then
+    print_debug "DEBUG INIT: AI mode requires token validation"
     if [[ -z "$ai_token" ]]; then
       # Check if we're planning to create an anonymous token
       if [[ "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
         print_info "AI mode '$ai_mode' enabled - anonymous token will be created automatically"
+        print_debug "DEBUG INIT: Anonymous token will be created, keeping ai_mode='$ai_mode'"
       else
         print_warning "AI commit message mode '$ai_mode' requires MAIASS_AI_TOKEN"
         print_warning "Falling back to 'off' mode"
+        print_debug "DEBUG INIT: No token and no anonymous planned, setting ai_mode to 'off'"
         export ai_mode="off"
       fi
+    else
+      print_debug "DEBUG INIT: Token available, keeping ai_mode='$ai_mode'"
     fi
+  else
+    print_debug "DEBUG INIT: AI mode '$ai_mode' does not require token validation"
   fi
+  
+  print_debug "DEBUG INIT: Final ai_mode='$ai_mode'"
 
   print_info "Integration configuration:"
   print_info "  Staging pull requests: $staging_pullrequests"

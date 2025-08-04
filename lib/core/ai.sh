@@ -752,14 +752,14 @@ esac
       # Display credit usage and remaining balance
       if [[ -n "$credits_used" && "$credits_used" != "empty" && "$credits_used" != "null" ]]; then
         print_always "Credits used: ${credits_used}" >&2
-        # Store for summary display
-        export MAIASS_AI_CREDITS_USED="$credits_used"
+        # Store for summary display in temp file
+        echo "CREDITS_USED=$credits_used" > /tmp/maiass_session_data.tmp
       fi
       
       if [[ -n "$credits_remaining" && "$credits_remaining" != "empty" && "$credits_remaining" != "null" ]]; then
         print_always "Credits remaining: ${credits_remaining}" >&2
-        # Store for summary display
-        export MAIASS_AI_CREDITS_REMAINING="$credits_remaining"
+        # Store for summary display in temp file
+        echo "CREDITS_REMAINING=$credits_remaining" >> /tmp/maiass_session_data.tmp
       fi
       
       if [[ -n "$cost" && "$cost" != "empty" && "$cost" != "null" ]]; then
@@ -768,8 +768,10 @@ esac
       
       # Store warning messages for later display (after commit message suggestion)
       if [[ -n "$warning_msgs" && "$warning_msgs" != "empty" && "$warning_msgs" != "null" ]]; then
-        # Store warnings in a global variable for display in sign-off
-        export MAIASS_AI_WARNINGS="$warning_msgs"
+        # Store warnings in temp file for display in sign-off
+        echo "AI_WARNINGS<<EOF" >> /tmp/maiass_session_data.tmp
+        echo "$warning_msgs" >> /tmp/maiass_session_data.tmp
+        echo "EOF" >> /tmp/maiass_session_data.tmp
       fi
     fi
 

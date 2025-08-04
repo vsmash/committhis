@@ -227,7 +227,7 @@ function getBitbucketUrl(){
 
 function branchDetection() {
     print_section "Branch Detection"
-    echo -e "Currently on branch: ${BWhite}$branch_name${Color_Off}"
+    print_info "Currently on branch: ${BWhite}$branch_name${Color_Off}" "brief"
     # if we are on the master branch, advise user not to use this script for hot fixes
     # if on master or a release branch, advise the user
     if [[ "$branch_name" == "$masterbranch" || "$branch_name" == release/* || "$branch_name" == releases/* ]]; then
@@ -559,5 +559,5 @@ check_git_repository() {
   fi
 
   export git_root
-  print_success "Git repository detected: $git_root"
+  print_info "Git repository detected: $git_root" "normal"
 }

@@ -76,43 +76,77 @@ open_url() {
 print_signoff_with_topup() {
   echo ""
   
-  # Display credit summary if available from AI operations
-  if [[ -n "$MAIASS_AI_CREDITS_USED" || -n "$MAIASS_AI_CREDITS_REMAINING" ]]; then
-    echo "📊 Credit Summary:"
-    if [[ -n "$MAIASS_AI_CREDITS_USED" ]]; then
-      echo "   Credits used this session: $MAIASS_AI_CREDITS_USED"
+  # Read session data from temp file if it exists
+  local credits_used credits_remaining ai_warnings
+  if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
+    # Source the file to get variables
+    while IFS='=' read -r key value; do
+      case "$key" in
+        "CREDITS_USED") credits_used="$value" ;;
+        "CREDITS_REMAINING") credits_remaining="$value" ;;
+      esac
+    done < /tmp/maiass_session_data.tmp
+    
+    # Read AI warnings (handle multiline)
+    if grep -q "AI_WARNINGS<<EOF" /tmp/maiass_session_data.tmp; then
+      ai_warnings=$(sed -n '/AI_WARNINGS<<EOF/,/EOF/p' /tmp/maiass_session_data.tmp | sed '1d;$d')
     fi
-    if [[ -n "$MAIASS_AI_CREDITS_REMAINING" ]]; then
-      echo "   Credits remaining: $MAIASS_AI_CREDITS_REMAINING"
+  fi
+  
+  # Display credit summary if available from AI operations
+  if [[ -n "$credits_used" || -n "$credits_remaining" ]]; then
+    echo "📊 Credit Summary:"
+    if [[ -n "$credits_used" ]]; then
+      echo "   Credits used this session: $credits_used"
+    fi
+    if [[ -n "$credits_remaining" ]]; then
+      echo "   Credits remaining: $credits_remaining"
     fi
     echo ""
   fi
   
   # Display AI warning messages if any
-  if [[ -n "$MAIASS_AI_WARNINGS" ]]; then
+  if [[ -n "$ai_warnings" ]]; then
     echo "⚠️  AI Service Notifications:"
     # Handle multiple warning messages
     while IFS= read -r warning_line; do
       if [[ -n "$warning_line" && "$warning_line" != "empty" && "$warning_line" != "null" ]]; then
         echo "   $warning_line"
       fi
-    done <<< "$MAIASS_AI_WARNINGS"
+    done <<< "$ai_warnings"
     echo ""
   fi
   
   echo "🎉 Thank you for using MAIASS!"
   echo ""
   
+  # Debug: Check topup URL variables
+  print_debug "DEBUG SIGNOFF: MAIASS_TOPUP_URL='${MAIASS_TOPUP_URL:-}'"
+  print_debug "DEBUG SIGNOFF: MAIASS_TOPUP_ENDPOINT='${MAIASS_TOPUP_ENDPOINT:-}'"
+  print_debug "DEBUG SIGNOFF: maiass_topup_endpoint='${maiass_topup_endpoint:-}'"
+  print_debug "DEBUG SIGNOFF: MAIASS_SUBSCRIPTION_ID='${MAIASS_SUBSCRIPTION_ID:-}'"
+  
   # Check if we have a stored top-up URL from anonymous subscription
   if [[ -n "$MAIASS_TOPUP_URL" ]]; then
     echo "💳 Need more credits? Visit: $MAIASS_TOPUP_URL"
-  # Fallback to simple method if MAIASS_TOPUP_ENDPOINT is set but no stored URL  
-  elif [[ -n "$MAIASS_TOPUP_ENDPOINT" ]]; then
-    local topup_url="$MAIASS_TOPUP_ENDPOINT"
+    print_debug "DEBUG SIGNOFF: Used MAIASS_TOPUP_URL"
+  # Fallback to simple method if MAIASS_TOPUP_ENDPOINT or maiass_topup_endpoint is set but no stored URL  
+  elif [[ -n "$MAIASS_TOPUP_ENDPOINT" || -n "$maiass_topup_endpoint" ]]; then
+    local topup_url="${MAIASS_TOPUP_ENDPOINT:-$maiass_topup_endpoint}"
     # Add subscription ID to path if available (new simple format)
     if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
       topup_url="${topup_url}/${MAIASS_SUBSCRIPTION_ID}"
+      print_debug "DEBUG SIGNOFF: Using topup endpoint with subscription ID: $topup_url"
+    else
+      print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
     fi
     echo "💳 Need more credits? Visit: $topup_url"
+  else
+    print_debug "DEBUG SIGNOFF: No topup URL variables set"
+  fi
+  
+  # Clean up session data file
+  if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
+    rm -f /tmp/maiass_session_data.tmp
   fi
 }
