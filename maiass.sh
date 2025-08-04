@@ -108,7 +108,7 @@ function initialiseBump() {
   if [[ "$ai_commits_only" == "true" ]]; then
     checkUncommittedChanges
     echo -e "${BAqua}Mode is commits only. \nWe are done and on $branch_name branch.${Color_Off}"
-    print_thank_you
+    print_signoff_with_topup
     exit 0
   fi
 
