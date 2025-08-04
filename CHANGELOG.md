@@ -1,6 +1,10 @@
-## 5.5.22
+## 5.5.23
 05 August 2025
 
+- Updated user feedback and color settings
+- 	- feat: modified user feedback when choosing not to merge into develop branch
+- 	- fix: adjusted color setting for debug message in logger.sh
+- 	- fix: changed Gray color variable to no color in help.sh for better visibility on dark terminals
 - Refactored AI credit and warning message handling, updated logging and links
 - 	- refactor(ai): store AI credit usage and warning messages in a temporary file
 - 	- refactor(logging): replace echo calls with print_info for branch and git repository detection
