@@ -1,6 +1,10 @@
-## 5.5.19
+## 5.5.20
 05 August 2025
 
+- Improved handling and display of AI service warnings
+- 	- feat: altered extraction process of warning messages from the API response
+- 	- feat: save API usage metrics for later display
+- 	- feat: display credit usage and warning messages in sign-off output
 - Refactored AI response handling in core library
 - 	- feat: switched from token to credit usage metrics
 - 	- feat: added handling for multiple warning messages
