@@ -1,6 +1,9 @@
-## 5.5.16
+## 5.5.17
 04 August 2025
 
+- Improved helper function for credit top-up
+- 	- feat: add support for subscription ID in top-up URL
+- 	- refactor: extract top-up URL to local variable for readability
 - Refactored signoff message
 - 	- refactor(core): replaced 'print_thank_you' with 'print_signoff_with_topup' in commit.sh, git.sh, and maiass.sh.
 - Refactored helper shell scripts
