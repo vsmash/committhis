@@ -1,19 +1,38 @@
+## 5.5.13
+04 August 2025
+
+- Enhanced AI token authentication and added anonymous subscription handling
+- 	- feat: improved handling of invalid AI tokens in 'envars.sh'
+- 	- feat: added automatic anonymous subscription generation on token absence in 'envars.sh' and 'ai.sh'
+- 	- fix: revised token replacement and addition process sequence in 'envars.sh'
+- 	- fix: implemented checking for failed anonymous subscription attempts in 'ai.sh'
+- MAI-8
+- Improve message formatting in AI scripts
+- 	- feat: added cleanup for leading empty lines and bullet point formatting in messages
+- 	- refactor(ai.sh): removed redundancy in handling whitespace and improved debugging prints
+- 	- refactor(commit.sh): simplified removal of special characters from AI suggestions
+- Extended AI error handling and added new secure variable
+- feat: Added function to manage invalid API key errors with user options
+- feat: Expanded implementation to handle anonymous subscription creation
+- feat: Included a new secure variable MAIASS_SUBSCRIPTION_ID for loading secure variables
+- Update logger and deletetoken scripts
+-  - feat: added NC variable to logger.sh for color reset
+-  - fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
+- Added shell script to delete security token
+- feat: added a shell script that deletes a "maiass" security token
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+
 ## 5.5.12
 4 August 2025
 
 - Update logger and deletetoken scripts
-	- feat: added NC variable to logger.sh for color reset
-	- fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
+- feat: added NC variable to logger.sh for color reset
+- fix(scripts): replaced var_name with MAIASS_AI_TOKEN in deletetoken.sh
 - Added shell script to delete security token
-	- feat: added a shell script that deletes a "maiass" security token
+- feat: added a shell script that deletes a "maiass" security token
 - Revert README to MAIASS
 - Temporary: swap README for committhis push
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
-- Revert README to MAIASS
-- Revert README to MAIASS
-- Temporary: swap README for committhis push
-- Revert README to MAIASS
 
 ## 5.5.10
 04 August 2025
