@@ -1,4 +1,4 @@
-## 5.5.25
+## 5.5.26
 06 August 2025
 
 - Refactored debugging in helpers.sh
