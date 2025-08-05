@@ -126,7 +126,6 @@ print_signoff_with_topup() {
   echo ""
   
   # Debug: Check topup URL variables
-  print_debug "DEBUG SIGNOFF: MAIASS_TOPUP_URL='${MAIASS_TOPUP_URL:-}'"
   print_debug "DEBUG SIGNOFF: maiass_topup_endpoint='${maiass_topup_endpoint:-}'"
   print_debug "DEBUG SIGNOFF: MAIASS_SUBSCRIPTION_ID='${MAIASS_SUBSCRIPTION_ID:-}'"
   
