@@ -1,6 +1,10 @@
-## 5.5.26
+## 5.5.27
 06 August 2025
 
+- Enhanced .gitignore functionality and improve cli output aesthetics
+- 	- feat: added .gitignore checks for environment files
+- 	- feat: integrated environment file handling in initialisation function
+- 	- style: enhanced visual output aesthetics by adding colors to text
 - Refactored debugging in helpers.sh
 - 	- fix: removed unnecessary debug print statement in print_signoff_with_topup function
 
