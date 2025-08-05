@@ -1,6 +1,17 @@
-## 5.5.23
+## 5.5.24
 05 August 2025
 
+- Removed MAIASS_TOPUP_URL related elements
+- 	- fix: remove 'MAIASS_TOPUP_URL' from secure variables in 'config/envars.sh'
+- 	- fix: delete 'top_up_url' related condition and statements in 'core/ai.sh'
+- 	- fix: remove 'MAIASS_TOPUP_ENDPOINT' debug signoff in 'utils/helpers.sh'
+- Updated session data and credit display
+- 	- feat: added AI_MODEL to session data in ai.sh
+- 	- feat: captured AI_MODEL value from session data in helpers.sh
+- 	- feat: updated credits used display to include AI_MODEL in helpers.sh
+- Updated color codes in logger and help utilities
+- 	- fix: changed color code for Grey in logger.sh
+- 	- feat: added color code for Gray in help.sh
 - Updated user feedback and color settings
 - 	- feat: modified user feedback when choosing not to merge into develop branch
 - 	- fix: adjusted color setting for debug message in logger.sh
