@@ -230,16 +230,10 @@ function create_anonymous_subscription() {
         if [[ -n "$subscription_id" && "$subscription_id" != "null" ]]; then
           security add-generic-password -a "MAIASS_SUBSCRIPTION_ID" -s "maiass" -w "$subscription_id" -U 2>/dev/null
         fi
-        if [[ -n "$top_up_url" && "$top_up_url" != "null" ]]; then
-          security add-generic-password -a "MAIASS_TOPUP_URL" -s "maiass" -w "$top_up_url" -U 2>/dev/null
-        fi
       elif command -v secret-tool >/dev/null 2>&1; then
         echo -n "$new_api_key" | secret-tool store --label="MAIASS AI Token" service maiass key "MAIASS_AI_TOKEN"
         if [[ -n "$subscription_id" && "$subscription_id" != "null" ]]; then
           echo -n "$subscription_id" | secret-tool store --label="MAIASS Subscription ID" service maiass key "MAIASS_SUBSCRIPTION_ID"
-        fi
-        if [[ -n "$top_up_url" && "$top_up_url" != "null" ]]; then
-          echo -n "$top_up_url" | secret-tool store --label="MAIASS Top-up URL" service maiass key "MAIASS_TOPUP_URL"
         fi
       fi
       
@@ -754,6 +748,7 @@ esac
         print_always "Credits used: ${credits_used}" >&2
         # Store for summary display in temp file
         echo "CREDITS_USED=$credits_used" > /tmp/maiass_session_data.tmp
+        echo "AI_MODEL=$ai_model" >> /tmp/maiass_session_data.tmp
       fi
       
       if [[ -n "$credits_remaining" && "$credits_remaining" != "empty" && "$credits_remaining" != "null" ]]; then

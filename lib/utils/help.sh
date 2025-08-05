@@ -8,9 +8,9 @@ show_help() {
   local BYellow='\033[1;33m'
   local BRed='\033[1;31m'
   local BCyan='\033[1;36m'
-  local Gray="${Color_Off}"  # Changed from gray to no color for better visibility on dark terminals
   local Color_Off='\033[0m'
   local BLime='\033[1;32m'
+  local Gray="\033[0;37m"  # Gray for default text
 
   echo -e "${BBlue}"
    cat <<-'EOF'

@@ -18,7 +18,7 @@ load_environment_variables() {
 
 # Load sensitive variables from secure storage
 load_secure_variables() {
-    local secure_vars=("MAIASS_AI_TOKEN" "MAIASS_SUBSCRIPTION_ID" "MAIASS_TOPUP_URL")
+    local secure_vars=("MAIASS_AI_TOKEN" "MAIASS_SUBSCRIPTION_ID")
     local token_prompted=0
 
     for var in "${secure_vars[@]}"; do

@@ -77,13 +77,14 @@ print_signoff_with_topup() {
   echo ""
   
   # Read session data from temp file if it exists
-  local credits_used credits_remaining ai_warnings
+  local credits_used credits_remaining ai_warnings ai_model
   if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
     # Source the file to get variables
     while IFS='=' read -r key value; do
       case "$key" in
         "CREDITS_USED") credits_used="$value" ;;
         "CREDITS_REMAINING") credits_remaining="$value" ;;
+        "AI_MODEL") ai_model="$value" ;;
       esac
     done < /tmp/maiass_session_data.tmp
     
@@ -97,7 +98,11 @@ print_signoff_with_topup() {
   if [[ -n "$credits_used" || -n "$credits_remaining" ]]; then
     echo "📊 Credit Summary:"
     if [[ -n "$credits_used" ]]; then
-      echo "   Credits used this session: $credits_used"
+      if [[ -n "$ai_model" ]]; then
+        echo "   Credits used this session: $credits_used ($ai_model)"
+      else
+        echo "   Credits used this session: $credits_used"
+      fi
     fi
     if [[ -n "$credits_remaining" ]]; then
       echo "   Credits remaining: $credits_remaining"
@@ -122,7 +127,6 @@ print_signoff_with_topup() {
   
   # Debug: Check topup URL variables
   print_debug "DEBUG SIGNOFF: MAIASS_TOPUP_URL='${MAIASS_TOPUP_URL:-}'"
-  print_debug "DEBUG SIGNOFF: MAIASS_TOPUP_ENDPOINT='${MAIASS_TOPUP_ENDPOINT:-}'"
   print_debug "DEBUG SIGNOFF: maiass_topup_endpoint='${maiass_topup_endpoint:-}'"
   print_debug "DEBUG SIGNOFF: MAIASS_SUBSCRIPTION_ID='${MAIASS_SUBSCRIPTION_ID:-}'"
   
