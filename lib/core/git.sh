@@ -96,6 +96,46 @@ check_gitignore_for_logs() {
     fi
 }
 
+# Check and handle .gitignore for environment files
+check_gitignore_for_env() {
+    local gitignore_file=".gitignore"
+    local env_pattern_found=false
+
+    # Check if .gitignore exists and contains env file patterns
+    if [[ -f "$gitignore_file" ]]; then
+        # Check for .env.maiass, .env.maiass*, .env*, or .env.* patterns
+        if grep -q "^\.env\.maiass$" "$gitignore_file" 2>/dev/null || \
+           grep -q "^\.env\.maiass\*$" "$gitignore_file" 2>/dev/null || \
+           grep -q "^\.env\*$" "$gitignore_file" 2>/dev/null || \
+           grep -q "^\.env\.\*$" "$gitignore_file" 2>/dev/null; then
+            env_pattern_found=true
+        fi
+    fi
+
+    # If .env.maiass is not ignored, warn user and offer to add it
+    if [[ "$env_pattern_found" == "false" && -f ".env.maiass" ]]; then
+        print_warning "Environment file '.env.maiass' is not in .gitignore"
+        echo -n "Add '.env.maiass' to .gitignore to avoid committing environment files? [Y/n]: "
+        read -r add_to_gitignore
+
+        if [[ "$add_to_gitignore" =~ ^[Nn]$ ]]; then
+            print_info "Continuing without adding to .gitignore" "brief"
+        else
+            # Add .env.maiass to .gitignore
+            if [[ ! -f "$gitignore_file" ]]; then
+                echo "# Environment files" > "$gitignore_file"
+                echo ".env.maiass" >> "$gitignore_file"
+                print_success "Created .gitignore and added '.env.maiass'"
+            else
+                echo "" >> "$gitignore_file"
+                echo "# MAIASS environment file" >> "$gitignore_file"
+                echo ".env.maiass" >> "$gitignore_file"
+                print_success "Added '.env.maiass' to .gitignore"
+            fi
+        fi
+    fi
+}
+
 # Get the latest version from git tags
 # Returns the highest semantic version tag, or empty string if no tags found
 get_latest_version_from_tags() {

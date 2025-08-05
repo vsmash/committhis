@@ -65,6 +65,9 @@ function initialiseBump() {
 
   # Check and handle .gitignore for log files if logging is enabled
   check_gitignore_for_logs
+  
+  # Check and handle .gitignore for environment files
+  check_gitignore_for_env
 
   # Ensure we're in a git repository
   check_git_repository
