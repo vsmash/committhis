@@ -92,36 +92,28 @@ function updateChangelog() {
             if (commit_lines ~ /^- /) {
                 # Already has bullet points (AI commit) - add indentation to body lines
                 n = split(commit_lines, lines, "\n")
-                for (i = 1; i <= n; i++) {
-                    if (lines[i] != "") {
-                        if (i == 1) {
-                            # First line (subject) - keep as main bullet
-                            print lines[i]
-                        } else {
-                            # Body lines - add indentation
-                            if (lines[i] ~ /^- /) {
-                                print "\t" lines[i]
+                    for (i = 1; i <= n; i++) {
+                        if (lines[i] != "") {
+                            if (i == 1) {
+                                print "" lines[i]
                             } else {
-                                print "\t- " lines[i]
+                                line = lines[i]
+                                gsub(/^\s*-+\s*/, "", line)
+                                print "\t- " line
                             }
                         }
                     }
-                }
             } else {
                 # Manual commit - split lines and add bullets with indentation
                 n = split(commit_lines, lines, "\n")
                 for (i = 1; i <= n; i++) {
                     if (lines[i] != "") {
                         if (i == 1) {
-                            # First line (subject) - main bullet
                             print "- " lines[i]
                         } else {
-                            # Body lines - indented bullets
-                            if (lines[i] ~ /^- /) {
-                                print "\t" lines[i]
-                            } else {
-                                print "\t- " lines[i]
-                            }
+                            line = lines[i]
+                            gsub(/^\s*-+\s*/, "", line)
+                            print "\t- " line
                         }
                     }
                 }
