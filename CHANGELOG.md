@@ -1,6 +1,30 @@
-## 5.5.34
+## 5.5.37
 07 August 2025
 
+- MAI-8 Refactored changelog generation script
+		- refactor: redesigned updateChangelog function for improved clarity
+		- fix: corrected handling of empty last_changelog_commit
+		- refactor: simplified changelog and changelog_internal commands
+		- feat: introduced JIRA ticket stripping in changelog output
+- MAI-8 Updated CHANGELOG and Script Refactoring
+		- refactor: Improved formatting in CHANGELOG.md across all sections
+		- feat(lib/core): Added debugging for machine fingerprint generation
+		- fix(lib/core): Updated the format of machine fingerprint
+		- refactor: Stripped JIRA ticket reference in changelog.sh
+		- feat: Improved .gitignore file checks and inclusion in initialization
+		- style: Enhanced text aesthetics in CLI by adding colors
+		- fix: Removed unnecessary debug print statement from various scripts
+- MAI-8 Improved Changelog, Scripts, and Features
+		- refactor: Improved formatting in CHANGELOG.md across all sections
+		- feat(lib/core): Added debugging for machine fingerprint generation
+		- fix(lib/core): Updated the format of machine fingerprint
+		- refactor(lib/core): Stopped function calls to clean_changelog in changelog.sh
+		- feat(lib/utils): Added generate_machine_fingerprint function in helpers.sh
+		- feat: Added --delete-token and --update-token functionality to maiass.sh
+		- feat: Added .gitignore checks for environment files and included in initialization function
+		- style: Improved CLI aesthetics by adding color to text
+		- fix: Removed unneeded debug print statement from print_signoff
+		-
 - Improved and Refactored Changelog, Scripts and Features
 	- refactor: Improved formatting in CHANGELOG.md across all sections
 	- feat(lib/core): Added debugging for machine fingerprint generation
