@@ -1,6 +1,32 @@
-## 5.5.29
+## 5.5.30
 07 August 2025
 
+- Improved code clarity and added new features
+	- 	- refactor: improved formatting in CHANGELOG.md
+	- 	- feat(lib/core): added debugging for machine fingerprint generation
+	- 	- fix(lib/core): updated the format of machine fingerprint
+	- 	- refactor(lib/core): stopped function calls to clean_changelog in changelog.sh
+	- 	- feat(lib/utils): added generate_machine_fingerprint function in helpers.sh
+	- 	- feat: added --delete-token and --update-token functionality to maiass.sh
+	- 	- feat: added .gitignore checks for environment files
+	- 	- feat: included environment file handling in initialisation function
+	- 	- style: improved CLI aesthetics by adding color to text
+	- 	- fix: removed unneeded debug print statement from print_signoff
+- Refactored changelog formatting
+	- 	- refactor: simplified bullet point indentation for AI and manual commits
+	- 	- fix: removed extra whitespace from commit line items
+- Updated ai.sh, changelog.sh, helpers.sh, and maiass.sh scripts
+	- 	- feat(lib/core): added debugging for machine fingerprint generation
+	- 	- fix(lib/core): updated the format of the machine_fingerprint
+	- 	- refactor(lib/core): commented out the function calls to clean_changelog in changelog.sh
+	- 	- feat(lib/utils): implemented generate_machine_fingerprint function in helpers.sh
+	- 	- feat: added --delete-token and --update-token functionality to maiass.sh
+- Enhanced .gitignore functionality and improve cli output aesthetics
+	- 	- feat: added .gitignore checks for environment files
+	- 	- feat: integrated environment file handling in initialisation function
+	- 	- style: enhanced visual output aesthetics by adding colors to text
+- Refactored debugging in helpers.sh
+	- 	- fix: removed unnecessary debug print statement in print_signoff_with_topup function
 - Refactored changelog formatting
 	- refactor: simplified bullet point indentation for AI and manual commits
 	- fix: removed extra whitespace from commit line items
