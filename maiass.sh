@@ -133,6 +133,8 @@ function initialiseBump() {
 
 
 # Parse command line arguments
+
+# Token management switches
 for arg in "$@"; do
   case $arg in
     -h|--help)
@@ -140,14 +142,31 @@ for arg in "$@"; do
       exit 0
       ;;
     -v|--version)
-      # Try to read version from package.json in script directory
       version="Unknown"
-      # get the version from line 3 of this very file
       script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
       script_file="${BASH_SOURCE[0]}"
       version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
       echo "MIASS v$version"
-
+      exit 0
+      ;;
+    --delete-token)
+      print_info "Deleting stored AI token..." "always"
+      remove_secure_variable "MAIASS_AI_TOKEN"
+      print_success "AI token deleted from secure storage (if it existed)." "always"
+      exit 0
+      ;;
+    --update-token)
+      print_info "Updating stored AI token..." "always"
+      remove_secure_variable "MAIASS_AI_TOKEN"
+      echo -n "Enter new AI token: "
+      read -s new_token
+      echo
+      if [[ -n "$new_token" ]]; then
+        store_secure_variable "MAIASS_AI_TOKEN" "$new_token"
+        print_success "New AI token stored securely." "always"
+      else
+        print_warning "No token entered. Nothing stored." "always"
+      fi
       exit 0
       ;;
     -aihelp|--committhis-help)
@@ -155,13 +174,10 @@ for arg in "$@"; do
       exit 0
       ;;
     -aicv|--committhis-version)
-      # Try to read version from package.json in script directory
       version="Unknown"
-      # get the version from line 3 of this very file
       script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
       script_file="${BASH_SOURCE[0]}"
       version=$(grep -m1 '^# MAIASS' "$script_file" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
-
       echo "COMMITTHIS v$version"
       exit 0
       ;;

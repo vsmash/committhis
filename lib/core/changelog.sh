@@ -240,7 +240,7 @@ function updateChangelog() {
         print_info "Internal changelog $changelogpath/$changelog_internal_name does not exist, skipping"
     fi
 
-    clean_changelog "$changelogpath/$changelog_name"
-    clean_changelog "$changelogpath/$changelog_internal_name"
+    #clean_changelog "$changelogpath/$changelog_name"
+    #clean_changelog "$changelogpath/$changelog_internal_name"
 
 }

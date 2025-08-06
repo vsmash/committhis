@@ -154,3 +154,65 @@ print_signoff_with_topup() {
     rm -f /tmp/maiass_session_data.tmp
   fi
 }
+
+
+generate_machine_fingerprint() {
+  # Get MAC address
+  get_mac_address() {
+    if command -v ip &>/dev/null; then
+      ip link | awk '/ether/ {print $2; exit}'
+    else
+      # macOS fallback
+      networksetup -listallhardwareports | \
+        awk '/Device|Ethernet Address/ {
+          if ($1 == "Device:") dev=$2;
+          else if ($1 == "Ethernet") {
+            print $3;
+            exit
+          }
+        }'
+    fi
+  }
+
+  # Get CPU info
+  get_cpu_info() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      sysctl -n machdep.cpu.brand_string
+    else
+      grep -m1 'model name' /proc/cpuinfo | cut -d ':' -f 2 | xargs
+    fi
+  }
+
+  # Get disk ID or volume UUID
+  get_disk_identifier() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      diskutil info / | awk -F': ' '/Volume UUID/ {print $2; exit}'
+    else
+      root_disk=$(df / | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//')
+      lsblk -no SERIAL "$root_disk" 2>/dev/null || echo "unknown-serial"
+    fi
+  }
+
+  # Kernel info
+  get_kernel_info() {
+    uname -srm
+  }
+
+  # Hashing helper
+  hash_fingerprint() {
+    if command -v sha256sum &>/dev/null; then
+      sha256sum
+    else
+      shasum -a 256
+    fi
+  }
+
+  # Main fingerprint generation
+  mac=$(get_mac_address)
+  cpu=$(get_cpu_info)
+  disk=$(get_disk_identifier)
+  kernel=$(get_kernel_info)
+
+  fingerprint_input="${mac}|${cpu}|${disk}|${kernel}"
+  echo "$fingerprint_input" | hash_fingerprint | awk '{print $1}'
+}

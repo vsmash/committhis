@@ -565,11 +565,12 @@ esac
     local machine_fingerprint
     if command -v generate_machine_fingerprint >/dev/null 2>&1; then
       machine_fingerprint=$(generate_machine_fingerprint)
+      print_debug "DEBUG: Added machine fingerprint header: ${machine_fingerprint:0:10}..." >&2
     else
-      machine_fingerprint=$(echo -n "$(uname -a)-$(whoami)-$(date +%Y%m)" | shasum -a 256 | cut -d' ' -f1)
+      machine_fingerprint=$(echo -n "$(uname -a)-$(whoami)-$(date +%Y)" | shasum -a 256 | cut -d' ' -f1)
+      print_debug "DEBUG: Added machine fingerprint header using falback: ${machine_fingerprint:0:10}..." >&2
     fi
     curl_headers+=("-H" "X-Machine-Fingerprint: $machine_fingerprint")
-    print_debug "DEBUG: Added machine fingerprint header: ${machine_fingerprint:0:10}..." >&2
   fi
   
   http_response=$(curl -s -w "\n%{http_code}" -X POST "$maiass_endpoint" \
