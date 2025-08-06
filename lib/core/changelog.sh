@@ -15,42 +15,40 @@ function updateChangelog() {
 
     log_range="$last_changelog_commit..HEAD"
 
-    # Public changelog formatting (with Jira stripping and clean bullets)
-    changelog=$(git log "$log_range" --pretty=format:"%B" |
-    grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
-    awk '
-    function indent(line) {
-        gsub(/^[A-Z]+-[0-9]+\s+/, "", line)  # Strip JIRA ticket
-        print "- " line
-    }
-    BEGIN { commit = "" }
-    /^$/ {
-        if (commit != "") {
-            n = split(commit, lines, "\n")
-            indent(lines[1])
-            for (i = 2; i <= n; i++) {
-                if (lines[i] != "") {
-                    print "\t" lines[i]
+        changelog=$(git log "$log_range" --pretty=format:"%B" |
+        grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
+        awk '
+        BEGIN { commit = "" }
+        /^$/ {
+            if (commit != "") {
+                n = split(commit, lines, "\n")
+                lines[1] = gensub(/^\[?[A-Z]+-[0-9]+\]?[[:space:]:—-]+/, "", 1, lines[1])
+                print "- " lines[1]
+                for (i = 2; i <= n; i++) {
+                    if (lines[i] != "") {
+                        print "\t" lines[i]
+                    }
+                }
+                commit = ""
+            }
+            next
+        }
+        {
+            commit = commit $0 "\n"
+        }
+        END {
+            if (commit != "") {
+                n = split(commit, lines, "\n")
+                lines[1] = gensub(/^\[?[A-Z]+-[0-9]+\]?[[:space:]:—-]+/, "", 1, lines[1])
+                print "- " lines[1]
+                for (i = 2; i <= n; i++) {
+                    if (lines[i] != "") {
+                        print "\t" lines[i]
+                    }
                 }
             }
-            commit = ""
-        }
-        next
-    }
-    {
-        commit = commit $0 "\n"
-    }
-    END {
-        if (commit != "") {
-            n = split(commit, lines, "\n")
-            indent(lines[1])
-            for (i = 2; i <= n; i++) {
-                if (lines[i] != "") {
-                    print "\t" lines[i]
-                }
-            }
-        }
-    }')
+        }')
+
 
     # Internal changelog: raw commit body with no stripping
     changelog_internal=$(git log "$log_range" --pretty=format:"%B" |
