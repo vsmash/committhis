@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------------------------------------------
-# MAIASS (Modular AI-Augmented Semantic Scribe) v5.5.35
+# MAIASS (Modular AI-Augmented Semantic Scribe) v5.5.36
 # Intelligent Git workflow automation script
 # Copyright (c) 2025 Velvary Pty Ltd
 # All rights reserved.
