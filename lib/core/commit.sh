@@ -7,6 +7,8 @@ function get_commit_message() {
   # Extract Jira ticket number from branch name if present
   if [[ "$branch_name" =~ .*/([A-Z]+-[0-9]+) ]]; then
       jira_ticket_number="${BASH_REMATCH[1]}"
+      # if we have a jira ticket number, export it
+      export jira_ticket_number
       print_info "Jira Ticket Number: ${BWhite}$jira_ticket_number${Color_Off}"
   fi
 

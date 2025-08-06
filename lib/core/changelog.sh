@@ -48,8 +48,10 @@ function updateChangelog() {
                 }
             }
         }')
-
-
+        # remove double tabs
+        changelog=$(echo "$changelog" | sed 's/\t\t/\t/g')
+        remove $jira_ticket_number if $jira_ticket_number is not empty
+        changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
     # Internal changelog: raw commit body with no stripping
     changelog_internal=$(git log "$log_range" --pretty=format:"%B" |
     grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
