@@ -79,13 +79,20 @@ function updateChangelog() {
     | awk '
     function process_commit(commit_lines,    n, i, line) {
         n = split(commit_lines, lines, "\n")
-        for (i = 1; i <= n; i++) {
+
+        # Clean subject line (remove JIRA prefix)
+        gsub(/^[A-Z]+-[0-9]+\s+/, "", lines[1])
+        print "- " lines[1]
+
+        for (i = 2; i <= n; i++) {
             if (lines[i] != "") {
-                if (i == 1) {
-                    print "- " lines[i]
+                line = lines[i]
+                if (line ~ /^\s*-\s+/) {
+                    # Already a bullet, just indent it
+                    gsub(/^\s*-\s+/, "", line)
+                    print "\t- " line
                 } else {
-                    line = lines[i]
-                    gsub(/^\s*-+\s*/, "", line)
+                    # Not a bullet, add one
                     print "\t- " line
                 }
             }
@@ -117,13 +124,12 @@ function updateChangelog() {
         }
     }')
 
-    # Internal changelog — cleaner, unformatted version
+    # Internal changelog — full unformatted messages
     changelog_internal=$(git log "$last_tag"..HEAD --pretty=format:"%B" \
     | sed -E 's/^[0-9a-f]+ \([^)]+\) //; s/^[0-9a-f]+ //' \
     | grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' \
     | sed 's/^/- /')
 
-    # Guard: no changelog
     if [ -z "$changelog" ]; then
         print_info "No changelog to add"
     else
@@ -145,7 +151,6 @@ function updateChangelog() {
         fi
     fi
 
-    # Internal changelog
     if [ -z "$changelog_internal" ]; then
         print_info "No internal changelog to add"
     elif [ -f "$changelogpath/$changelog_internal_name" ]; then
