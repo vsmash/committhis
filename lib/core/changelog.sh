@@ -75,10 +75,11 @@ BEGIN { commit = "" }
 /^$/ {
     if (commit != "") {
         n = split(commit, lines, "\n")
+        gsub(/^[A-Z]+-[0-9]+\s+/, "", lines[1])  # Strip JIRA ticket
         indent(lines[1])
         for (i = 2; i <= n; i++) {
             if (lines[i] != "") {
-                print "\t" lines[i]  # <-- single tab only
+                print "\t" lines[i]
             }
         }
         commit = ""
@@ -91,6 +92,7 @@ BEGIN { commit = "" }
 END {
     if (commit != "") {
         n = split(commit, lines, "\n")
+        gsub(/^[A-Z]+-[0-9]+\s+/, "", lines[1])  # Strip JIRA ticket
         indent(lines[1])
         for (i = 2; i <= n; i++) {
             if (lines[i] != "") {
@@ -99,6 +101,7 @@ END {
         }
     }
 }')
+
 
 
 
