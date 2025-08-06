@@ -65,22 +65,11 @@ function clean_changelog() {
     rm -f "$temp_section" "$temp_file"
 }
 
-function updateChangelog() {
-    changelogpath=$1
-    [ -z "$changelogpath" ] && changelogpath="."
-
-    last_tag=$(git describe --tags --abbrev=0)
-
-    # Public changelog processing
 changelog=$(git log "$last_tag"..HEAD --pretty=format:"%B" |
 grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
 awk '
 function indent(line) {
-    if (line ~ /^-/) {
-        print "\t" line
-    } else {
-        print "- " line
-    }
+    print "- " line
 }
 BEGIN { commit = "" }
 /^$/ {
@@ -89,7 +78,7 @@ BEGIN { commit = "" }
         indent(lines[1])
         for (i = 2; i <= n; i++) {
             if (lines[i] != "") {
-                print "\t" lines[i]
+                print "\t" lines[i]  # <-- single tab only
             }
         }
         commit = ""
@@ -110,6 +99,7 @@ END {
         }
     }
 }')
+
 
 
     # Internal changelog — full unformatted messages
