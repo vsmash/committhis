@@ -1,7 +1,7 @@
 ## 5.5.34
 07 August 2025
 
-- MAI-8 Improved and Refactored Changelog, Scripts and Features
+- Improved and Refactored Changelog, Scripts and Features
 	- refactor: Improved formatting in CHANGELOG.md across all sections
 	- feat(lib/core): Added debugging for machine fingerprint generation
 	- fix(lib/core): Updated the format of machine fingerprint
@@ -11,7 +11,7 @@
 	- feat: Added .gitignore checks for environment files and included in initialization function
 	- style: Improved CLI aesthetics by adding color to text
 	- fix: Removed unneeded debug print statement from print_signoff
-- MAI-8 Refactored and updated scripts and features
+- Refactored and updated scripts and features
 	- refactor: Improved formatting in CHANGELOG.md across multiple sections
 	- feat(lib/core): Added debugging for machine fingerprint generation
 	- fix(lib/core): Updated the format of machine fingerprint
@@ -21,7 +21,7 @@
 	- feat: Added .gitignore checks for environment files and included it in initialization function
 	- style: Improved CLI aesthetics by adding color to text
 	- fix: Removed unneeded debug print statement from print_signoff
-- MAI-8 Updated CHANGELOG and various scripts
+- Updated CHANGELOG and various scripts
 	- refactor: Improved formatting in CHANGELOG.md
 	- feat(lib/core): Added debugging for machine fingerprint generation
 	- fix(lib/core): Updated the format of machine fingerprint
@@ -67,7 +67,7 @@
 	- feat: added .gitignore checks for environment files
 	- feat: integrated environment file handling in initialisation function
 	- style: enhanced visual output aesthetics by adding colors to text
-- MAI-8 Refactored debugging in helpers.sh
+- Refactored debugging in helpers.sh
 	- fix: removed unnecessary debug print statement in print_signoff_with_topup function
 - Refactored and updated scripts and features
 	- refactor: Improved formatting in CHANGELOG.md across multiple sections
