@@ -72,57 +72,45 @@ function updateChangelog() {
     last_tag=$(git describe --tags --abbrev=0)
 
     # Public changelog processing
-    changelog=$(git log "$last_tag"..HEAD --pretty=format:"%B" \
-    | sed -E 's/^[0-9a-f]+ \([^)]+\) //; s/^[0-9a-f]+ //' \
-    | sed -E 's/^[A-Z]+-[0-9]+ //' \
-    | grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' \
-    | awk '
-    function process_commit(commit_lines,    n, i, line) {
-        n = split(commit_lines, lines, "\n")
-
-        # Clean subject line (remove JIRA prefix)
-        gsub(/^[A-Z]+-[0-9]+\s+/, "", lines[1])
-        print "- " lines[1]
-
+changelog=$(git log "$last_tag"..HEAD --pretty=format:"%B" |
+grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
+awk '
+function indent(line) {
+    if (line ~ /^-/) {
+        print "\t" line
+    } else {
+        print "- " line
+    }
+}
+BEGIN { commit = "" }
+/^$/ {
+    if (commit != "") {
+        n = split(commit, lines, "\n")
+        indent(lines[1])
         for (i = 2; i <= n; i++) {
             if (lines[i] != "") {
-                line = lines[i]
-                if (line ~ /^\s*-\s+/) {
-                    # Already a bullet, just indent it
-                    gsub(/^\s*-\s+/, "", line)
-                    print "\t- " line
-                } else {
-                    # Not a bullet, add one
-                    print "\t- " line
-                }
+                print "\t" lines[i]
+            }
+        }
+        commit = ""
+    }
+    next
+}
+{
+    commit = commit $0 "\n"
+}
+END {
+    if (commit != "") {
+        n = split(commit, lines, "\n")
+        indent(lines[1])
+        for (i = 2; i <= n; i++) {
+            if (lines[i] != "") {
+                print "\t" lines[i]
             }
         }
     }
-    BEGIN {
-        in_commit = 0
-        commit_lines = ""
-    }
-    /^$/ {
-        if (in_commit && commit_lines != "") {
-            process_commit(commit_lines)
-            commit_lines = ""
-            in_commit = 0
-        }
-        next
-    }
-    {
-        if (in_commit) {
-            commit_lines = commit_lines "\n" $0
-        } else {
-            commit_lines = $0
-            in_commit = 1
-        }
-    }
-    END {
-        if (in_commit && commit_lines != "") {
-            process_commit(commit_lines)
-        }
-    }')
+}')
+
 
     # Internal changelog — full unformatted messages
     changelog_internal=$(git log "$last_tag"..HEAD --pretty=format:"%B" \
