@@ -24,7 +24,7 @@
 	- feat: Added .gitignore checks for environment files and included in initialization function
 	- style: Improved CLI aesthetics by adding color to text
 	- fix: Removed unneeded debug print statement from print_signoff
-		-
+	
 - Improved and Refactored Changelog, Scripts and Features
 	- refactor: Improved formatting in CHANGELOG.md across all sections
 	- feat(lib/core): Added debugging for machine fingerprint generation
