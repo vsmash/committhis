@@ -65,9 +65,15 @@ function updateChangelog() {
                 if (commit != "") {
                     n = split(commit, lines, "\n")
                     author = lines[1]
-                    subject = lines[2]
+                    subject = ""
+                    for (j = 2; j <= n; j++) {
+                        if (lines[j] != "") {
+                            subject = lines[j]
+                            break
+                        }
+                    }
                     print "- " author ": " subject
-                    for (i = 3; i <= n; i++) {
+                    for (i = j + 1; i <= n; i++) {
                         if (lines[i] != "") {
                             print "\t" lines[i]
                         }
@@ -83,15 +89,22 @@ function updateChangelog() {
                 if (commit != "") {
                     n = split(commit, lines, "\n")
                     author = lines[1]
-                    subject = lines[2]
+                    subject = ""
+                    for (j = 2; j <= n; j++) {
+                        if (lines[j] != "") {
+                            subject = lines[j]
+                            break
+                        }
+                    }
                     print "- " author ": " subject
-                    for (i = 3; i <= n; i++) {
+                    for (i = j + 1; i <= n; i++) {
                         if (lines[i] != "") {
                             print "\t" lines[i]
                         }
                     }
                 }
             }')
+
 
     if [ -z "$changelog" ]; then
         print_info "No changelog to add"
