@@ -105,6 +105,12 @@ function updateChangelog() {
                 }
             }')
 
+        if [ -n "$jira_ticket_number" ]; then
+            changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
+            changelog_internal=$(echo "$changelo_internal" | sed 's/^$jira_ticket_number //g')
+        fi
+
+
 
     if [ -z "$changelog" ]; then
         print_info "No changelog to add"
