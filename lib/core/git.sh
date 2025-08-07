@@ -403,7 +403,7 @@ function mergeDevelop() {
 
       # Update version and changelog
       bumpVersion
-      updateChangelog "$changelog_path"
+      updateChangelog "$changelog_path" "$newversion"
 
       # Commit changes
       git add -A
@@ -444,7 +444,7 @@ function mergeDevelop() {
       # For patch versions without release branch, update directly on develop
       print_info "Updating version and changelog directly on $developbranch..."
       bumpVersion
-      updateChangelog "$changelog_path"
+      updateChangelog "$changelog_path" "$newversion"
 
       # Commit changes
       git add -A

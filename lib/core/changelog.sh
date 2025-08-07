@@ -1,6 +1,7 @@
 
 function updateChangelog() {
-    changelogpath=$1
+    local changelogpath="$1"
+    local version="$2"
     [ -z "$changelogpath" ] && changelogpath="."
 
     # Determine changelog range from latest version entry in the changelog
@@ -107,7 +108,7 @@ function updateChangelog() {
 
         if [ -n "$jira_ticket_number" ]; then
             changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
-            changelog_internal=$(echo "$changelo_internal" | sed 's/^$jira_ticket_number //g')
+            changelog_internal=$(echo "$changelog_internal" | sed 's/^$jira_ticket_number //g')
         fi
 
 
@@ -115,21 +116,29 @@ function updateChangelog() {
     if [ -z "$changelog" ]; then
         print_info "No changelog to add"
     else
+        # Use the provided version or fall back to $newversion for backward compatibility
+        local version_to_use="${version:-$newversion}"
+        
+        if [ -z "$version_to_use" ]; then
+            print_error "No version specified for changelog update"
+            return 1
+        fi
+        
         if [ -f "$changelogpath/$changelog_name" ]; then
-            if [ "$(head -n 1 "$changelogpath/$changelog_name" | sed 's/## //' | cut -d. -f1,2)" == "$(echo $newversion | cut -d. -f1,2)" ]; then
+            if [ "$(head -n 1 "$changelogpath/$changelog_name" | sed 's/## //' | cut -d. -f1,2)" == "$(echo $version_to_use | cut -d. -f1,2)" ]; then
                 if [ "$(sed -n '2p' "$changelogpath/$changelog_name")" == "$humandate" ]; then
                     sed_inplace '1,3d' "$changelogpath/$changelog_name"
-                    echo -e "## $newversion\n$humandate\n\n$changelog\n$(cat "$changelogpath/$changelog_name")" > "$changelogpath/$changelog_name"
+                    echo -e "## $version_to_use\n$humandate\n\n$changelog\n$(cat "$changelogpath/$changelog_name")" > "$changelogpath/$changelog_name"
                 else
-                    echo -e "## $newversion\n$humandate\n\n$changelog\n\n$(cat "$changelogpath/$changelog_name")" > "$changelogpath/$changelog_name"
+                    echo -e "## $version_to_use\n$humandate\n\n$changelog\n\n$(cat "$changelogpath/$changelog_name")" > "$changelogpath/$changelog_name"
                 fi
             else
-                echo -e "## $newversion\n$humandate\n\n$changelog\n\n$(cat "$changelogpath/$changelog_name")" > "$changelogpath/$changelog_name"
+                echo -e "## $version_to_use\n$humandate\n\n$changelog\n\n$(cat "$changelogpath/$changelog_name")" > "$changelogpath/$changelog_name"
             fi
-            print_success "Updated changelog in $changelogpath/$changelog_name"
+            print_success "Updated changelog in $changelogpath/$changelog_name to version $version_to_use"
         else
-            echo -e "## $newversion\n$humandate\n\n$changelog" > "$changelogpath/$changelog_name"
-            print_success "Created changelog in $changelogpath/$changelog_name"
+            echo -e "## $version_to_use\n$humandate\n\n$changelog" > "$changelogpath/$changelog_name"
+            print_success "Created changelog in $changelogpath/$changelog_name with version $version_to_use"
         fi
     fi
 
