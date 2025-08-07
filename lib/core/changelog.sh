@@ -51,11 +51,47 @@ function updateChangelog() {
         # remove double tabs
         changelog=$(echo "$changelog" | sed 's/\t\t/\t/g')
         remove $jira_ticket_number if $jira_ticket_number is not empty
-        changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
-    # Internal changelog: raw commit body with no stripping
-    changelog_internal=$(git log "$log_range" --pretty=format:"%B" |
-    grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
-    sed 's/^/- /')
+        
+
+        if [ -n "$jira_ticket_number" ]; then
+            changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
+        fi
+        
+        changelog_internal=$(git log "$log_range" --pretty=format:"%an%n%B" |
+            grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
+            awk '
+            BEGIN { commit = "" }
+            /^$/ {
+                if (commit != "") {
+                    n = split(commit, lines, "\n")
+                    author = lines[1]
+                    subject = lines[2]
+                    print "- " author ": " subject
+                    for (i = 3; i <= n; i++) {
+                        if (lines[i] != "") {
+                            print "\t" lines[i]
+                        }
+                    }
+                    commit = ""
+                }
+                next
+            }
+            {
+                commit = commit $0 "\n"
+            }
+            END {
+                if (commit != "") {
+                    n = split(commit, lines, "\n")
+                    author = lines[1]
+                    subject = lines[2]
+                    print "- " author ": " subject
+                    for (i = 3; i <= n; i++) {
+                        if (lines[i] != "") {
+                            print "\t" lines[i]
+                        }
+                    }
+                }
+            }')
 
     if [ -z "$changelog" ]; then
         print_info "No changelog to add"
