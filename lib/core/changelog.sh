@@ -16,18 +16,21 @@ function updateChangelog() {
 
     log_range="$last_changelog_commit..HEAD"
 
+        # Use sed to remove JIRA ticket numbers from commit messages before processing with awk
         changelog=$(git log "$log_range" --pretty=format:"%B" |
         grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
+        sed -E 's/^\[?[A-Z]+-[0-9]+\]?[[:space:]:—-]+//' |
         awk '
         BEGIN { commit = "" }
         /^$/ {
             if (commit != "") {
                 n = split(commit, lines, "\n")
-                lines[1] = gensub(/^\[?[A-Z]+-[0-9]+\]?[[:space:]:—-]+/, "", 1, lines[1])
-                print "- " lines[1]
-                for (i = 2; i <= n; i++) {
-                    if (lines[i] != "") {
-                        print "\t" lines[i]
+                if (lines[1] != "") {
+                    print "- " lines[1]
+                    for (i = 2; i <= n; i++) {
+                        if (lines[i] != "") {
+                            print "\t" lines[i]
+                        }
                     }
                 }
                 commit = ""
@@ -35,27 +38,28 @@ function updateChangelog() {
             next
         }
         {
-            commit = commit $0 "\n"
+            if (commit == "" && $0 == "") next
+            commit = commit (commit == "" ? "" : "\n") $0
         }
         END {
             if (commit != "") {
                 n = split(commit, lines, "\n")
-                lines[1] = gensub(/^\[?[A-Z]+-[0-9]+\]?[[:space:]:—-]+/, "", 1, lines[1])
-                print "- " lines[1]
-                for (i = 2; i <= n; i++) {
-                    if (lines[i] != "") {
-                        print "\t" lines[i]
+                if (lines[1] != "") {
+                    print "- " lines[1]
+                    for (i = 2; i <= n; i++) {
+                        if (lines[i] != "") {
+                            print "\t" lines[i]
+                        }
                     }
                 }
             }
         }')
-        # remove double tabs
-        changelog=$(echo "$changelog" | sed 's/\t\t/\t/g')
-        remove $jira_ticket_number if $jira_ticket_number is not empty
+        # remove double tabs and empty lines
+        changelog=$(echo "$changelog" | sed -e 's/\t\t/\t/g' -e '/^[[:space:]]*$/d')
         
-
+        # Remove JIRA ticket number from the beginning of each line if specified
         if [ -n "$jira_ticket_number" ]; then
-            changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
+            changelog=$(echo "$changelog" | sed -E "s/^$jira_ticket_number[[:space:]]*//g")
         fi
         
         changelog_internal=$(git log "$log_range" --pretty=format:"%an%n%B" |
