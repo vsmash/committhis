@@ -1,6 +1,41 @@
-## 5.5.37
+## 5.5.44
 07 August 2025
 
+- Refined changelog generation script
+	- feat: implemented JIRA ticket number removal from commit messages
+	- fix(core): corrected line selection for commit message retrieval
+	- refactor: improved code for removing double tabs and empty lines
+	- fix: removed JIRA ticket number from the start of each line if present.
+- Improved version handling in changelog updates
+	- refactor: added version as a new parameter in updateChangelog function
+	- fix: corrected variable name from 'changelo_internal' to 'changelog_internal'
+	- feat: implemented conditional logic for version specification when updating changelog
+	- refactor: updated 'mergeDevelop' function to pass 'newversion' as argument to 'updateChangelog' function
+- Updated changelog handling
+	- feat: added JIRA ticket number handling in changelog
+	- fix: ensured checks for empty changelog
+- Improved changelog script handling
+	- refactor: enhanced subject extraction process in the changelog script
+	- refactor: adjusted the iteration range on the consecutive loops
+	- style: removed unnecessary blank line
+- Improve Changelog and Update Scripts
+	- refactor: Improved formatting in CHANGELOG.md across all sections
+	- feat(lib/core): Added debugging for machine fingerprint generation
+	- refactor(lib/core): Updated changelog.sh to handle JIRA ticket removal and internal changelog generation.
+- Improved and refactored changelog, scripts, and features
+	- refactor: Improved formatting in CHANGELOG.md across all sections
+	- feat(lib/core): Added debugging for machine fingerprint generation
+	- fix(lib/core): Updated format of machine fingerprint
+	- refactor: Stripped JIRA ticket reference in changelog.sh
+	- style: Enhanced CLI aesthetic by adding colors
+	- fix: Removed unnecessary debug print statements in scripts
+	- feat: Improved .gitignore file checks and inclusion in initialization
+	- feat(lib/utils): Added generate_machine_fingerprint function in helpers.sh
+	- refactor: Removed double tabs in changelog
+	- feat: Added --delete-token and --update-token functionality to maiass.sh
+- Updated changelog generation script
+	- refactor: simplified commit line formatting in changelog script
+	- fix: corrected issues with JIRA ticket stripping in changelog entries
 - Refactored changelog generation script
 	- refactor: redesigned updateChangelog function for improved clarity
 	- fix: corrected handling of empty last_changelog_commit
