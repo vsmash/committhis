@@ -1,6 +1,10 @@
-## 5.5.46
+## 5.5.47
 09 August 2025
 
+- Improve print_line function in core logger script
+	- refactor: modified print_line function in logger.sh to utilize printf instead of echo for better format control
+	- refactor: added default settings for color, char, and repeat parameters in print_line function
+	- style: added comments for clarity in print_line function parameters
 - Fixed syntax error in logger script
 	- fix(logger.sh): corrected string literal syntax
 - MAI-8
