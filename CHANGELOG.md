@@ -1,6 +1,10 @@
-## 5.5.47
+## 5.5.48
 09 August 2025
 
+- Improved user experience and visual appearance
+	- feat: added print_thanks function in logger.sh
+	- style: changed color of MAIASS_TOPUP_URL
+	- refactor: replaced direct print with print_thanks function in helpers.sh
 - Improve print_line function in core logger script
 	- refactor: modified print_line function in logger.sh to utilize printf instead of echo for better format control
 	- refactor: added default settings for color, char, and repeat parameters in print_line function
