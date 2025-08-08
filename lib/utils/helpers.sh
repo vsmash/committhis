@@ -124,7 +124,8 @@ print_signoff_with_topup() {
   
   # "Thank you for using MAIASS!" with bold yellow and green MAIASS
   print_line 
-  print_info "Thank you for using ${BYellow}MAI${BGreen}ASS${Color_Off}!" 
+  print_thanks
+  print_line 
   echo ""
   
   # Debug: Check topup URL variables
@@ -133,7 +134,7 @@ print_signoff_with_topup() {
   
   # Check if we have a stored top-up URL from anonymous subscription
   if [[ -n "$MAIASS_TOPUP_URL" ]]; then
-    echo "💳 Need more credits? Visit: $MAIASS_TOPUP_URL"
+    echo "💳 Need more credits? Visit: ${blue}$MAIASS_TOPUP_URL${Color_Off}"
     print_debug "DEBUG SIGNOFF: Used MAIASS_TOPUP_URL"
   # Fallback to simple method if MAIASS_TOPUP_ENDPOINT or maiass_topup_endpoint is set but no stored URL  
   elif [[ -n "$MAIASS_TOPUP_ENDPOINT" || -n "$maiass_topup_endpoint" ]]; then

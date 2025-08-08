@@ -179,6 +179,20 @@ print_line() {
     echo -e "${color}${line}${Color_Off}"
 }
 
+print_thanks() {
+  local reset=$'\e[0m'
+  # Soft pink -> burgundy across M A I A S S
+  local -a cols=(218 211 205 198 161 88)
+  local word="MAIASS"
+  local colored=""
+
+  for ((i=0; i<${#word}; i++)); do
+    colored+=$'\e[38;5;'${cols[i]}m"${word:i:1}"
+  done
+
+  printf '✨ Thank you for using %s%s!\n' "$colored" "$reset"
+}
+
 
 # devlog.sh is my personal script for logging work in google sheets.
 # if devlog.sh is not a bash script, create an empty function to prevent errors
