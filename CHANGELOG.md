@@ -1,3 +1,14 @@
+## 5.5.45
+09 August 2025
+
+- MAI-8
+- Refactored and enhanced core functions
+	- fix(ai): update extraction of API responses
+	- feat(ai): add warning when API key has zero credits
+	- refactor(changelog): improve extraction and formatting of commit messages
+	- feat(logger): add function to print colored lines in logs
+	- refactor(helpers): optimise print_signoff_with_topup function
+
 ## 5.5.44
 07 August 2025
 
