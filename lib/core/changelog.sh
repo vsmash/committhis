@@ -63,57 +63,63 @@ function updateChangelog() {
         fi
         
         changelog_internal=$(git log "$log_range" --pretty=format:"%an%n%B" |
-            grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
-            awk '
-            BEGIN { commit = "" }
-            /^$/ {
-                if (commit != "") {
-                    n = split(commit, lines, "\n")
-                    author = lines[1]
-                    subject = ""
-                    for (j = 2; j <= n; j++) {
-                        if (lines[j] != "") {
-                            subject = lines[j]
-                            break
-                        }
-                    }
-                    print "- " author ": " subject
-                    for (i = j + 1; i <= n; i++) {
-                        if (lines[i] != "") {
-                            print "\t" lines[i]
-                        }
-                    }
-                    commit = ""
-                }
-                next
+        grep -vEi '^(ncl|Merge|Bump|Fixing merge conflicts)' |
+        awk '
+        BEGIN { commit = "" }
+
+        # Blank line signals end of a commit
+        /^$/ {
+            process_commit()
+            commit = ""
+            next
+        }
+
+        {
+            commit = commit $0 "\n"
+        }
+
+        END {
+            process_commit()
+        }
+
+        function process_commit() {
+            if (commit == "") return
+
+            # Remove leading/trailing newlines
+            gsub(/^\n+|\n+$/, "", commit)
+
+            # Split into lines
+            n = split(commit, lines, "\n")
+            author = lines[1]
+            subject = ""
+
+            # Find the first non-empty line after author
+            for (j = 2; j <= n; j++) {
+            if (lines[j] ~ /[^[:space:]]/) {
+                subject = lines[j]
+                break
             }
-            {
-                commit = commit $0 "\n"
             }
-            END {
-                if (commit != "") {
-                    n = split(commit, lines, "\n")
-                    author = lines[1]
-                    subject = ""
-                    for (j = 2; j <= n; j++) {
-                        if (lines[j] != "") {
-                            subject = lines[j]
-                            break
-                        }
-                    }
-                    print "- " author ": " subject
-                    for (i = j + 1; i <= n; i++) {
-                        if (lines[i] != "") {
-                            print "\t" lines[i]
-                        }
-                    }
-                }
-            }')
+
+            # Skip if no meaningful subject
+            if (subject == "") return
+
+            printf("- %s: %s\n", author, subject)
+
+            # Print rest of body lines (skip empty ones and trim trailing empty line)
+            for (i = j + 1; i <= n; i++) {
+            if (lines[i] ~ /[^[:space:]]/) {
+                printf("\t%s\n", lines[i])
+            }
+            }
+        }')
+
 
         if [ -n "$jira_ticket_number" ]; then
             changelog=$(echo "$changelog" | sed 's/^$jira_ticket_number //g')
             changelog_internal=$(echo "$changelog_internal" | sed 's/^$jira_ticket_number //g')
         fi
+        changelog_internal=$(echo "$changelog_internal" | sed -e 's/\t\t/\t/g' -e '/^[[:space:]]*$/d')
 
 
 

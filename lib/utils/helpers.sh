@@ -123,7 +123,8 @@ print_signoff_with_topup() {
   fi
   
   # "Thank you for using MAIASS!" with bold yellow and green MAIASS
-  echo -e "🎉 Thank you for using ${BYellow}MAI${BGreen}ASS${Color_Off}!"
+  print_line 
+  print_info "Thank you for using ${BYellow}MAI${BGreen}ASS${Color_Off}!" 
   echo ""
   
   # Debug: Check topup URL variables

@@ -190,10 +190,10 @@ function create_anonymous_subscription() {
     
     # Extract the API key and other details
     if command -v jq >/dev/null 2>&1; then
-      new_api_key=$(echo "$api_response" | jq -r '.token // .api_key // empty' 2>/dev/null)
-      local subscription_id=$(echo "$api_response" | jq -r '.subscription_id // empty' 2>/dev/null)
-      credits=$(echo "$api_response" | jq -r '.credits_remaining // .credits // empty' 2>/dev/null)
-      top_up_url=$(echo "$api_response" | jq -r '.payment_url // .top_up_url // empty' 2>/dev/null)
+      new_api_key=$(echo "$api_response" | jq -r '.apiKey // .api_key // .token // empty' 2>/dev/null)
+      local subscription_id=$(echo "$api_response" | jq -r '.id // .subscription_id // empty' 2>/dev/null)
+      credits=$(echo "$api_response" | jq -r '.creditsRemaining // .credits_remaining // .credits // empty' 2>/dev/null)
+      top_up_url=$(echo "$api_response" | jq -r '.purchaseUrl // .payment_url // .top_up_url // empty' 2>/dev/null)
     else
       new_api_key=$(echo "$api_response" | grep -o '"token":"[^"]*"' | sed 's/"token":"//' | sed 's/"$//' | head -1)
       if [[ -z "$new_api_key" ]]; then
@@ -219,9 +219,11 @@ function create_anonymous_subscription() {
         print_info "   Subscription ID: ${subscription_id:0:12}..." >&2
       fi
       
-      if [[ -n "$top_up_url" && "$top_up_url" != "null" ]]; then
-        print_info "   📱 Top-up URL: ${top_up_url:0:50}..." >&2
-        print_info "   💡 Save this URL to add more credits later!" >&2
+      if [[ -z "$credits" || "$credits" == "0" ]]; then
+        print_warning "⚠️  Your anonymous API key has zero credits. Please purchase credits to use AI features." >&2
+        if [[ -n "$top_up_url" && "$top_up_url" != "null" ]]; then
+          print_info "   Purchase credits here: $top_up_url" >&2
+        fi
       fi
       
       # Store the token, subscription ID, and top-up URL securely

@@ -168,6 +168,14 @@ print_debug(){
 
 }
 
+# print line function with optional colour and character
+print_line() {
+    local color="${1:-BBlue}"
+    local char="${2:-=}
+    local repeat="${3:-80}"
+    echo -e "${color}${char:0:1}\${repeat}${Color_Off}"
+}
+
 
 # devlog.sh is my personal script for logging work in google sheets.
 # if devlog.sh is not a bash script, create an empty function to prevent errors
