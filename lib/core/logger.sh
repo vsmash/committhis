@@ -171,7 +171,7 @@ print_debug(){
 # print line function with optional colour and character
 print_line() {
     local color="${1:-BBlue}"
-    local char="${2:-=}
+    local char="${2:-=}"
     local repeat="${3:-80}"
     echo -e "${color}${char:0:1}\${repeat}${Color_Off}"
 }
