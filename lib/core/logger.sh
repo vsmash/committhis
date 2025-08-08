@@ -170,10 +170,13 @@ print_debug(){
 
 # print line function with optional colour and character
 print_line() {
-    local color="${1:-BBlue}"
-    local char="${2:-=}"
-    local repeat="${3:-80}"
-    echo -e "${color}${char:0:1}\${repeat}${Color_Off}"
+    local color="${1:-$BBlue}"   # default to $BBlue if unset
+    local char="${2:-=}"         # default to '='
+    local repeat="${3:-80}"      # default to 80
+    local line
+
+    line=$(printf "%*s" "$repeat" "" | tr ' ' "$char")
+    echo -e "${color}${line}${Color_Off}"
 }
 
 
