@@ -140,6 +140,7 @@ for arg in "$@"; do
     -h|--help)
       show_help
       exit 0
+      exit 0
       ;;
     -v|--version)
       version="Unknown"
@@ -166,6 +167,96 @@ for arg in "$@"; do
         print_success "New AI token stored securely." "always"
       else
         print_warning "No token entered. Nothing stored." "always"
+      fi
+      exit 0
+      ;;
+    --account-info)
+      # Query account info from maiass-proxy
+      api_key="${MAIASS_AI_TOKEN:-}"
+      if [[ -z "$api_key" ]]; then
+        print_warning "No API key found. Set MAIASS_AI_TOKEN or use --update-token." "always"
+        exit 1
+      fi
+      # Determine client version from script header
+      client_version=$(grep -m1 '^# MAIASS' "${BASH_SOURCE[0]}" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+      [[ -z "$client_version" ]] && client_version="0.0.0"
+      client_name="bashmaiass"
+      # Use new /account-info endpoint (GET preferred)
+      base_host="${MAIASS_AI_HOST:-${MAIASS_HOST:-http://localhost:8787}}"
+      endpoint="${base_host}/account-info"
+      echo "[INFO] Querying account info at: $endpoint" >&2
+      response=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
+        -H "Authorization: Bearer $api_key" \
+        -H "X-Client-Name: $client_name" \
+        -H "X-Client-Version: $client_version" \
+        "$endpoint")
+      http_status=$(echo "$response" | awk -F'HTTP_STATUS:' 'NF>1{print $2}' | tail -n1)
+      response_body=$(echo "$response" | sed '/^HTTP_STATUS:/d')
+      last_endpoint="$endpoint"
+      last_status="$http_status"
+      # If error or missing fields, try POST fallback
+      if [[ -z "$response_body" || "$response_body" == *'error'* || "$http_status" == "404" ]]; then
+        echo "[INFO] Retrying with POST to $endpoint" >&2
+        response=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST "$endpoint" \
+          -H "Content-Type: application/json" \
+          -H "X-Client-Name: $client_name" \
+          -H "X-Client-Version: $client_version" \
+          -d "{\"api_key\":\"$api_key\"}")
+        http_status=$(echo "$response" | awk -F'HTTP_STATUS:' 'NF>1{print $2}' | tail -n1)
+        response_body=$(echo "$response" | sed '/^HTTP_STATUS:/d')
+        last_endpoint="$endpoint (POST)"
+        last_status="$http_status"
+      fi
+      # If still not JSON or 404, try versioned path
+      if [[ -z "$response_body" || "$response_body" == *'Not Found'* ]]; then
+        endpoint_v1="${base_host}/v1/account-info"
+        echo "[INFO] Fallback to: $endpoint_v1" >&2
+        response=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
+          -H "Authorization: Bearer $api_key" \
+          -H "X-Client-Name: $client_name" \
+          -H "X-Client-Version: $client_version" \
+          "$endpoint_v1")
+        http_status=$(echo "$response" | awk -F'HTTP_STATUS:' 'NF>1{print $2}' | tail -n1)
+        response_body=$(echo "$response" | sed '/^HTTP_STATUS:/d')
+        last_endpoint="$endpoint_v1"
+        last_status="$http_status"
+        if [[ -z "$response_body" || "$response_body" == *'error'* || "$http_status" == "404" ]]; then
+          echo "[INFO] Retrying with POST to $endpoint_v1" >&2
+          response=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST "$endpoint_v1" \
+            -H "Content-Type: application/json" \
+            -H "X-Client-Name: $client_name" \
+            -H "X-Client-Version: $client_version" \
+            -d "{\"api_key\":\"$api_key\"}")
+          http_status=$(echo "$response" | awk -F'HTTP_STATUS:' 'NF>1{print $2}' | tail -n1)
+          response_body=$(echo "$response" | sed '/^HTTP_STATUS:/d')
+          last_endpoint="$endpoint_v1 (POST)"
+          last_status="$http_status"
+        fi
+      fi
+      if command -v jq >/dev/null 2>&1; then
+        if [[ "$response_body" =~ ^\{ ]]; then
+          echo "$response_body" | jq --arg token "$api_key" --arg subid "${MAIASS_SUBSCRIPTION_ID:-}" '{
+            token: $token,
+            subscription_id: $subid,
+            tokens_used: .tokens_used,
+            tokens_remaining: .tokens_remaining,
+            quota: .quota,
+            subscription_type: .subscription_type,
+            customer_email: .customer_email,
+            status: .status
+          }'
+        else
+          echo "[ERROR] Response is not valid JSON (status: ${last_status:-unknown}, endpoint: ${last_endpoint:-unknown}). Raw body:" >&2
+          # Print raw body to stderr for debug
+          if [[ -n "$response_body" ]]; then
+            echo "$response_body" >&2
+          else
+            echo "(empty response body)" >&2
+          fi
+        fi
+      else
+        echo "[INFO] jq not found; printing raw response (status: ${last_status:-unknown}, endpoint: ${last_endpoint:-unknown})" >&2
+        echo "$response_body"
       fi
       exit 0
       ;;
