@@ -1,3 +1,11 @@
+## 5.6.0
+09 August 2025
+
+- Added client identity/version for min-version enforcement and analytics
+	- feat: Added "X-Client-Name" and "X-Client-Version" headers to API requests in ai.sh
+	- feat: Included lines to export client name and version in init.sh
+	- feat: Specified main script path and version to be available to all sourced libs in maiass.sh
+
 ## 5.5.54
 09 August 2025
 
