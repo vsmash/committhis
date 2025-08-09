@@ -175,6 +175,8 @@ function create_anonymous_subscription() {
   print_debug "DEBUG: Calling ${maiass_tokenrequest}" >&2
   api_response=$(curl -s -X POST "${maiass_tokenrequest}" \
     -H "Content-Type: application/json" \
+    -H "X-Client-Name: ${client_name:-bashmaiass}" \
+    -H "X-Client-Version: ${client_version:-0.0.0}" \
     -d "$json_payload" 2>/dev/null)
   
   print_debug "DEBUG: Anonymous subscription response: $api_response" >&2
@@ -560,6 +562,9 @@ esac
   local curl_headers=()
   curl_headers+=("-H" "Content-Type: application/json")
   curl_headers+=("-H" "Authorization: Bearer $ai_token")
+  # Always send client identity/version for min-version enforcement and analytics
+  curl_headers+=("-H" "X-Client-Name: ${client_name:-bashmaiass}")
+  curl_headers+=("-H" "X-Client-Version: ${client_version:-0.0.0}")
   
   if [[ "$ai_token" == anon_* ]]; then
     print_debug "DEBUG: Anonymous token detected, adding machine fingerprint header" >&2

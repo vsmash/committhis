@@ -70,6 +70,10 @@ setup_bumpscript_variables() {
       export maiass_register_endpoint="${MAIASS_REGISTER_ENDPOINT:-https://maiass.net/register}"
       export maiass_topup_endpoint="${MAIASS_TOPUP_ENDPOINT:-https://maiass.net/top-up}"
 
+      # Client identity/version for proxy min-version enforcement
+      export client_name="${MAIASS_CLIENT_NAME:-bashmaiass}"
+      export client_version="${MAIASS_CLIENT_VERSION:-0.0.0}"
+
       # Initialize configurable version file system
       export version_primary_file="${MAIASS_VERSION_PRIMARY_FILE:-}"
       export version_primary_type="${MAIASS_VERSION_PRIMARY_TYPE:-}"

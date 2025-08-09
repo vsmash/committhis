@@ -24,6 +24,14 @@ else
 fi
 PROJECT_DIR="$(pwd)"
 
+# Make main script path and version available to all sourced libs
+export MAIASS_MAIN_SCRIPT="$SOURCE"
+# Prefer explicit env override, else parse from script header comment, else 0.0.0
+if [[ -z "${MAIASS_CLIENT_VERSION:-}" ]]; then
+  parsed_ver=$(grep -m1 '^# MAIASS' "$SOURCE" | sed -E 's/.* v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+  export MAIASS_CLIENT_VERSION="${parsed_ver:-0.0.0}"
+fi
+
 source "$LIBEXEC_DIR/core/logger.sh"
 source "$LIBEXEC_DIR/config/envars.sh"
 
