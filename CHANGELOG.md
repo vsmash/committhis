@@ -1,6 +1,8 @@
-## 5.5.52
+## 5.5.53
 09 August 2025
 
+- Updated logger print statement
+	- fix(logger): modify text output order in print_thanks function
 - Significant alterations to shell scripts
 	- feat: added --account-info flag to main shell script for querying account information
 	- fix: adjusted print statement in logger.sh
