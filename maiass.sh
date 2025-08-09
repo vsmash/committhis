@@ -241,11 +241,16 @@ for arg in "$@"; do
           last_status="$http_status"
         fi
       fi
-      if command -v jq >/dev/null 2>&1; then
-        if [[ "$response_body" =~ ^\{ ]]; then
-          echo "$response_body" | jq --arg token "$api_key" --arg subid "${MAIASS_SUBSCRIPTION_ID:-}" '{
-            token: $token,
-            subscription_id: $subid,
+      # Helper: mask a sensitive token (show start and end only)
+      mask_token() {
+        local s="$1"; local n=${#s}
+        if (( n <= 10 )); then echo "${s:0:1}***${s: -1}"; else echo "${s:0:6}***${s: -4}"; fi
+      }
+
+      # If JSON requested explicitly, print JSON (without exposing full token)
+      if [[ "${MAIASS_ACCOUNT_INFO_JSON:-0}" == "1" ]]; then
+        if command -v jq >/dev/null 2>&1 && [[ "$response_body" =~ ^\{ ]]; then
+          echo "$response_body" | jq '{
             tokens_used: .tokens_used,
             tokens_remaining: .tokens_remaining,
             quota: .quota,
@@ -253,23 +258,65 @@ for arg in "$@"; do
             customer_email: .customer_email,
             status: .status
           }'
+          exit 0
         else
-          echo "[ERROR] Response is not valid JSON (status: ${last_status:-unknown}, endpoint: ${last_endpoint:-unknown}). Raw body:" >&2
-          # Print raw body to stderr for debug
-          if [[ -n "$response_body" ]]; then
-            echo "$response_body" >&2
-          else
-            echo "(empty response body)" >&2
-          fi
+          echo "[ERROR] JSON mode requested but response is not valid JSON (status: ${last_status:-unknown})." >&2
+          [[ -n "$response_body" ]] && echo "$response_body" >&2
+          exit 2
         fi
-      else
-        echo "[INFO] jq not found; printing raw response (status: ${last_status:-unknown}, endpoint: ${last_endpoint:-unknown})" >&2
-        echo "$response_body"
       fi
+
+      # Human-readable summary (default)
+      if command -v jq >/dev/null 2>&1 && [[ "$response_body" =~ ^\{ ]]; then
+        # Extract fields safely
+        tokens_used=$(echo "$response_body" | jq -r '.tokens_used // "-"')
+        tokens_remaining=$(echo "$response_body" | jq -r '.tokens_remaining // "-"')
+        quota=$(echo "$response_body" | jq -r '.quota // "-"')
+        sub_type=$(echo "$response_body" | jq -r '.subscription_type // "-"')
+        cust_email=$(echo "$response_body" | jq -r '.customer_email // "-"')
+        status_field=$(echo "$response_body" | jq -r '.status // "-"')
+      else
+        # Fallback parsing when jq missing or non-JSON
+        tokens_used="-"; tokens_remaining="-"; quota="-"; sub_type="-"; cust_email="-"; status_field="${last_status:-unknown}"
+      fi
+
+      masked_key=$(mask_token "$api_key")
+      echo ""
+      echo "Account Info"
+      echo "------------"
+      echo "API Token:        $masked_key"
+      if [[ -n "${MAIASS_SUBSCRIPTION_ID:-}" ]]; then
+        echo "Subscription ID:  ${MAIASS_SUBSCRIPTION_ID}"
+      fi
+      echo "Type:             ${sub_type}"
+      echo "Email:            ${cust_email}"
+      echo "Credits Used:     ${tokens_used}"
+      echo "Credits Remaining:${tokens_remaining}"
+      echo "Quota:            ${quota}"
+      # Explain status codes clearly
+      if [[ "${last_status:-}" == "403" || "$status_field" == "403" ]]; then
+        echo "Status:          403 Forbidden"
+        echo "Explanation:     Your token was rejected. Ensure it is correct, not expired, and associated with an active subscription."
+      elif [[ "${last_status:-}" == "401" || "$status_field" == "401" ]]; then
+        echo "Status:          401 Unauthorized"
+        echo "Explanation:     Missing or invalid credentials. Try updating your token with '--update-token'."
+      elif [[ "${last_status:-}" =~ ^2 && "${last_status:-}" != "" ]]; then
+        echo "Status:          ${last_status} OK"
+      else
+        echo "Status:          ${last_status:-unknown}"
+      fi
+      echo ""
       exit 0
+      
       ;;
     -aihelp|--committhis-help)
-      show_help_committhis
+      echo "Usage: bma [options]"
+      echo "Common options:"
+      echo "  --account-info        Show your account status (masked token)"
+      echo "  --update-token        Prompt to update and store your API token"
+      echo "  --delete-token        Remove stored API token"
+      echo "  -v, --version         Show version"
+      echo "  -h, --help            Show help"
       exit 0
       ;;
     -aicv|--committhis-version)
