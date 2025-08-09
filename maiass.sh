@@ -102,9 +102,9 @@ function initialiseBump() {
     has_version_files=true
   fi
 
-  print_info "Verion primary file: ${BYellow}${version_primary_file}" debug
+  print_debug "Verion primary file: ${BYellow}${version_primary_file}${Color_Off}" 
   echo
-  print_info "has version files: ${BYellow}$has_version_files" debug
+  print_debug "has version files: ${BYellow}$has_version_files${Color_Off}" 
 
 
   # if $ai_commits_only exit 0
