@@ -190,7 +190,7 @@ print_thanks() {
     colored+=$'\e[38;5;'${cols[i]}m"${word:i:1}"
   done
 
-  printf '✨ Thank you for using %s%s! $\e[38;5;218m((| ✨\n' "$colored" "$reset"
+  printf '\e[38;5;218m|)) Thank you for using %s%s! ✨\n' "$colored" "$reset"
 }
 
 
