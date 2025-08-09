@@ -12,7 +12,7 @@ load_bumpscript_env() {
   local env_file=".env.maiass"
 
   if [[ -f "$env_file" ]]; then
-    print_info "Loading MAIASS_* variables from $env_file"
+    print_debug "Loading MAIASS_* variables from $env_file"
 
     while IFS= read -r line || [[ -n "$line" ]]; do
       # Trim leading/trailing whitespace
@@ -49,7 +49,7 @@ setup_bumpscript_variables() {
       export autopush_commits="${MAIASS_AUTOPUSH_COMMITS:=false}"
       export brand="${MAIASS_BRAND:=MAIASS}"
       # Initialize brevity and logging configuration - set debug for testing
-      export verbosity_level="${MAIASS_VERBOSITY:=debug}"
+      export verbosity_level="${MAIASS_VERBOSITY:=brief}"
       export enable_logging="${MAIASS_LOGGING:=true}"
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
 
@@ -133,15 +133,15 @@ setup_bumpscript_variables() {
       ;;
   esac
 
-  print_info "Branch configuration:" "normal"
-  print_info "  Develop: $developbranch" "normal"
-  print_info "  Staging: $stagingbranch" "normal"
-  print_info "  Master: $masterbranch" "normal"
+  print_debug "Branch configuration:" 
+  print_debug "  Develop: $developbranch"
+  print_debug "  Staging: $stagingbranch"
+  print_debug "  Master: $masterbranch"
 
-  print_info "Changelog configuration:" "normal"
-  print_info "  Path: $changelog_path" "normal"
-  print_info "  Main changelog: $changelog_name" "normal"
-  print_info "  Internal changelog: $changelog_internal_name" "normal"
+  print_debug "Changelog configuration:"
+  print_debug "  Path: $changelog_path"
+  print_debug "  Main changelog: $changelog_name"
+  print_debug "  Internal changelog: $changelog_internal_name"
 
   # Pull request configuration
   export staging_pullrequests="${MAIASS_STAGING_PULLREQUESTS:-on}"
@@ -198,12 +198,12 @@ fi
     export wpVersionConstant="${MAIASS_WP_VERSION_CONSTANT:-}"
   fi
 
-  print_info "Repository type: $repo_type" "normal"
-  print_info "Path configuration:" "normal"
-  print_info "  Version file: $version_file_path" "normal"
-  print_info "  Package.json: $package_json_path" "normal"
+  print_debug "Repository type: $repo_type"
+  print_debug "Path configuration:"
+  print_debug "  Version file: $version_file_path"
+  print_debug "  Package.json: $package_json_path"
   if [[ -n "$wordpress_files_path" ]]; then
-    print_info "  WordPress files: $wordpress_files_path" "normal"
+    print_debug "  WordPress files: $wordpress_files_path"
   fi
 
   # AI commit message configuration - Don't override if already set
@@ -223,16 +223,16 @@ fi
   # Determine the AI commit message style
   if [[ -n "$MAIASS_AI_COMMIT_MESSAGE_STYLE" ]]; then
     ai_commit_style="$MAIASS_AI_COMMIT_MESSAGE_STYLE"
-    print_info "Using AI commit style from .env: $ai_commit_style"
+    print_debug "Using AI commit style from .env: $ai_commit_style"
   elif [[ -f ".maiass.prompt" ]]; then
     ai_commit_style="custom"
-    print_info "No style set in .env; using local prompt file: .maiass.prompt"
+    print_debug "No style set in .env; using local prompt file: .maiass.prompt"
   elif [[ -f "$HOME/.maiass.prompt" ]]; then
     ai_commit_style="global_custom"
-    print_info "No style set in .env; using global prompt file: ~/.maiass.prompt"
+    print_debug "No style set in .env; using global prompt file: ~/.maiass.prompt"
   else
     ai_commit_style="bullet"
-    print_info "No style or prompt files found; defaulting to 'bullet'"
+    print_debug "No style or prompt files found; defaulting to 'bullet'"
   fi
 
   export ai_commit_style
@@ -264,26 +264,26 @@ fi
   
   print_debug "DEBUG INIT: Final ai_mode='$ai_mode'"
 
-  print_info "Integration configuration:"
-  print_info "  Staging pull requests: $staging_pullrequests"
-  print_info "  Master pull requests: $master_pullrequests"
-  print_info "  AI commit messages: $ai_mode"
+  print_debug "Integration configuration:"
+  print_debug "  Staging pull requests: $staging_pullrequests"
+  print_debug "  Master pull requests: $master_pullrequests"
+  print_debug "  AI commit messages: $ai_mode"
   if [[ "$ai_mode" != "off" && -n "$ai_token" ]]; then
-    print_info "  AI model: $ai_model"
-    print_info "  AI temperature: $ai_temperature"
-    print_info "  AI Max commit characters: $ai_max_characters"
-    print_info "  AI commit style: $ai_commit_style"
+    print_debug "  AI model: $ai_model"
+    print_debug "  AI temperature: $ai_temperature"
+    print_debug "  AI Max commit characters: $ai_max_characters"
+    print_debug "  AI commit style: $ai_commit_style"
   fi
   if [[ "$REPO_PROVIDER" == "bitbucket" && -n "$BITBUCKET_WORKSPACE" ]]; then
-    print_info "  Repository: Bitbucket ($BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG)"
+    print_debug "  Repository: Bitbucket ($BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG)"
     export client="$BITBUCKET_WORKSPACE"
     export project="$BITBUCKET_REPO_SLUG"
   elif [[ "$REPO_PROVIDER" == "github" && -n "$GITHUB_OWNER" ]]; then
-    print_info "  Repository: GitHub ($GITHUB_OWNER/$GITHUB_REPO)"
+    print_debug "  Repository: GitHub ($GITHUB_OWNER/$GITHUB_REPO)"
     export client="$GITHUB_OWNER"
     export project="$GITHUB_REPO"
   fi
   if [[ -n "$wpVersionConstant" ]]; then
-    print_info "  WordPress version constant: $wpVersionConstant"
+    print_debug "  WordPress version constant: $wpVersionConstant"
   fi
 }

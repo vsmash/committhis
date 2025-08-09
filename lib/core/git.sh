@@ -601,5 +601,5 @@ check_git_repository() {
   fi
 
   export git_root
-  print_info "Git repository detected: $git_root" "normal"
+  print_debug "Git repository detected: $git_root"
 }
