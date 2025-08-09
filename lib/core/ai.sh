@@ -817,6 +817,10 @@ esac
     # Add tab before bullet points for proper indentation
     suggested_message=$(printf '%s' "$suggested_message" | sed 's/^[[:space:]]*-[[:space:]]*/\t- /')
 
+    # remove any empty lines at the beginning of suggested_message
+    suggested_message=$(printf "%s" "$suggested_message" | sed '/./,$!d')
+
+
     print_debug "DEBUG: Final cleaned message: '$suggested_message'" >&2
     print_debug "DEBUG: Message length: ${#suggested_message} characters" >&2
     print_debug "DEBUG: First 100 chars with visible newlines: $(printf '%q' "${suggested_message:0:100}")" >&2
