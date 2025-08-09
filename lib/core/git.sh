@@ -184,8 +184,8 @@ perform_merge_operation() {
     local use_pullrequest="off"
     if [[ "$target_branch" == "$stagingbranch" ]]; then
         use_pullrequest="$staging_pullrequests"
-    elif [[ "$target_branch" == "$masterbranch" ]]; then
-        use_pullrequest="$master_pullrequests"
+    elif [[ "$target_branch" == "$mainbranch" ]]; then
+        use_pullrequest="$main_pullrequests"
     fi
 
     # Handle pull requests vs direct merge
@@ -268,9 +268,9 @@ function getBitbucketUrl(){
 function branchDetection() {
     print_section "Branch Detection"
     print_info "Currently on branch: ${BWhite}$branch_name${Color_Off}" "brief"
-    # if we are on the master branch, advise user not to use this script for hot fixes
-    # if on master or a release branch, advise the user
-    if [[ "$branch_name" == "$masterbranch" || "$branch_name" == release/* || "$branch_name" == releases/* ]]; then
+    # if we are on the main branch, advise user not to use this script for hot fixes
+    # if on main or a release branch, advise the user
+    if [[ "$branch_name" == "$mainbranch" || "$branch_name" == release/* || "$branch_name" == releases/* ]]; then
         print_warning "You are currently on the $branch_name branch"
         read -n 1 -s -p "$(echo -e ${BYellow}Do you want to continue on $developbranch? [y/N]${Color_Off} )" REPLY
         echo
@@ -279,12 +279,12 @@ function branchDetection() {
             exit 1
         fi
     fi
-    # if branch starts with release/ or releases/ offer do same as masterbranch
+    # if branch starts with release/ or releases/ offer do same as mainbranch
 
 
 
-    # if we are on the master or staging branch, switch to develop
-    if [ "$branch_name" == "$masterbranch" ] || [ "$branch_name" == "$stagingbranch" ]; then
+    # if we are on the main or staging branch, switch to develop
+    if [ "$branch_name" == "$mainbranch" ] || [ "$branch_name" == "$stagingbranch" ]; then
         print_info "Switching to $developbranch branch..."
         git checkout "$developbranch"
         check_git_success
@@ -474,10 +474,10 @@ function mergeDevelop() {
 # function to show deploy options
 function deployOptions() {
   # Check what branches are available and adapt options accordingly
-  local has_develop has_staging has_master has_remote
+  local has_develop has_staging has_main has_remote
   has_develop=$(branch_exists "$developbranch" && echo "true" || echo "false")
   has_staging=$(branch_exists "$stagingbranch" && echo "true" || echo "false")
-  has_master=$(branch_exists "$masterbranch" && echo "true" || echo "false")
+  has_main=$(branch_exists "$mainbranch" && echo "true" || echo "false")
   has_remote=$(remote_exists "origin" && echo "true" || echo "false")
 
   print_info "What would you like to do?"
@@ -498,14 +498,14 @@ function deployOptions() {
     echo "$option_count) Merge $branch_name to $stagingbranch"
   fi
 
-  # Only show direct merge to master if no staging branch exists (proper Git Flow)
-  if [[ "$has_master" == "true" && "$has_staging" == "false" ]]; then
+  # Only show direct merge to main if no staging branch exists (proper Git Flow)
+  if [[ "$has_main" == "true" && "$has_staging" == "false" ]]; then
     ((option_count++))
-    options["$option_count"]="merge_to_master"
+    options["$option_count"]="merge_to_main"
     if [[ "$has_develop" == "true" ]]; then
-      echo "$option_count) Merge $developbranch to $masterbranch"
+      echo "$option_count) Merge $developbranch to $mainbranch"
     else
-      echo "$option_count) Merge $branch_name to $masterbranch"
+      echo "$option_count) Merge $branch_name to $mainbranch"
     fi
   fi
 
@@ -543,15 +543,15 @@ function deployOptions() {
         print_info "Merging $branch_name to $stagingbranch"
         perform_merge_operation "$branch_name" "$stagingbranch"
         ;;
-      "merge_to_master")
+      "merge_to_main")
         local source_branch
         if [[ "$has_develop" == "true" ]]; then
           source_branch="$developbranch"
         else
           source_branch="$branch_name"
         fi
-        print_info "Merging $source_branch to $masterbranch"
-        perform_merge_operation "$source_branch" "$masterbranch"
+        print_info "Merging $source_branch to $mainbranch"
+        perform_merge_operation "$source_branch" "$mainbranch"
         ;;
       "push_current")
         print_info "Pushing current branch to remote"
