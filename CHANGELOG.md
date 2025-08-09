@@ -1,6 +1,11 @@
-## 5.5.48
+## 5.5.49
 09 August 2025
 
+- MAI-8
+- Modified debugging messages and levels
+	- refactor: Changed 'print_info' calls to 'print_debug' in 'git.sh'
+	- refactor: Altered verbosity levels and debug messages in 'init.sh'
+	- refactor: Adjusted debugging print-outs in 'maiass.sh'
 - Improved user experience and visual appearance
 	- feat: added print_thanks function in logger.sh
 	- style: changed color of MAIASS_TOPUP_URL
