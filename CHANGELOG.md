@@ -1,6 +1,13 @@
-## 5.5.51
+## 5.5.52
 09 August 2025
 
+- Significant alterations to shell scripts
+	- feat: added --account-info flag to main shell script for querying account information
+	- fix: adjusted print statement in logger.sh
+	- feat: integrated different response handling methods for --account-info request
+	- fix: added an additional exit 0 after --help command argument
+	- feat: implemented various fallback strategies for endpoint query in --account-info
+	- feat: added comprehensive response handling for --account-info flag, with different behaviors dependent on the presence of 'jq' command
 - Refactor git scripts to use 'main' instead of 'master'
 	- feat: updated 'masterbranch' to 'mainbranch' in git.sh and init.sh scripts
 	- refactor: replaced all occurrences of 'master' with 'main' in git.sh
