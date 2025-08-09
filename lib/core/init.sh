@@ -58,8 +58,8 @@ setup_bumpscript_variables() {
       export ai_mode="${MAIASS_AI_MODE:-ask}"
       print_debug "DEBUG INIT: First ai_mode assignment - MAIASS_AI_MODE='${MAIASS_AI_MODE:-}', ai_mode='$ai_mode'"
       export ai_token="${MAIASS_AI_TOKEN:-}"
-      export ai_model="${MAIASS_AI_MODEL:=gpt-3.5-turbo}"
-      export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.7}"
+      export ai_model="${MAIASS_AI_MODEL:=gpt-4}"
+      export ai_temperature="${MAIASS_AI_TEMPERATURE:=0.8}"
       export ai_max_characters="${MAIASS_AI_MAX_CHARACTERS:=8000}"
       export ai_commit_message_style="${MAIASS_AI_COMMIT_MESSAGE_STYLE:=bullet}"
       export maiass_host="${MAIASS_AI_HOST:-https://pound.maiass.net}"
@@ -83,7 +83,7 @@ setup_bumpscript_variables() {
   # Branch name defaults with MAIASS_* overrides
   export developbranch="${MAIASS_DEVELOPBRANCH:-develop}"
   export stagingbranch="${MAIASS_STAGINGBRANCH:-staging}"
-  export masterbranch="${MAIASS_MASTERBRANCH:-main}"
+  export mainbranch="${MAIASS_MAINBRANCH:-main}"
 
   # Changelog defaults with MAIASS_* overrides
   export changelog_path="${MAIASS_CHANGELOG_PATH:-.}"
@@ -136,7 +136,7 @@ setup_bumpscript_variables() {
   print_debug "Branch configuration:" 
   print_debug "  Develop: $developbranch"
   print_debug "  Staging: $stagingbranch"
-  print_debug "  Master: $masterbranch"
+  print_debug "  Main: $mainbranch"
 
   print_debug "Changelog configuration:"
   print_debug "  Path: $changelog_path"
@@ -145,7 +145,7 @@ setup_bumpscript_variables() {
 
   # Pull request configuration
   export staging_pullrequests="${MAIASS_STAGING_PULLREQUESTS:-on}"
-  export master_pullrequests="${MAIASS_MASTER_PULLREQUESTS:-on}"
+  export main_pullrequests="${MAIASS_MAIN_PULLREQUESTS:-on}"
 
   # Auto-detect repository provider (GitHub/Bitbucket) and extract repo info from git remote
   local git_remote_url
@@ -266,7 +266,7 @@ fi
 
   print_debug "Integration configuration:"
   print_debug "  Staging pull requests: $staging_pullrequests"
-  print_debug "  Master pull requests: $master_pullrequests"
+  print_debug "  Main pull requests: $main_pullrequests"
   print_debug "  AI commit messages: $ai_mode"
   if [[ "$ai_mode" != "off" && -n "$ai_token" ]]; then
     print_debug "  AI model: $ai_model"
