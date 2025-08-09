@@ -1,6 +1,9 @@
-## 5.5.49
+## 5.5.50
 09 August 2025
 
+- Improved message formatting in AI script
+	- feat: added function to remove empty lines at message start
+	- refactor: implemented change in message formatting for cleaner output
 - MAI-8
 - Modified debugging messages and levels
 	- refactor: Changed 'print_info' calls to 'print_debug' in 'git.sh'
