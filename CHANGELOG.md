@@ -1,3 +1,15 @@
+## 5.6.2
+10 August 2025
+
+- MAI-8
+- Improved token privacy and shell script functionality
+	- feat: added token masking helper function
+	- feat: added explicit JSON printing mode
+	- feat: improved error messages for invalid JSON responses
+	- feat: enhanced human-readable summary with status codes
+	- refactor: restructured conditional statements for response body parsing
+	- refactor: expanded help section for more user options
+
 ## 5.6.0
 09 August 2025
 
