@@ -1,6 +1,13 @@
-## 5.5.50
+## 5.5.51
 09 August 2025
 
+- Refactor git scripts to use 'main' instead of 'master'
+	- feat: updated 'masterbranch' to 'mainbranch' in git.sh and init.sh scripts
+	- refactor: replaced all occurrences of 'master' with 'main' in git.sh
+	- docs: updated comments to reflect the change from 'master' to 'main' in main.sh
+- Updated AI model and temperature in init.sh
+	- feat: changed AI model from 'gpt-3.5-turbo' to 'gpt-4'
+	- feat: increased AI temperature from '0.7' to '0.8'
 - Improved message formatting in AI script
 	- feat: added function to remove empty lines at message start
 	- refactor: implemented change in message formatting for cleaner output
