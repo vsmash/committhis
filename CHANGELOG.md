@@ -1,6 +1,8 @@
-## 5.5.53
+## 5.5.54
 09 August 2025
 
+- Updated logger script message
+	- fix(logger): Corrected message sequence in print_thanks function
 - Updated logger print statement
 	- fix(logger): modify text output order in print_thanks function
 - Significant alterations to shell scripts
