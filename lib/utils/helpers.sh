@@ -134,7 +134,7 @@ print_signoff_with_topup() {
   
   # Check if we have a stored top-up URL from anonymous subscription
   if [[ -n "$MAIASS_TOPUP_URL" ]]; then
-    echo "💳 Need more credits? Visit: ${blue}$MAIASS_TOPUP_URL${Color_Off}"
+    echo -e "💳 Need more credits? Visit: ${blue}$MAIASS_TOPUP_URL${Color_Off}"
   #  print_debug "DEBUG SIGNOFF: Used MAIASS_TOPUP_URL"
   # Fallback to simple method if MAIASS_TOPUP_ENDPOINT or maiass_topup_endpoint is set but no stored URL  
   elif [[ -n "$MAIASS_TOPUP_ENDPOINT" || -n "$maiass_topup_endpoint" ]]; then
@@ -146,7 +146,7 @@ print_signoff_with_topup() {
     else
       print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
     fi
-    echo "${BYellow}💳 Need more credits? Visit: ${BBlue}$topup_url${Color_off}"
+    echo -e "${BYellow}💳 Need more credits? Visit: ${BBlue}$topup_url${Color_off}"
   else
     print_debug "DEBUG SIGNOFF: No topup URL variables set"
   fi
