@@ -1,6 +1,9 @@
-## 5.6.9
+## 5.6.10
 10 August 2025
 
+- MAI-8
+- Updated installation banner in install.sh
+	- style: adjusted MAIASS Installation banner style
 - Updated README.md
 	- docs: corrected typo in README.md
 - MAI-8
