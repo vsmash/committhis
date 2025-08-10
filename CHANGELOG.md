@@ -1,6 +1,9 @@
-## 5.6.14
+## 5.6.15
 10 August 2025
 
+- Enhanced logger functionalities and improved visual output
+	- feat: added gradient line print functionality in logger script
+	- fix: updated print_signoff_with_topup function to utilize new print_gradient_line feature for better visual output
 - Disabled subscription ID appending in topup URL
 	- fix: commented out condition that adds subscription ID to topup URL
 - Updated echo statements in helper script
