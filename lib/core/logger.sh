@@ -168,6 +168,25 @@ print_debug(){
 
 }
 
+# print a line that has a gradient of colors from one to another. default to soft pink to burgundy
+# use a unicode dash if unicode is supported or a regular dash if not
+print_gradient_line(){
+    local color1="${1:-$BSoftPink}"
+    local color2="${2:-$BNavy}"
+    local repeat="${3:-80}"
+    local line  
+    
+    if supports_unicode; then
+        line=$(printf "%*s" "$repeat" "" | tr ' ' "\u2500")
+    else
+        line=$(printf "%*s" "$repeat" "" | tr ' ' "-")
+    fi
+    
+    echo -e "${color1}${line}${Color_Off}"
+}
+    
+
+
 # print line function with optional colour and character
 print_line() {
     local color="${1:-$BBlue}"   # default to $BBlue if unset

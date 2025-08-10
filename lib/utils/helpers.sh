@@ -123,9 +123,9 @@ print_signoff_with_topup() {
   fi
   
   # "Thank you for using MAIASS!" with bold yellow and green MAIASS
-  print_line 
+  print_gradient_line
   print_thanks
-  print_line 
+  print_gradient_line
   echo ""
   
   # Debug: Check topup URL variables
