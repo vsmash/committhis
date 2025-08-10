@@ -14,9 +14,11 @@ supports_unicode() {
 export unicode_supported=supports_unicode
 
 
+supports_truecolor() { [[ "${COLORTERM:-}" == *truecolor* || "${COLORTERM:-}" == *24bit* ]]; }
+supports_256color()  { local n; n=$(tput colors 2>/dev/null || echo 0); [ "$n" -ge 256 ]; }
 
-
-
+export twofivesixcolor_supported=supports_256color
+export truecolor_supported=supports_truecolor
 
 
 
@@ -170,21 +172,69 @@ print_debug(){
 
 # print a line that has a gradient of colors from one to another. default to soft pink to burgundy
 # use a unicode dash if unicode is supported or a regular dash if not
-print_gradient_line(){
-    local color1="${1:-$BSoftPink}"
-    local color2="${2:-$BNavy}"
-    local repeat="${3:-80}"
-    local line  
-    
-    if supports_unicode; then
-        line=$(printf "%*s" "$repeat" "" | tr ' ' "\u2500")
-    else
-        line=$(printf "%*s" "$repeat" "" | tr ' ' "-")
-    fi
-    
-    echo -e "${color1}${line}${Color_Off}"
+print_gradient_line() {
+  # Defaults: soft pink -> burgundy
+  local start_hex="${1:-#f7b2c4}"   # soft pink
+  local end_hex="${2:-#6b0022}"     # burgundy
+  local repeat="${3:-80}"
+  local char reset
+
+  # Prefer Unicode long dash
+  if unicode_supported; then
+    char=$'\u2500'   # "─"
+  else
+    char='-'
+  fi
+
+  reset="${Color_Off:-$'\033[0m'}"
+
+  # Truecolor path (smoothest)
+  if truecolor_supported; then
+    local sh="${start_hex#\#}" eh="${end_hex#\#}"
+    local r1=$((16#${sh:0:2})) g1=$((16#${sh:2:2})) b1=$((16#${sh:4:2}))
+    local r2=$((16#${eh:0:2})) g2=$((16#${eh:2:2})) b2=$((16#${eh:4:2}))
+    awk -v n="$repeat" -v c="$char" -v r1="$r1" -v g1="$g1" -v b1="$b1" -v r2="$r2" -v g2="$g2" -v b2="$b2" -v reset="$reset" '
+      BEGIN {
+        for (i = 0; i < n; i++) {
+          t = (n > 1) ? i / (n - 1) : 0
+          r = int(r1 + (r2 - r1) * t + 0.5)
+          g = int(g1 + (g2 - g1) * t + 0.5)
+          b = int(b1 + (b2 - b1) * t + 0.5)
+          printf("\033[38;2;%d;%d;%dm%s", r, g, b, c)
+        }
+        printf("%s\n", reset)
+      }'
+    return
+  fi
+
+  # 256-color fallback (blocky but decent)
+  if twofivesixcolor_supported; then
+    # Pink -> burgundy-ish palette
+    local palette=(224 217 218 212 211 210 205 204 198 197 161 125 89 88 52)
+    local total=${#palette[@]}
+    local printed=0
+    local per=$(( (repeat + total - 1) / total ))
+    local spaces chunk code count
+    while [ "$printed" -lt "$repeat" ]; do
+      for code in "${palette[@]}"; do
+        count=$(( repeat - printed ))
+        [ "$count" -le 0 ] && break
+        [ "$count" -gt "$per" ] && count="$per"
+        printf "\033[38;5;%sm" "$code"
+        spaces=$(printf "%*s" "$count" "")
+        # replace spaces with the chosen char (works with multibyte replacement)
+        printf "%s" "${spaces// /$char}"
+        printed=$(( printed + count ))
+      done
+    done
+    printf "%s\n" "$reset"
+    return
+  fi
+
+  # Plain ASCII fallback
+  local spaces=$(printf "%*s" "$repeat" "")
+  printf "%s\n" "${spaces// /$char}"
 }
-    
 
 
 # print line function with optional colour and character
