@@ -140,12 +140,12 @@ print_signoff_with_topup() {
   elif [[ -n "$MAIASS_TOPUP_ENDPOINT" || -n "$maiass_topup_endpoint" ]]; then
     local topup_url="${MAIASS_TOPUP_ENDPOINT:-$maiass_topup_endpoint}"
     # Add subscription ID to path if available (new simple format)
-    if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
-      topup_url="${topup_url}/${MAIASS_SUBSCRIPTION_ID}"
-      print_debug "DEBUG SIGNOFF: Using topup endpoint with subscription ID: $topup_url"
-    else
-      print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
-    fi
+    # if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
+    #   topup_url="${topup_url}/${MAIASS_SUBSCRIPTION_ID}"
+    #   print_debug "DEBUG SIGNOFF: Using topup endpoint with subscription ID: $topup_url"
+    # else
+    #   print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
+    # fi
     echo -e "${BYellow}💳 Need more credits? Visit: ${BBlue}$topup_url${Color_off}"
   else
     print_debug "DEBUG SIGNOFF: No topup URL variables set"
