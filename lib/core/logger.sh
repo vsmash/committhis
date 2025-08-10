@@ -180,7 +180,7 @@ print_gradient_line() {
   local char reset
 
   # Prefer Unicode long dash
-  char='_'
+  char='='
   reset="${Color_Off:-$'\033[0m'}"
 
   # Truecolor path (smoothest)
