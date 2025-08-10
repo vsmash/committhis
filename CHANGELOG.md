@@ -1,6 +1,9 @@
-## 5.6.10
+## 5.6.11
 10 August 2025
 
+- Refactored debug information and user interface in helpers.sh
+	- feat: Improved visibility of the top-up credit url
+	- fix: Commented out debug print lines to clean up console output
 - MAI-8
 - Updated installation banner in install.sh
 	- style: adjusted MAIASS Installation banner style
