@@ -1,6 +1,8 @@
-## 5.6.12
+## 5.6.13
 10 August 2025
 
+- Updated echo statements in helper script
+	- fix: added -e flag to echo statements for proper color rendering
 - Enabled debug prints in helpers.sh
 	- feat: Uncommented debug print statements related to topup endpoint usage
 - Refactored debug information and user interface in helpers.sh
