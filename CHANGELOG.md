@@ -1,6 +1,15 @@
-## 5.6.4
+## 5.6.5
 10 August 2025
 
+- MAI-8
+- Introduced bashmaiass automated script
+	- feat: added Makefile for bashmaiass with bundle and clean targets
+	- feat: generated bundled bashmaiass script for intelligent git workflow automation
+	- feat: included bashmaiass version management, token management and account info querying functionality
+	- feat: provided ability to parse command line arguments for various switches
+	- feat: introduced branching, bumping version number, and deploying options
+	- feat: implemented checks for uncommitted changes, git repository validity and existence of version files
+	- feat: created modules for change management and merging with develop branch
 - MAI-8
 - Updated internal changelog naming
 	- feat: added prefix '.' to internal changelog filename
