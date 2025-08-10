@@ -142,9 +142,9 @@ print_signoff_with_topup() {
     # Add subscription ID to path if available (new simple format)
     if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
       topup_url="${topup_url}/${MAIASS_SUBSCRIPTION_ID}"
-      #print_debug "DEBUG SIGNOFF: Using topup endpoint with subscription ID: $topup_url"
+      print_debug "DEBUG SIGNOFF: Using topup endpoint with subscription ID: $topup_url"
     else
-      #print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
+      print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
     fi
     echo "${BYellow}💳 Need more credits? Visit: ${BBlue}$topup_url${Color_off}"
   else
