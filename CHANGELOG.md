@@ -1,6 +1,8 @@
-## 5.6.13
+## 5.6.14
 10 August 2025
 
+- Disabled subscription ID appending in topup URL
+	- fix: commented out condition that adds subscription ID to topup URL
 - Updated echo statements in helper script
 	- fix: added -e flag to echo statements for proper color rendering
 - Enabled debug prints in helpers.sh
