@@ -1,6 +1,10 @@
-## 5.6.5
+## 5.6.6
 10 August 2025
 
+- MAI-8
+- Removed MAIASS test script
+	- feat: removed 'test_maiass.sh' test shell script
+	- chore: cleaned up codebase by removing unused testing script
 - MAI-8
 - Introduced bashmaiass automated script
 	- feat: added Makefile for bashmaiass with bundle and clean targets
