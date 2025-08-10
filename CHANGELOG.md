@@ -1,6 +1,12 @@
-## 5.6.2
+## 5.6.4
 10 August 2025
 
+- MAI-8
+- Updated internal changelog naming
+	- feat: added prefix '.' to internal changelog filename
+	- fix: updated references to internal changelog filename in init.sh
+	- test: modified test_maiass.sh to create correct internal changelog file
+	- docs: updated documentation to match new internal changelog naming
 - MAI-8
 - Improved token privacy and shell script functionality
 	- feat: added token masking helper function
