@@ -48,7 +48,7 @@ The internal changelog additionally:
 MAIASS uses these default changelog files:
 
 - `CHANGELOG.md` - Main changelog (created automatically)
-- `CHANGELOG_internal.md` - Internal changelog with commit details (updated only if it already exists)
+- `.CHANGELOG_internal.md` - Internal changelog with commit details (updated only if it already exists)
 
 ### Custom Changelog Configuration
 

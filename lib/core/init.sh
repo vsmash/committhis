@@ -92,7 +92,7 @@ setup_bumpscript_variables() {
   # Changelog defaults with MAIASS_* overrides
   export changelog_path="${MAIASS_CHANGELOG_PATH:-.}"
   export changelog_name="${MAIASS_CHANGELOG_NAME:-CHANGELOG.md}"
-  export changelog_internal_name="${MAIASS_CHANGELOG_INTERNAL_NAME:-CHANGELOG_internal.md}"
+  export changelog_internal_name="${MAIASS_CHANGELOG_INTERNAL_NAME:-.CHANGELOG_internal.md}"
 
   # Repository type (for future multi-repo support)
   export repo_type="${MAIASS_REPO_TYPE:-bespoke}"
