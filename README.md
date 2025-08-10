@@ -6,11 +6,8 @@ Modular AI-Augmented Semantic Scribe
 
 ---
 
-
 ### 👩‍💻 Are you tired of switching from code-mode to explain-brain?
-
 ### 🧑‍💼 Are you sick of opening a repo and finding 20 commits named “fix”?
-
 ### 🧠 Wanna keep your code-mode going and leave your explain-brain to ai at commit time?
 ### 🌟 You deserve structure.
 ### 🚀 You deserve changelogs. 
@@ -18,7 +15,7 @@ Modular AI-Augmented Semantic Scribe
 ___
 ### AI Commit Messages
 ### Automated Changelogs * Versioning 
-### 🫏 YOU can get it all from MAIASS
+### |)) YOU can get it all from MAIASS
 #### You want MAIASS
 #### You deserve MAIASS
 Deep down in places you don’t talk about at parties, you *knead MAIASS*
