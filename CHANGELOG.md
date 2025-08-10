@@ -1,6 +1,8 @@
-## 5.6.11
+## 5.6.12
 10 August 2025
 
+- Enabled debug prints in helpers.sh
+	- feat: Uncommented debug print statements related to topup endpoint usage
 - Refactored debug information and user interface in helpers.sh
 	- feat: Improved visibility of the top-up credit url
 	- fix: Commented out debug print lines to clean up console output
