@@ -53,7 +53,7 @@ export MAIASS_AI_MODE="off"
 
 # Create empty changelog files to prevent errors
 touch CHANGELOG.md
-touch CHANGELOG_internal.md
+touch .CHANGELOG_internal.md
 
 # Define path to MAIASS script
 # First try to use the repository's maiass.sh if we're in the repo

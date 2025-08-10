@@ -14,6 +14,7 @@ yarn-error.log*
 lerna-debug.log*
 CHANGELOG_verbose.md
 CHANGELOG_internal.md
+.CHANGELOG_internal.md
 
 # Runtime and Temporary Files
 *.tmp
