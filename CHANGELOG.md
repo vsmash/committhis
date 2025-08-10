@@ -1,6 +1,8 @@
-## 5.6.6
+## 5.6.9
 10 August 2025
 
+- Updated README.md
+	- docs: corrected typo in README.md
 - MAI-8
 - Removed MAIASS test script
 	- feat: removed 'test_maiass.sh' test shell script
