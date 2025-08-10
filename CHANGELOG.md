@@ -1,6 +1,8 @@
-## 5.6.17
+## 5.6.18
 10 August 2025
 
+- Changed character value in print_gradient_line function
+	- refactor: replaced dash character with underscore in print_gradient_line function
 - Renamed color support checks in logger.sh
 	- fix: renamed unicode_supported to supports_unicode
 	- fix: renamed truecolor_supported to supports_truecolor
