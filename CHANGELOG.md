@@ -1,6 +1,10 @@
-## 5.6.16
+## 5.6.17
 10 August 2025
 
+- Renamed color support checks in logger.sh
+	- fix: renamed unicode_supported to supports_unicode
+	- fix: renamed truecolor_supported to supports_truecolor
+	- fix: renamed twofivesixcolor_supported to supports_256color
 - Updated logger behavior and support for color schemes.
 	- feat: added support for truecolor and 256color
 	- feat: updated print_gradient_line function to incorporate new color support
