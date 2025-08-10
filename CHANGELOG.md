@@ -1,6 +1,10 @@
-## 5.6.15
+## 5.6.16
 10 August 2025
 
+- Updated logger behavior and support for color schemes.
+	- feat: added support for truecolor and 256color
+	- feat: updated print_gradient_line function to incorporate new color support
+	- fix: updated methods for proper fallback when no color support is available
 - Enhanced logger functionalities and improved visual output
 	- feat: added gradient line print functionality in logger script
 	- fix: updated print_signoff_with_topup function to utilize new print_gradient_line feature for better visual output
