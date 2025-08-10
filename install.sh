@@ -190,7 +190,7 @@ show_usage() {
 }
 
 main() {
-    echo -e "${BLUE}🚀 MAIASS Installation Script${NC}"
+    echo -e "${BLUE}|)) MAIASS Installation Script${NC}"
     echo
 
     check_requirements
