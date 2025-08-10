@@ -180,7 +180,7 @@ print_gradient_line() {
   local char reset
 
   # Prefer Unicode long dash
-  if unicode_supported; then
+  if supports_unicode; then
     char=$'\u2500'   # "─"
   else
     char='-'
@@ -189,7 +189,7 @@ print_gradient_line() {
   reset="${Color_Off:-$'\033[0m'}"
 
   # Truecolor path (smoothest)
-  if truecolor_supported; then
+  if supports_truecolor; then
     local sh="${start_hex#\#}" eh="${end_hex#\#}"
     local r1=$((16#${sh:0:2})) g1=$((16#${sh:2:2})) b1=$((16#${sh:4:2}))
     local r2=$((16#${eh:0:2})) g2=$((16#${eh:2:2})) b2=$((16#${eh:4:2}))
@@ -208,7 +208,7 @@ print_gradient_line() {
   fi
 
   # 256-color fallback (blocky but decent)
-  if twofivesixcolor_supported; then
+  if supports_256color; then
     # Pink -> burgundy-ish palette
     local palette=(224 217 218 212 211 210 205 204 198 197 161 125 89 88 52)
     local total=${#palette[@]}
