@@ -296,9 +296,9 @@ for arg in "$@"; do
       fi
       echo "Type:             ${sub_type}"
       echo "Email:            ${cust_email}"
-      echo "Credits Used:     ${tokens_used}"
-      echo "Credits Remaining:${tokens_remaining}"
-      echo "Quota:            ${quota}"
+      echo "${credit}s Used:     ${tokens_used}"
+      echo "${credit}s Remaining:${tokens_remaining}"
+      echo "${credit}s Quota:            ${quota}"
       # Explain status codes clearly
       if [[ "${last_status:-}" == "403" || "$status_field" == "403" ]]; then
         echo "Status:          403 Forbidden"
