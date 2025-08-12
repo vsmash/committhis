@@ -1,6 +1,9 @@
-## 5.6.23
+## 5.6.24
 13 August 2025
 
+- Refactored credit terminology and added new environment variable
+	- refactor(bundle.sh, maiass.bundle.sh, maiass.sh): replaced 'credit' terminology with variable
+	- feat(core/init.sh): added new environment variable 'credit' with value 'nugt'
 - Updated color scheme in helper messages
 	- style: changed color of credit reminder messages from blue and bYellow to BBlue and Yellow
 	- fix: standardized color scheme for credit reminders when subscription ID is missing
