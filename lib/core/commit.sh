@@ -211,7 +211,8 @@ handle_staged_commit() {
           fi
 
           if [[ "$effective_verbosity" == "debug" ]]; then
-            echo "$commit_message" | git commit -F -
+            # leave this for future debugging
+            echo "$commit_message" | git commit -F - >/dev/null 2>&1
           else
             echo "$commit_message" | git commit -F - >/dev/null 2>&1
           fi

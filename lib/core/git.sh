@@ -577,7 +577,9 @@ function deployOptions() {
   git checkout "$branch_name"
 
   print_info "All done. You are on branch: ${BWhite}$branch_name${Color_Off}"
-  print_signoff_with_topup
+  if type -t print_signoff_with_topup >/dev/null 2>&1; then
+    print_signoff_with_topup
+  fi
 
   # Clean up
   unset GIT_MERGE_AUTOEDIT

@@ -15,6 +15,8 @@ OUT=$2
 ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
 ENTRY_ABS=$(cd "$(dirname "$ENTRY")" && pwd)/"$(basename "$ENTRY")"
 OUT_ABS=$(cd "$(dirname "$OUT")" && pwd)/"$(basename "$OUT")"
+ENTRY_DIR=$(cd "$(dirname "$ENTRY_ABS")" && pwd)
+LIBEXEC_FROM_ENTRY="$ENTRY_DIR/lib"
 
 # Track included absolute paths to avoid duplication
 declare -A INCLUDED
@@ -47,17 +49,30 @@ emit_file() {
       raw=${raw%%[;#]*}
       raw=$(echo "$raw" | sed -e 's/^\s\+//; s/\s\+$//; s/^\"//; s/\"$//; s/^\'\''//; s/\'\''$//')
 
-      # If path contains variable expansion or wildcard, we cannot safely inline → keep as-is
-      if [[ $raw == *"$"* || $raw == *"*"* || $raw == *"?"* || $raw == *"["* ]]; then
+      # Attempt to resolve a limited set of known variables for inlining
+      local resolved_raw="$raw"
+      # Handle ${LIBEXEC_DIR} and $LIBEXEC_DIR
+      if [[ $resolved_raw == *"LIBEXEC_DIR"* ]]; then
+        resolved_raw=${resolved_raw//\$\{LIBEXEC_DIR\}/$LIBEXEC_FROM_ENTRY}
+        resolved_raw=${resolved_raw//\$LIBEXEC_DIR/$LIBEXEC_FROM_ENTRY}
+      fi
+      # Handle ${SCRIPT_PATH} and $SCRIPT_PATH (assume entry dir)
+      if [[ $resolved_raw == *"SCRIPT_PATH"* ]]; then
+        resolved_raw=${resolved_raw//\$\{SCRIPT_PATH\}/$ENTRY_DIR}
+        resolved_raw=${resolved_raw//\$SCRIPT_PATH/$ENTRY_DIR}
+      fi
+
+      # If after substitution there are still unknown expansions or globs, keep as-is
+      if [[ $resolved_raw == *"$"* || $resolved_raw == *"*"* || $resolved_raw == *"?"* || $resolved_raw == *"["* ]]; then
         echo "$line"
         continue
       fi
 
       local target
-      if [[ $raw = /* ]]; then
-        target="$raw"
+      if [[ $resolved_raw = /* ]]; then
+        target="$resolved_raw"
       else
-        target="$basedir/$raw"
+        target="$basedir/$resolved_raw"
       fi
 
       if [[ -f $target ]]; then

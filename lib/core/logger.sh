@@ -174,13 +174,13 @@ print_debug(){
 # use a unicode dash if unicode is supported or a regular dash if not
 print_gradient_line() {
   # Defaults: soft pink -> burgundy
-  local start_hex="${1:-#f7b2c4}"   # soft pink
-  local end_hex="${2:-#6b0022}"     # burgundy
-  local repeat="${3:-80}"
+  local repeat="${1:-80}"
+  local start_hex="${2:-#f7b2c4}"   # soft pink
+  local end_hex="${3:-#6b0022}"     # burgundy
   local char reset
 
   # Prefer Unicode long dash
-  char='_'
+  char='='
   reset="${Color_Off:-$'\033[0m'}"
 
   # Truecolor path (smoothest)
