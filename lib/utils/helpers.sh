@@ -123,9 +123,9 @@ print_signoff_with_topup() {
   fi
   
   # "Thank you for using MAIASS!" with bold yellow and green MAIASS
-  print_gradient_line 50
+  print_gradient_line 40
   print_thanks
-  print_gradient_line 50
+  print_gradient_line 40
   echo ""
   
   # Debug: Check topup URL variables
@@ -134,7 +134,7 @@ print_signoff_with_topup() {
   
   # Check if we have a stored top-up endpoint from init
   if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
-    echo -e "💳 Need more credits? Visit: ${blue}$MAIASS_TOPUP_ENDPOINT/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
+    echo -e "💳 Need more credits? Visit: ${blue}$maiass_topup_endpoint/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
   else
    echo -e "💳 Need more credits? Visit: ${blue}$maiass_topup_endpoint${Color_Off}"
   fi
