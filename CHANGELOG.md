@@ -1,6 +1,9 @@
-## 5.6.20
+## 5.6.21
 13 August 2025
 
+- Adjust gradient line length and update variable name in helpers.sh
+	- refactor: reduced gradient line length from 50 to 40 in print_signoff_with_topup function
+	- fix: updated variable name from MAIASS_TOPUP_ENDPOINT to maiass_topup_endpoint in print_signoff_with_topup function
 - Refactored top-up URL logic in helpers.sh
 	- refactor: simplified and streamlined top-up URL generation
 	- fix: removed unused debugging lines
