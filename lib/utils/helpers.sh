@@ -132,25 +132,12 @@ print_signoff_with_topup() {
   #print_debug "DEBUG SIGNOFF: maiass_topup_endpoint='${maiass_topup_endpoint:-}'"
   #print_debug "DEBUG SIGNOFF: MAIASS_SUBSCRIPTION_ID='${MAIASS_SUBSCRIPTION_ID:-}'"
   
-  # Check if we have a stored top-up URL from anonymous subscription
-  if [[ -n "$MAIASS_TOPUP_URL" ]]; then
-    echo -e "💳 Need more credits? Visit: ${blue}$MAIASS_TOPUP_URL${Color_Off}"
-  #  print_debug "DEBUG SIGNOFF: Used MAIASS_TOPUP_URL"
-  # Fallback to simple method if MAIASS_TOPUP_ENDPOINT or maiass_topup_endpoint is set but no stored URL  
-  elif [[ -n "$MAIASS_TOPUP_ENDPOINT" || -n "$maiass_topup_endpoint" ]]; then
-    local topup_url="${MAIASS_TOPUP_ENDPOINT:-$maiass_topup_endpoint}"
-    # Add subscription ID to path if available (new simple format)
-    # if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
-    #   topup_url="${topup_url}/${MAIASS_SUBSCRIPTION_ID}"
-    #   print_debug "DEBUG SIGNOFF: Using topup endpoint with subscription ID: $topup_url"
-    # else
-    #   print_debug "DEBUG SIGNOFF: Using topup endpoint without subscription ID: $topup_url"
-    # fi
-    echo -e "${BYellow}💳 Need more credits? Visit: ${BBlue}$topup_url${Color_off}"
+  # Check if we have a stored top-up endpoint from init
+  if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
+    echo -e "💳 Need more credits? Visit: ${blue}$MAIASS_TOPUP_ENDPOINT/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
   else
-    print_debug "DEBUG SIGNOFF: No topup URL variables set"
+   echo -e "💳 Need more credits? Visit: ${blue}$maiass_topup_endpoint${Color_Off}"
   fi
-  
   # Clean up session data file
   if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
     rm -f /tmp/maiass_session_data.tmp
