@@ -134,9 +134,9 @@ print_signoff_with_topup() {
   
   # Check if we have a stored top-up endpoint from init
   if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
-    echo -e "💳 ${BYellow}Need more credits? Visit: ${blue}${maiass_topup_endpoint}/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
+    echo -e "💳 ${Yellow}Need more credits? Visit: ${BBlue}${maiass_topup_endpoint}/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
   else
-   echo -e "💳 ${BYellow}Need more credits? Visit: ${blue}${maiass_topup_endpoint}${Color_Off}"
+   echo -e "💳 ${Yellow}Need more credits? Visit: ${BBlue}${maiass_topup_endpoint}${Color_Off}"
   fi
   # Clean up session data file
   if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
