@@ -1,3 +1,13 @@
+## 5.6.19
+13 August 2025
+
+- Updated Makefile and added bundled bash script
+	- refactor: changed output filename in Makefile
+	- feat: added new bundled bash script for managing git workflows and versioning
+	- feat: included tools for version bumping, change log management, and automated git workflows in bash script
+- Update logger output format
+	- style: changed print gradient line character from underscore to equal sign
+
 ## 5.6.18
 10 August 2025
 
