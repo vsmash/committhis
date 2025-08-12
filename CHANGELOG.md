@@ -1,6 +1,10 @@
-## 5.6.22
+## 5.6.23
 13 August 2025
 
+- Updated color scheme in helper messages
+	- style: changed color of credit reminder messages from blue and bYellow to BBlue and Yellow
+	- fix: standardized color scheme for credit reminders when subscription ID is missing
+	- chore: formatted code for improved legibility
 - Update helpers.sh print_signoff_with_topup function
 	- refactor: change the color of the "Need more credits" message in helpers.sh
 - Adjust gradient line length and update variable name in helpers.sh
