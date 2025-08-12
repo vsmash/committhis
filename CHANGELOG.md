@@ -1,6 +1,11 @@
-## 5.6.19
+## 5.6.20
 13 August 2025
 
+- Refactored top-up URL logic in helpers.sh
+	- refactor: simplified and streamlined top-up URL generation
+	- fix: removed unused debugging lines
+	- feat: direct reference for subscription endpoint using MAIASS_SUBSCRIPTION_ID
+	- clean: removed temporary session data file
 - Updated Makefile and added bundled bash script
 	- refactor: changed output filename in Makefile
 	- feat: added new bundled bash script for managing git workflows and versioning
