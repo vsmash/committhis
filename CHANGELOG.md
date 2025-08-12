@@ -1,6 +1,8 @@
-## 5.6.21
+## 5.6.22
 13 August 2025
 
+- Update helpers.sh print_signoff_with_topup function
+	- refactor: change the color of the "Need more credits" message in helpers.sh
 - Adjust gradient line length and update variable name in helpers.sh
 	- refactor: reduced gradient line length from 50 to 40 in print_signoff_with_topup function
 	- fix: updated variable name from MAIASS_TOPUP_ENDPOINT to maiass_topup_endpoint in print_signoff_with_topup function
