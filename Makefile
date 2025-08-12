@@ -1,7 +1,7 @@
 # Makefile for bashmaiass
 
 ENTRY ?= maiass.sh
-OUT ?= maiass.bundle.sh
+OUT ?= maiass.bundled.sh
 
 .PHONY: bundle clean
 
