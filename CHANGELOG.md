@@ -1,6 +1,15 @@
-## 5.6.25
+## 5.6.26
 13 August 2025
 
+- Improved git operation execution and error handling
+	- refactor: replaced direct git usage with run_git_command for better error handling
+	- refactor: consolidated all git commands to use run_git_command
+	- refactor: used run_git_command to checkout branches
+	- refactor: used run_git_command to fetch and pull changes
+	- refactor: used run_git_command to merge branches and push changes
+	- refactor: used run_git_command to add and commit changes
+	- refactor: used run_git_command to create tags
+	- refactor: used run_git_command to deploy changes
 - Improved commit handling and process flow
 	- feat: added check for clean working directory after staging and committing
 	- refactor: reorganized conditional structures for clarity
