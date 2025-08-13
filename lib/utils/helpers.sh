@@ -76,7 +76,7 @@ open_url() {
 print_signoff_with_topup() {
   echo ""
   print_info "${BGreen}Done${Color_Off}"
-  print_info "You are on $branch_name branch" "brief"
+  print_info "You are on ${BWhite}$branch_name${Aqua} branch" "brief"
   # Read session data from temp file if it exists
   local credits_used credits_remaining ai_warnings ai_model
   if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
