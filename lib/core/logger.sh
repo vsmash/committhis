@@ -183,14 +183,14 @@ print_gradient_line() {
 
   # Prefer Unicode long dash
   char='═'
-  reset="${Color_Off:-$'\033[0m'}"
+  reset="${Color_Off:-\\033[0m}"
 
   # Truecolor path (smoothest)
   if supports_truecolor; then
     local sh="${start_hex#\#}" eh="${end_hex#\#}"
     local r1=$((16#${sh:0:2})) g1=$((16#${sh:2:2})) b1=$((16#${sh:4:2}))
     local r2=$((16#${eh:0:2})) g2=$((16#${eh:2:2})) b2=$((16#${eh:4:2}))
-    awk -v n="$repeat" -v c="$char" -v r1="$r1" -v g1="$g1" -v b1="$b1" -v r2="$r2" -v g2="$g2" -v b2="$b2" -v reset="$reset" '
+    awk -v n="$repeat" -v c="$char" -v r1="$r1" -v g1="$g1" -v b1="$b1" -v r2="$r2" -v g2="$g2" -v b2="$b2" '
       BEGIN {
         for (i = 0; i < n; i++) {
           t = (n > 1) ? i / (n - 1) : 0
@@ -199,7 +199,7 @@ print_gradient_line() {
           b = int(b1 + (b2 - b1) * t + 0.5)
           printf("\033[38;2;%d;%d;%dm%s", r, g, b, c)
         }
-        printf("%s\n", reset)
+        printf("\033[0m\n")
       }'
     return
   fi
@@ -224,7 +224,7 @@ print_gradient_line() {
         printed=$(( printed + count ))
       done
     done
-    printf "%s\n" "$reset"
+    printf "\033[0m\n"
     return
   fi
 
