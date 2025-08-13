@@ -180,8 +180,23 @@ for arg in "$@"; do
       ;;
     --account-info)
       # Query account info from maiass-proxy
+      # Ensure secure variables are loaded (including token acquisition if needed)
+      load_secure_variables
+      
+      # Check if we need to create an anonymous token
+      if [[ "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
+        source "$LIBEXEC_DIR/core/ai.sh"
+        if create_anonymous_subscription; then
+          print_info "Anonymous subscription created successfully."
+          export _MAIASS_NEED_ANON_TOKEN=""
+        else
+          print_warning "Failed to create anonymous subscription."
+          exit 1
+        fi
+      fi
+      
       api_key="${MAIASS_AI_TOKEN:-}"
-      if [[ -z "$api_key" ]]; then
+      if [[ -z "$api_key" || "$api_key" == "DISABLED" ]]; then
         print_warning "No API key found. Set MAIASS_AI_TOKEN or use --update-token." "always"
         exit 1
       fi
