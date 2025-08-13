@@ -1,6 +1,8 @@
-## 5.6.27
+## 5.6.28
 13 August 2025
 
+- Updated color scheme in print_signoff_with_topup function
+	- feat: changed branch name color to white in print_signoff_with_topup function
 - Updated AI and commit scripts
 	- refactor(core/ai): replaced 'print_always' with 'print_info' for credit usage and balance info
 	- stylistic(core/commit): updated prompt color to yellow when asking to use AI suggestion
