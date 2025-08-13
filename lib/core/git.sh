@@ -28,7 +28,22 @@ run_git_command() {
         local effective_verbosity="$verbosity_level"
     fi
 
-    # Control output based on verbosity level
+    # If hidegit is enabled, capture output for logging but don't show to user
+    if [[ "$hidegit" == "true" ]]; then
+        local temp_output
+        temp_output=$(eval "$git_cmd" 2>&1)
+        local exit_code=$?
+        
+        # Log the output if logging is enabled
+        if [[ "$enable_logging" == "true" && -n "$temp_output" ]]; then
+            log_message "GIT OUTPUT: $git_cmd"
+            log_message "$temp_output"
+        fi
+        
+        return $exit_code
+    fi
+
+    # Control output based on verbosity level (original behavior when hidegit=false)
     case "$effective_verbosity" in
         "brief")
             if [[ "$show_level" == "brief" ]]; then
@@ -193,7 +208,7 @@ perform_merge_operation() {
         print_info "Creating pull request for merge"
 
         # Ensure source branch is pushed
-        git push --set-upstream origin "$source_branch" 2>/dev/null || git push origin "$source_branch"
+        run_git_command "git push --set-upstream origin '$source_branch'" "normal" || run_git_command "git push origin '$source_branch'" "normal"
         check_git_success
 
         # Create pull request URL
@@ -266,7 +281,7 @@ function getBitbucketUrl(){
 
 
 function branchDetection() {
-    print_section "Branch Detection"
+    print_debug "Branch Detection"
     print_info "Currently on branch: ${BWhite}$branch_name${Color_Off}" "brief"
     # if we are on the main branch, advise user not to use this script for hot fixes
     # if on main or a release branch, advise the user
@@ -305,6 +320,10 @@ has_uncommitted_changes() {
   [ -n "$(git status --porcelain)" ]
 }
 
+has_unstaged_changes() {
+  [ -n "$(git status --porcelain | grep -E '^.[^[:space:]]')" ]
+}
+
 
 
 
@@ -316,7 +335,7 @@ function mergeDevelop() {
   local has_version_files="${1:-true}"  # Default to true for backward compatibility
   shift  # Remove the first argument so remaining args can be passed to getVersion
 
-  print_section "Git Workflow"
+  print_debug "Git Workflow"
 
   # Check for uncommitted changes first
   if has_uncommitted_changes; then
@@ -342,7 +361,7 @@ function mergeDevelop() {
   # Check if we're already on develop or need to merge
   if [ "$current_branch" != "$developbranch" ]; then
     print_info "Not on $developbranch branch (currently on $current_branch)"
-    read -n 1 -s -p "$(echo -e ${BYellow}Do you want to merge $current_branch into $developbranch? [y/N]${Color_Off} )" REPLY
+    read -n 1 -s -p "$(echo -e ${Yellow}Do you want to merge ${BGreen}$current_branch${Yellow} into ${BGreen}$developbranch${Yellow}? [y/N]${Color_Off} )" REPLY
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
       print_info "User chose not to merge into $developbranch. Staying on $current_branch."
@@ -421,8 +440,8 @@ function mergeDevelop() {
 
       # Push the release branch and tag if remote exists
       if remote_exists "origin"; then
-        git push -u origin "release/$newversion"
-        git push origin "$newversion"
+        run_git_command "git push -u origin 'release/$newversion'" "normal"
+        run_git_command "git push origin '$newversion'" "normal"
       fi
 
       # Go back to develop
@@ -436,7 +455,7 @@ function mergeDevelop() {
       print_success "Merged release/$newversion into $developbranch"
       # Push develop
       if remote_exists "origin"; then
-        git push origin "$developbranch"
+        run_git_command "git push origin '$developbranch'" "normal"
       fi
 
       check_git_success
@@ -480,7 +499,7 @@ function deployOptions() {
   has_main=$(branch_exists "$mainbranch" && echo "true" || echo "false")
   has_remote=$(remote_exists "origin" && echo "true" || echo "false")
 
-  print_info "What would you like to do?"
+  print_always "What would you like to do?${Yellow}"
 
   # Build dynamic menu based on available branches
   local option_count=0
@@ -556,7 +575,7 @@ function deployOptions() {
       "push_current")
         print_info "Pushing current branch to remote"
         if can_push_to_remote "origin"; then
-          git push --set-upstream origin "$branch_name" 2>/dev/null || git push origin "$branch_name"
+          run_git_command "git push --set-upstream origin '$branch_name'" "normal" || run_git_command "git push origin '$branch_name'" "normal"
           check_git_success
           print_success "Pushed $branch_name to remote"
         else

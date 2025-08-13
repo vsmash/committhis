@@ -75,7 +75,8 @@ open_url() {
 # Generate sign-off message with optional top-up URL
 print_signoff_with_topup() {
   echo ""
-  
+  print_info "${BGreen}Done${Color_Off}"
+  print_info "You are on $branch_name branch" "brief"
   # Read session data from temp file if it exists
   local credits_used credits_remaining ai_warnings ai_model
   if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
@@ -121,7 +122,14 @@ print_signoff_with_topup() {
     done <<< "$ai_warnings"
     echo ""
   fi
-  
+    # Check if we have a stored top-up endpoint from init
+  if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
+    echo -e "💳 ${Yellow}Need more credits?"
+    echo -e "${BBlue}${maiass_topup_endpoint}/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
+  else
+   echo -e "💳 ${Yellow}Need more credits?"
+   echo -e "${BBlue}${maiass_topup_endpoint}${Color_Off}"
+  fi
   # "Thank you for using MAIASS!" with bold yellow and green MAIASS
   print_gradient_line 40
   print_thanks
@@ -132,12 +140,7 @@ print_signoff_with_topup() {
   #print_debug "DEBUG SIGNOFF: maiass_topup_endpoint='${maiass_topup_endpoint:-}'"
   #print_debug "DEBUG SIGNOFF: MAIASS_SUBSCRIPTION_ID='${MAIASS_SUBSCRIPTION_ID:-}'"
   
-  # Check if we have a stored top-up endpoint from init
-  if [[ -n "$MAIASS_SUBSCRIPTION_ID" ]]; then
-    echo -e "💳 ${Yellow}Need more credits? Visit: ${BBlue}${maiass_topup_endpoint}/$MAIASS_SUBSCRIPTION_ID${Color_Off}"
-  else
-   echo -e "💳 ${Yellow}Need more credits? Visit: ${BBlue}${maiass_topup_endpoint}${Color_Off}"
-  fi
+
   # Clean up session data file
   if [[ -f "/tmp/maiass_session_data.tmp" ]]; then
     rm -f /tmp/maiass_session_data.tmp

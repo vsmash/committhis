@@ -270,39 +270,62 @@ check_git_commit_status() {
 }
 # Check for uncommitted changes and offer to commit them
 function checkUncommittedChanges(){
-  print_section "Checking for Changes"
-  # if there are uncommitted changes, ask if the user wants to commit them
-  if [ -n "$(git status --porcelain)" ]; then
-      print_warning "There are uncommitted changes in your working directory"
-      read -n 1 -s -p "$(echo -e ${BYellow}Do you want to ${BRed}stage and commit${BYellow} them? [y/N]${Color_Off} )" REPLY
-      echo
-      if [[ $REPLY =~ ^[Yy]$ ]]; then
-          git add -A
-          handle_staged_commit
-          # set upstream
-      else
-            if has_staged_changes; then
-              handle_staged_commit
-            fi
-          if [[ $ai_commits_only == 'true' ]]; then
-            echo -e "${BGreen}Commit process completed.${Color_Off}"
-            print_signoff_with_topup
-            exit 0
-          else
-            print_success "Commit process completed."
-            print_error "Cannot proceed on release/changelog pipeline with uncommitted changes"
-            print_signoff_with_topup
-            exit 1
-          fi
-      fi
-  else
-    if has_staged_changes; then
+  print_debug "Checking for Changes"
+  
+  local has_staged has_unstaged
+  has_staged=$(has_staged_changes && echo "true" || echo "false")
+  has_unstaged=$(has_unstaged_changes && echo "true" || echo "false")
+  
+  print_debug "Change detection: staged=$has_staged, unstaged=$has_unstaged, ai_commits_only=${ai_commits_only:-unset}"
+  
+  # If there are unstaged changes, we must force commits-only mode
+  if [[ $has_unstaged == "true" ]]; then
+    print_warning "There are unstaged changes in your working directory"
+    read -n 1 -s -p "$(echo -e ${BYellow}Do you want to ${BRed}stage and commit${BYellow} them? [y/N]${Color_Off} )" REPLY
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      git add -A
       handle_staged_commit
+    else
+      if [[ $has_staged == "true" ]]; then
+        print_info "Committing staged changes only (unstaged changes remain)"
+        handle_staged_commit
+      fi
     fi
+    
+    # Force exit after commit when unstaged changes were present
+    print_success "Commit process completed."
+    if has_unstaged_changes; then
+      print_info "Cannot proceed with merge/release pipeline - unstaged changes remain in working directory"
+      print_info "To continue with merge/release pipeline, commit or stash all changes first"
+    else
+      print_info "Exiting after commit (unstaged changes were present at start)"
+    fi
+    print_signoff_with_topup
+    exit 0
+    
+  # If only staged changes, proceed normally
+  elif [[ $has_staged == "true" ]]; then
+    print_info "Found staged changes ready for commit"
+    handle_staged_commit
+    
+    # Check if user has commits-only mode enabled
     if [[ $ai_commits_only == 'true' ]]; then
-      echo -e "${BGreen}No changes found.${Color_Off}"
+      print_success "Commit process completed (commits-only mode)."
       print_signoff_with_topup
       exit 0
+    else
+      print_success "Commit process completed. Proceeding with merge/release pipeline..."
+    fi
+    
+  # No changes at all
+  else
+    if [[ $ai_commits_only == 'true' ]]; then
+      print_info "No changes found (commits-only mode)."
+      print_signoff_with_topup
+      exit 0
+    else
+      print_info "No changes found. Proceeding with merge/release pipeline..."
     fi
   fi
 }

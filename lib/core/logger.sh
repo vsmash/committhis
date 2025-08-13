@@ -36,6 +36,7 @@ BAqua='\033[1;96m'      # Bold Aqua
 BSoftPink='\033[38;5;218m' # Bold Soft Pink
 BNavy='\033[1;34m'      # Bold Navy
 BGrey='\033[1;35m'      # Bold Grey
+BOrange='\033[1;38;2;255;165;0m'    # Bold Orange
 
 # Regular colors (for standard messages)
 Cyan='\033[0;36m'       # Cyan
@@ -50,6 +51,7 @@ Aqua='\033[0;96m'       # Aqua
 SoftPink='\033[38;5;218m' # Soft Pink
 Navy='\033[0;34m'       # Navy
 Grey='\033[0;35m'      # Grey
+Orange='\033[38;5;208m'   # Orange
 
 # Special formatting
 Color_Off='\033[0m'     # Text Reset
@@ -59,8 +61,8 @@ NC='\033[0m'
 # Print a decorated header
 print_header() {
     echo -e "\n${BPurple}════════════════════════════════════════════════════════════════${Color_Off}"
-    echo -e "${BBlue}                    $1 MAIASS Script${Color_Off}"
-    echo -e "${BPurple}════════════════════════════════════════════════════════════════${Color_Off}\n"
+    echo -e "${BSoftPink}|))${BBlue}                 Welcome to MAIASS ${Color_Off}"
+    echo -e "${BPurple}═══════════════════════════════════════════════════════════════${Color_Off}\n"
 }
 
 # Print a section header
@@ -134,7 +136,7 @@ print_info() {
 
 # Print a warning message
 print_warning() {
-    echo -e "${Yellow}⚠ $1${Color_Off}"
+    echo -e "${Orange}⚠ $1${Color_Off}"
     log_message "WARNING: $1"
 }
 
@@ -180,7 +182,7 @@ print_gradient_line() {
   local char reset
 
   # Prefer Unicode long dash
-  char='='
+  char='═'
   reset="${Color_Off:-$'\033[0m'}"
 
   # Truecolor path (smoothest)

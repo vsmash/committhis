@@ -234,13 +234,13 @@ function getVersion(){
     currentversion=""
     newversion=""
 
-    print_section "Determining Version Source"
+    print_debug "Determining Version Source"
 
     # Check for custom primary version file first
     if [[ -n "$version_primary_file" && -n "$version_primary_type" ]]; then
-        print_info "Checking custom primary version file: $version_primary_file"
+        print_debug "Checking custom primary version file: $version_primary_file"
         if currentversion=$(read_version_from_file "$version_primary_file" "$version_primary_type" "$version_primary_line_start"); then
-            print_info "Found custom primary version file: $version_primary_file - using as version source"
+            print_debug "Found custom primary version file: $version_primary_file - using as version source"
             version_source="custom_primary"
             version_source_file="$version_primary_file"
             version_source_type="$version_primary_type"
@@ -252,7 +252,7 @@ function getVersion(){
     # Fallback to package.json (legacy behavior)
     elif [ -f "${package_json_path}/package.json" ]; then
         local package_json_file="${package_json_path}/package.json"
-        print_info "Found package.json at $package_json_file - using as version source"
+        print_debug "Found package.json at $package_json_file - using as version source"
         version_source="package.json"
         version_source_file="$package_json_file"
         version_source_type="json"
@@ -409,7 +409,7 @@ function bumpVersion() {
         exit 1
     fi
 
-    print_section "Updating Version Numbers"
+    print_debug "Updating Version Numbers"
 
     # Update the primary version source first
     if [ "$version_source" = "custom_primary" ]; then
