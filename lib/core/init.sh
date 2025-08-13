@@ -53,6 +53,7 @@ setup_bumpscript_variables() {
       export enable_logging="${MAIASS_LOGGING:=true}"
       export log_file="${MAIASS_LOG_FILE:=maiass.log}"
       export credit='nugét'
+      export hidegit="${MAIASS_HIDEGIT:=true}"
 
       # Initialize AI variables early so they're available when get_commit_message is called
       export ai_invalid_token_choices="${MAIASS_AI_INVALID_TOKEN_CHOICES:-false}"

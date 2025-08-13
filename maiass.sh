@@ -190,7 +190,7 @@ for arg in "$@"; do
       [[ -z "$client_version" ]] && client_version="0.0.0"
       client_name="bashmaiass"
       # Use new /account-info endpoint (GET preferred)
-      base_host="${MAIASS_AI_HOST:-${MAIASS_HOST:-http://localhost:8787}}"
+      base_host="${MAIASS_AI_HOST:-${MAIASS_HOST:-https://pound.maiass.net}}"
       endpoint="${base_host}/account-info"
       echo "[INFO] Querying account info at: $endpoint" >&2
       response=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
