@@ -1,6 +1,11 @@
-## 5.6.29
+## 5.6.30
 13 August 2025
 
+- Simplify AI token validation and update colors resetting in logger
+	- refactor: simplified AI mode token validation logic
+	- fix: corrected colors resetting in print_gradient_line function
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
 - MAI-8
 	Improved token handling and anonymous subscription creation
 	- feat: load secure variables before API key check
