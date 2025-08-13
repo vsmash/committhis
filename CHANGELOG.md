@@ -1,6 +1,17 @@
-## 5.6.28
+## 5.6.29
 13 August 2025
 
+- MAI-8
+	Improved token handling and anonymous subscription creation
+	- feat: load secure variables before API key check
+	- feat: added handling for 'DISABLED' API key
+	- feat: enhanced token entry behavior with offer for existing token or auto-create
+	- feat: added flag for need of anonymous token
+	- feat: implemented creation of anonymous subscription
+	- feat: added script for deleting subscription token from secure storage
+- Revert README to MAIASS
+- Temporary: swap README for committhis push
+- Revert README to MAIASS
 - Updated color scheme in print_signoff_with_topup function
 	- feat: changed branch name color to white in print_signoff_with_topup function
 - Updated AI and commit scripts
