@@ -1,6 +1,20 @@
-## 5.6.24
+## 5.6.25
 13 August 2025
 
+- Improved commit handling and process flow
+	- feat: added check for clean working directory after staging and committing
+	- refactor: reorganized conditional structures for clarity
+	- fix: ensured correct handling and feedback messages for unstaged changes
+	- feat: added commit-only mode functionality
+	- feat: implemented force exit if unstaged changes remain after commit
+- Improved script functionality and debug information
+	- feat: updated the base host in bundle.sh
+	- refactor: modified the function checkUncommittedChanges() in commit.sh to improve information handling and debug
+	- feat: added a function has_unstaged_changes() in git.sh to check for unstaged changes
+	- refactor: updated the run_git_command(), branchDetection(), and mergeDevelop() functions in git.sh to better handle and display git operations
+	- feat: added better output handling in run_git_command() in git.sh when hidegit is enabled
+- Updated maiass.sh script
+	- feat: updated default base_host URL
 - Refactored credit terminology and added new environment variable
 	- refactor(bundle.sh, maiass.bundle.sh, maiass.sh): replaced 'credit' terminology with variable
 	- feat(core/init.sh): added new environment variable 'credit' with value 'nugt'
