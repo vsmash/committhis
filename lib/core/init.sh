@@ -247,26 +247,7 @@ fi
   export debug_mode="${MAIASS_DEBUG:-false}"
 
   # Validate AI configuration - prevent ask/autosuggest modes without token
-  print_debug "DEBUG INIT: AI validation - ai_mode='$ai_mode', ai_token length=${#ai_token}"
-  if [[ "$ai_mode" == "ask" || "$ai_mode" == "autosuggest" ]]; then
-    print_debug "DEBUG INIT: AI mode requires token validation"
-    if [[ -z "$ai_token" ]]; then
-      # Check if we're planning to create an anonymous token
-      if [[ "$_MAIASS_NEED_ANON_TOKEN" == "true" ]]; then
-        print_info "AI mode '$ai_mode' enabled - anonymous token will be created automatically"
-        print_debug "DEBUG INIT: Anonymous token will be created, keeping ai_mode='$ai_mode'"
-      else
-        print_warning "AI commit message mode '$ai_mode' requires MAIASS_AI_TOKEN"
-        print_warning "Falling back to 'off' mode"
-        print_debug "DEBUG INIT: No token and no anonymous planned, setting ai_mode to 'off'"
-        export ai_mode="off"
-      fi
-    else
-      print_debug "DEBUG INIT: Token available, keeping ai_mode='$ai_mode'"
-    fi
-  else
-    print_debug "DEBUG INIT: AI mode '$ai_mode' does not require token validation"
-  fi
+  print_debug "DEBUG INIT: AI mode set to '$ai_mode' - token validation will happen when AI features are used"
   
   print_debug "DEBUG INIT: Final ai_mode='$ai_mode'"
 
