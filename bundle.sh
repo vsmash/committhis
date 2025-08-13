@@ -186,8 +186,11 @@ for arg in "$@"; do
       ;;
     --account-info)
       # Query account info from maiass-proxy
+      # Ensure secure variables are loaded (including token acquisition if needed)
+      load_secure_variables
+      
       api_key="${MAIASS_AI_TOKEN:-}"
-      if [[ -z "$api_key" ]]; then
+      if [[ -z "$api_key" || "$api_key" == "DISABLED" ]]; then
         print_warning "No API key found. Set MAIASS_AI_TOKEN or use --update-token." "always"
         exit 1
       fi

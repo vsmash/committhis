@@ -74,27 +74,30 @@ load_secure_variables() {
                     export MAIASS_AI_TOKEN="DISABLED"
                 fi
             else
-                # Original manual token entry behavior
+                # Enhanced token entry behavior - offer existing token or auto-create
                 print_warning "No AI token found in secure storage."
                 echo -e "To get started, you'll need an AI token for commit message generation."
-                echo -e "Please enter your AI token (input will be hidden): "
+                echo -e "Enter your existing AI token, or press ENTER to create a free anonymous token:"
+                echo -n "AI Token (input hidden): "
 
                 # Read token with hidden input
                 if read -s token; then
                     if [[ -z "$token" ]]; then
-                        print_warning "No token provided. AI features will be disabled."
-                        token="DISABLED"
-                    fi
+                        # User pressed enter - create anonymous subscription
+                        print_info "Creating anonymous subscription..."
+                        export _MAIASS_NEED_ANON_TOKEN="true"
+                        export MAIASS_AI_TOKEN=""  # Set empty to trigger AI module handling
+                    else
+                        # User provided a token - store it
+                        if [[ "$OSTYPE" == "darwin"* ]]; then
+                            security add-generic-password -a "$var" -s "maiass" -w "$token" -U
+                        elif command -v secret-tool >/dev/null 2>&1; then
+                            echo -n "$token" | secret-tool store --label="MAIASS AI Token" service maiass key "$var"
+                        fi
 
-                    # Store the token
-                    if [[ "$OSTYPE" == "darwin"* ]]; then
-                        security add-generic-password -a "$var" -s "maiass" -w "$token" -U
-                    elif command -v secret-tool >/dev/null 2>&1; then
-                        echo -n "$token" | secret-tool store --label="MAIASS AI Token" service maiass key "$var"
+                        export MAIASS_AI_TOKEN="$token"
+                        print_success "AI token stored successfully."
                     fi
-
-                    export MAIASS_AI_TOKEN="$token"
-                    print_success "AI token stored successfully."
                     token_prompted=1
                 else
                     print_warning "Failed to read token. AI features will be disabled."
