@@ -1,6 +1,9 @@
-## 5.6.26
+## 5.6.27
 13 August 2025
 
+- Updated AI and commit scripts
+	- refactor(core/ai): replaced 'print_always' with 'print_info' for credit usage and balance info
+	- stylistic(core/commit): updated prompt color to yellow when asking to use AI suggestion
 - Improved git operation execution and error handling
 	- refactor: replaced direct git usage with run_git_command for better error handling
 	- refactor: consolidated all git commands to use run_git_command
