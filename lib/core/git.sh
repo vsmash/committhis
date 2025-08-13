@@ -225,20 +225,20 @@ perform_merge_operation() {
         # Direct merge
         print_info "Performing direct merge: $source_branch → $target_branch"
 
-        git checkout "$target_branch"
+        run_git_command "git checkout '$target_branch'" "normal"
         check_git_success
 
         # Pull latest changes if remote available
         if remote_exists "origin"; then
             # Check if current branch has upstream tracking
             if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
-                git pull 2>/dev/null || print_warning "Could not pull latest changes (continuing anyway)"
+                run_git_command "git pull" "normal" || print_warning "Could not pull latest changes (continuing anyway)"
             else
                 # Try to set up tracking if remote branch exists
                 if git ls-remote --heads origin "$target_branch" | grep -q "$target_branch"; then
                     print_info "Setting up tracking for $target_branch with origin/$target_branch"
-                    git branch --set-upstream-to=origin/"$target_branch" "$target_branch"
-                    git pull 2>/dev/null || print_warning "Could not pull latest changes (continuing anyway)"
+                    run_git_command "git branch --set-upstream-to=origin/'$target_branch' '$target_branch'" "normal"
+                    run_git_command "git pull" "normal" || print_warning "Could not pull latest changes (continuing anyway)"
                 else
                     print_info "Remote branch origin/$target_branch doesn't exist - skipping pull"
                 fi
@@ -301,7 +301,7 @@ function branchDetection() {
     # if we are on the main or staging branch, switch to develop
     if [ "$branch_name" == "$mainbranch" ] || [ "$branch_name" == "$stagingbranch" ]; then
         print_info "Switching to $developbranch branch..."
-        git checkout "$developbranch"
+        run_git_command "git checkout '$developbranch'" "normal"
         check_git_success
         branch_name="$developbranch"
         print_success "Switched to $developbranch branch"
@@ -371,25 +371,25 @@ function mergeDevelop() {
     fi
 
     # Checkout develop and update it
-    git checkout "$developbranch"
+    run_git_command "git checkout '$developbranch'" "normal"
     check_git_success
 
     # Pull latest changes
     if remote_exists "origin"; then
       print_info "Pulling latest changes from $developbranch..."
-      git pull origin "$developbranch"
+      run_git_command "git pull origin '$developbranch'" "normal"
       check_git_success
     fi
 
     # Merge the branch
-    git merge --no-ff -m "Merge $current_branch into $developbranch" "$current_branch"
+    run_git_command "git merge --no-ff -m 'Merge $current_branch into $developbranch' '$current_branch'" "normal"
     check_git_success
     logthis "Merged $current_branch into $developbranch"
   else
     # On develop, just pull latest
     if remote_exists "origin"; then
       print_info "Pulling latest changes from $developbranch..."
-      git pull origin "$developbranch"
+      run_git_command "git pull origin '$developbranch'" "normal"
       check_git_success
     fi
   fi
@@ -417,7 +417,7 @@ function mergeDevelop() {
 
     if [ "$create_release" == true ]; then
       # Create release branch
-      git checkout -b "release/$newversion"
+      run_git_command "git checkout -b 'release/$newversion'" "normal"
       check_git_success
 
       # Update version and changelog
@@ -425,13 +425,13 @@ function mergeDevelop() {
       updateChangelog "$changelog_path" "$newversion"
 
       # Commit changes
-      git add -A
-      git commit -m "Bumped version to $newversion"
+      run_git_command "git add -A" "normal"
+      run_git_command "git commit -m 'Bumped version to $newversion'" "normal"
       check_git_success
 
       # Create tag
       if ! git tag -l "$newversion" | grep -q "^$newversion$"; then
-        git tag -a "$newversion" -m "Release version $newversion"
+        run_git_command "git tag -a '$newversion' -m 'Release version $newversion'" "normal"
         check_git_success
         print_success "Created release tag $newversion"
       else
@@ -445,11 +445,11 @@ function mergeDevelop() {
       fi
 
       # Go back to develop
-      git checkout "$developbranch"
+      run_git_command "git checkout '$developbranch'" "normal"
       check_git_success
 
       # Merge release branch into develop
-      git merge --no-ff -m "Merge release/$newversion into $developbranch" "release/$newversion"
+      run_git_command "git merge --no-ff -m 'Merge release/$newversion into $developbranch' 'release/$newversion'" "normal"
       check_git_success
 
       print_success "Merged release/$newversion into $developbranch"
@@ -466,13 +466,13 @@ function mergeDevelop() {
       updateChangelog "$changelog_path" "$newversion"
 
       # Commit changes
-      git add -A
-      git commit -m "Bump version to $newversion (no release)"
+      run_git_command "git add -A" "normal"
+      run_git_command "git commit -m 'Bump version to $newversion (no release)'" "normal"
       check_git_success
 
       # Push changes if remote exists
       if remote_exists "origin"; then
-        git push origin "$developbranch"
+        run_git_command "git push origin '$developbranch'" "normal"
       fi
 
       print_success "Version updated to $newversion on $developbranch"
@@ -593,7 +593,7 @@ function deployOptions() {
     print_error "Invalid choice. Please select a number between 1 and $option_count"
   fi
 
-  git checkout "$branch_name"
+  run_git_command "git checkout '$branch_name'" "normal"
 
   print_info "All done. You are on branch: ${BWhite}$branch_name${Color_Off}"
   if type -t print_signoff_with_topup >/dev/null 2>&1; then
