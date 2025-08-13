@@ -753,14 +753,14 @@ esac
 
       # Display credit usage and remaining balance
       if [[ -n "$credits_used" && "$credits_used" != "empty" && "$credits_used" != "null" ]]; then
-        print_always "Credits used: ${credits_used}" >&2
+        print_info "Credits used: ${credits_used}" >&2
         # Store for summary display in temp file
         echo "CREDITS_USED=$credits_used" > /tmp/maiass_session_data.tmp
         echo "AI_MODEL=$ai_model" >> /tmp/maiass_session_data.tmp
       fi
       
       if [[ -n "$credits_remaining" && "$credits_remaining" != "empty" && "$credits_remaining" != "null" ]]; then
-        print_always "Credits remaining: ${credits_remaining}" >&2
+        print_info "Credits remaining: ${credits_remaining}" >&2
         # Store for summary display in temp file
         echo "CREDITS_REMAINING=$credits_remaining" >> /tmp/maiass_session_data.tmp
       fi
