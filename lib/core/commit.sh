@@ -67,7 +67,7 @@ function get_commit_message() {
       echo
 
       # Ask user if they want to use the AI suggestion
-      read -n 1 -s -p "$(echo -e ${BCyan}Use this AI suggestion? [Y/n/e=edit]${Color_Off} )" REPLY
+      read -n 1 -s -p "$(echo -e ${BYellow}Use this AI suggestion? [Y/n/e=edit]${Color_Off} )" REPLY
       echo
 
       case "$REPLY" in
