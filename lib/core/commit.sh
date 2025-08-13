@@ -286,23 +286,40 @@ function checkUncommittedChanges(){
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       git add -A
       handle_staged_commit
+      
+      # Check if working directory is now clean after staging and committing
+      if ! has_unstaged_changes; then
+        # Working directory is clean, check if user wants commits-only mode
+        if [[ $ai_commits_only == 'true' ]]; then
+          print_success "Commit process completed (commits-only mode)."
+          print_signoff_with_topup
+          exit 0
+        else
+          print_success "Commit process completed. Proceeding with merge/release pipeline..."
+          return 0  # Continue to merge/release pipeline
+        fi
+      else
+        # Still have unstaged changes after commit
+        print_success "Commit process completed."
+        print_info "Cannot proceed with merge/release pipeline - unstaged changes remain in working directory"
+        print_info "To continue with merge/release pipeline, commit or stash all changes first"
+        print_signoff_with_topup
+        exit 0
+      fi
     else
+      # User chose not to stage unstaged changes
       if [[ $has_staged == "true" ]]; then
         print_info "Committing staged changes only (unstaged changes remain)"
         handle_staged_commit
       fi
-    fi
-    
-    # Force exit after commit when unstaged changes were present
-    print_success "Commit process completed."
-    if has_unstaged_changes; then
+      
+      # Force exit since unstaged changes remain
+      print_success "Commit process completed."
       print_info "Cannot proceed with merge/release pipeline - unstaged changes remain in working directory"
       print_info "To continue with merge/release pipeline, commit or stash all changes first"
-    else
-      print_info "Exiting after commit (unstaged changes were present at start)"
+      print_signoff_with_topup
+      exit 0
     fi
-    print_signoff_with_topup
-    exit 0
     
   # If only staged changes, proceed normally
   elif [[ $has_staged == "true" ]]; then
